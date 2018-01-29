@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Archive
-permalink: /archive/
+permalink: "/archive/"
 weight: 5
 sitemap:
   priority: 0.9
