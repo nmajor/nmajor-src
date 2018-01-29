@@ -5,7 +5,7 @@ tags:
 - serverless
 - react
 - aws
-hero: https://process.filestackapi.com/cache=expiry:max/resize=width:1050/compress/DmWFogQLQIaANgk8P8k9
+hero: "/uploads/2018/01/29/serverless-hero.png"
 published: true
 date: 2018-01-29 00:00:00 +0000
 ---
