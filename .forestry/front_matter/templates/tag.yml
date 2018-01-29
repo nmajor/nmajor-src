@@ -5,12 +5,18 @@ fields:
   label: Layout
   type: text
   hidden: false
-  default: ''
+  default: blog-by-tag
 - name: title
   label: Title
   type: text
   hidden: false
   default: ''
+- type: text
+  name: slug
+  label: slug
+- type: text
+  name: name
+  label: Name
 - name: date
   label: Date
   type: datetime
