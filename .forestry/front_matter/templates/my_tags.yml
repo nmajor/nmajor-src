@@ -1,0 +1,32 @@
+---
+pages:
+- _my_tags/serverless.md
+- _my_tags/react.md
+- _my_tags/aws.md
+hide_body: false
+fields:
+- name: layout
+  label: Layout
+  type: text
+  hidden: false
+  default: blog-by-tag
+- name: title
+  label: Title
+  type: text
+  hidden: false
+  default: ''
+- name: slug
+  label: Slug
+  type: text
+  hidden: false
+  default: ''
+- name: name
+  label: Name
+  type: text
+  hidden: false
+  default: ''
+- name: date
+  label: Date
+  type: datetime
+  hidden: false
+  default: ''
