@@ -1,0 +1,9 @@
+---
+hide_body: false
+fields:
+- type: file
+  name: hero
+  label: Hero Image
+- type: tag_list
+  name: tags
+  label: Tags
