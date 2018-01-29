@@ -125,7 +125,6 @@ This should create a new folder for us called `business-cardistry`. Let's go int
     -rw-r--r--    1 nmajor  staff    86B Dec 27 13:37 .gitignore
     -rw-r--r--    1 nmajor  staff   466B Dec 27 13:37 handler.js
     -rw-r--r--    1 nmajor  staff   2.8K Dec 27 13:37 serverless.yml
-    
 
 As you can see, aside from `.gitignore`, we only have two files, `handler.js` and `serverless.yml`. Later, this file structure can grow into any structure we need to keep our code organized, but everything comes back to these two files.
 
