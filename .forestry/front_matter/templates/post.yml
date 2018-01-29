@@ -1,9 +1,21 @@
 ---
 hide_body: false
 fields:
+- type: text
+  name: title
+  label: Title
+  config:
+    required: true
+- type: text
+  name: layout
+  label: Layout
+  default: post
 - type: file
   name: hero
   label: Hero Image
 - type: tag_list
   name: tags
   label: Tags
+- type: datetime
+  name: date
+  label: Date
