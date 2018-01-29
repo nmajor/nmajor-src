@@ -61,6 +61,14 @@ article a {
   top: -20px;
 
   .logo {
+    img {
+      width: 50px;
+      border-radius: 25px;
+      display: inline-block;
+      margin: 0;
+      position: relative;
+      top: 8px;
+    }
     a {
       color: $text-color;
       font-size: 45px;
