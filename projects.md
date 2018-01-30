@@ -4,7 +4,7 @@ layout: Page
 date: 2018-01-30 00:55:26 +0000
 hero: ''
 tags: []
-permalink: "/projects"
+permalink: "/projects/"
 published: false
 ---
 # Hello!
