@@ -9,7 +9,7 @@ hero: "/uploads/2018/01/29/serverless-hero.png"
 published: true
 date: 2018-01-29 00:00:00 +0000
 ---
-I believe Serverless is the next big thing in web development. I discuss the what, why, and how of Serverless. Then I show you how to build a simple backend for a react app. You'll be surprised how easy it is. hey
+I believe Serverless is the next big thing in web development. I discuss the what, why, and how of Serverless. Then I show you how to build a simple backend for a react app. You'll be surprised how easy it is.
 
 {: .lead}  
 <!–-break-–>
