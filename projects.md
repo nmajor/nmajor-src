@@ -5,7 +5,7 @@ date: 2018-01-30 00:55:26 +0000
 hero: ''
 tags: []
 permalink: "/projects/"
-published: false
+published: true
 ---
 # Hello!
 
