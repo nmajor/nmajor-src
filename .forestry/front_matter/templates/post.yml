@@ -1,6 +1,5 @@
 ---
 pages:
-- projects.md
 - _posts/2018-01-29-serverless-back-end-for-react-your-introduction-to-serverless-architecture.md
 hide_body: false
 fields:

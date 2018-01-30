@@ -1,9 +1,11 @@
 ---
 title: Projects
-layout: post
-date: 2018-01-30 00:00:00 +0000
+layout: Page
+date: 2018-01-30 00:55:26 +0000
 hero: ''
 tags: []
+permalink: "/projects/"
+published: false
 ---
 # Hello!
 
