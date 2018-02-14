@@ -1,4 +1,6 @@
 ---
+pages:
+- _my_tags/azure.md
 hide_body: false
 fields:
 - name: layout

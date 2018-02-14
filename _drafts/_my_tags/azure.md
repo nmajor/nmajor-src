@@ -1,5 +1,7 @@
 ---
 layout: blog-by-tag
-title: Azure
-date: 2018-02-14 17:42:01 +0000
+title: azure
+date: 2018-02-14 00:00:00 +0000
+slug: azure
+name: azure
 ---
