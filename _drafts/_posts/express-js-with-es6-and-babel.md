@@ -27,6 +27,15 @@ First lets use the [express-generator](http://expressjs.com/en/starter/generator
 
 This generates a new express app in a new folder called new-app. And as you can see, I've told express to use sass for css and pug for the html templating.
 
+### Rearrange Files
+
+We are going to need to rearrange things a bit. This is because of the production build. We want all the javascript files isolated in a subfolder of our app because later we are going to tell babel to compile all the files and things get really messy if all our code is in at the same level as our dot files, node_modules folder, etc...
+
+So lets make a new folder called `src` and move all our express stuff into it.
+
+    $ mkdir src
+    $ mv bin public routes views app.js src/
+
 ### Install Babel
 
 First we need to add 2 babel packages to our apps dev-dependencies.
@@ -56,20 +65,24 @@ with this:
 
 And then we run express with babel with this command:
 
-    $ babel-node bin/www
+    $ babel-node src/bin/www
 
 It works!
 
-And you will notice that if you just run `node bin/www` you get an error which is expected.  
+And you will notice that if you just run `node src/bin/www` you get an error which is expected.  
   
 Now lets add a npm script to make running this easier. Open up your `package.json` file and lets add a new line in the scripts section so it looks like this:
 
     ...
       "scripts": {
         "start": "node ./bin/www",
-        "start:dev": "babel-node ./bin/www"
+        "start:dev": "babel-node ./src/bin/www"
       }
     ...
+
+Now we can run our babelized app with the command:
+
+    npm run start:dev
 
 You might be asking, "Why don't we just use the existing start script". We need to save that for production because many production environments use the start script to run the app, but obviously we need to change it since we know `node ./bin/www` doesn't work.
 
@@ -77,4 +90,14 @@ You might be asking, "Why don't we just use the existing start script". We need 
 
 So to prepare our app for production we need a build step that will take our ES6 code and generate node-friendly ES5 code in a file somewhere that node can run.
 
-To do this 
+To do this I like to another npm script:
+
+    ...
+      "scripts": {
+        "start": "node ./bin/www",
+        "start:dev": "babel-node ./app/bin/www",
+        "build": "rm -rf ./build && mkdir build && babel --out-dir ./build --source-maps --copy-files ./app"
+      }
+    ...
+
+As you can see this build script removes and recreates any existing `build` folder, and then runs the command `babel -d ./build ./bin/www -s` which 
