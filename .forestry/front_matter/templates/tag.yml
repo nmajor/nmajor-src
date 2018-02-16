@@ -1,5 +1,6 @@
 ---
 pages:
+- _my_tags/babel.md
 - _my_tags/express.md
 - _my_tags/production.md
 - _my_tags/node.md
