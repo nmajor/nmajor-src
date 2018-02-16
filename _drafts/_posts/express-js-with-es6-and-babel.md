@@ -31,10 +31,10 @@ This generates a new express app in a new folder called new-app. And as you can 
 
 We are going to need to rearrange things a bit. This is because of the production build. We want all the javascript files isolated in a subfolder of our app because later we are going to tell babel to compile all the files and things get really messy if all our code is in at the same level as our dot files, node_modules folder, etc...
 
-So lets make a new folder called `src` and move all our express stuff into it.
+So lets make a new folder called `app` and move all our express stuff into it.
 
-    $ mkdir src
-    $ mv bin public routes views app.js src/
+    $ mkdir app
+    $ mv bin public routes views app.js app/
 
 ### Install Babel
 
@@ -65,18 +65,18 @@ with this:
 
 And then we run express with babel with this command:
 
-    $ babel-node src/bin/www
+    $ babel-node app/bin/www
 
 It works!
 
-And you will notice that if you just run `node src/bin/www` you get an error which is expected.  
+And you will notice that if you just run `node app/bin/www` you get an error which is expected.  
   
 Now lets add a npm script to make running this easier. Open up your `package.json` file and lets add a new line in the scripts section so it looks like this:
 
     ...
       "scripts": {
         "start": "node ./bin/www",
-        "start:dev": "babel-node ./src/bin/www"
+        "start:dev": "babel-node ./app/bin/www"
       }
     ...
 
@@ -100,4 +100,14 @@ To do this I like to another npm script:
       }
     ...
 
-As you can see this build script removes and recreates any existing `build` folder, and then runs the command `babel -d ./build ./bin/www -s` which 
+As you can see this build script removes and recreates any existing `build` folder, and then runs the command `babel --out-dir ./build --source-maps --copy-files ./app` which compiles all the javascript files and copies any other files  into the `build` folder. Checkout [this page](https://babeljs.io/docs/usage/cli/) for more info on how the babel command works.
+
+You may want to add the `build` folder to your `.gitignore`.
+
+Then the last thing to do is to change the start script to look like this:
+
+    "start": "node ./app/bin/www"
+
+And we are good to go.
+
+Just make sure you run `npm run build` as part of any deployment into production.
