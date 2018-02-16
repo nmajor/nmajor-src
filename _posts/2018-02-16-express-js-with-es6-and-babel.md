@@ -11,7 +11,7 @@ hero: "/uploads/2018/02/16/Express.js - ES6 - Babel.png"
 ---
 Express.js doesn't come with es6 out of the box. But its actually not that hard to add.
 
-This is the best way I have found to add ES6 support to an express project. I'm going to go over how to easily add ES6 support to your project using the [babel-cli](https://www.npmjs.com/package/babel-cli "babel-cli").
+I'm going to go over how to easily add ES6 support to your project using the [babel-cli](https://www.npmjs.com/package/babel-cli "babel-cli"), as well as show you some of the things you need to do so your app will be ready for production later.
 
 {: .lead}  
 <!–-break-–>
@@ -54,7 +54,7 @@ Next we need to add the babel configuration file `.babelrc` to our app folder. M
       "presets": ["env"]
     }
 
-This just tells babel to use [babel-preset-env]() that we just installed but take a look as some of the other configuration settings you can specify [here](https://babeljs.io/docs/usage/babelrc/). 
+This just tells babel to use [babel-preset-env]() that we just installed but take a look as some of the other configuration settings you can specify [here](https://babeljs.io/docs/usage/babelrc/).
 
 ### Try it Out
 
@@ -72,8 +72,8 @@ And then we run express with babel with this command:
 
 It works!
 
-And you will notice that if you just run `node app/bin/www` you get an error which is expected.  
-  
+And you will notice that if you just run `node app/bin/www` you get an error which is expected.
+
 Now lets add a npm script to make running this easier. Open up your `package.json` file and lets add a new line in the scripts section so it looks like this:
 
     ...
