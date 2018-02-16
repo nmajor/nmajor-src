@@ -7,7 +7,7 @@ tags:
 - node
 - babel
 - es6
-hero: ''
+hero: "/uploads/2018/02/16/Express.js - ES6 - Babel.png"
 ---
 Express.js doesn't come with es6 out of the box. But its actually not that hard to add.
 
