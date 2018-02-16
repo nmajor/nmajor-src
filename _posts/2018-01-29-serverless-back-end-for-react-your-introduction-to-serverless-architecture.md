@@ -5,7 +5,7 @@ tags:
 - serverless
 - react
 - aws
-hero: "/uploads/2018/01/29/serverless-hero.png"
+hero: "/uploads/2018/02/16/call it a plan (1).png"
 published: true
 date: 2018-01-29 00:00:00 +0000
 ---
