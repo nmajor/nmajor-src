@@ -13,6 +13,9 @@ Express.js doesn't come with es6 out of the box. But its actually not that hard 
 
 This is the best way I have found to add ES6 support to an express project. I'm going to go over how to easily add ES6 support to your project using the [babel-cli](https://www.npmjs.com/package/babel-cli "babel-cli").
 
+{: .lead}  
+<!–-break-–>
+
 The `babel-cli` gives us a command line tool called `babel-node` that wraps around node and converts our ES6 code to basic javascript that node can read.
 
 **However it is not recommended to use babel-node in production**
