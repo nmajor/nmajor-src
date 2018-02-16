@@ -17,11 +17,21 @@ The `babel-cli` gives us a command line tool called `babel-node` that wraps arou
 
 **However it is not recommended to use babel-node in production**
 
-So I will also show you how to prepare your Express.js app for production with a build step.
+### New Express App
 
-  
-  
-  
-  
-  
-The `babel-cli` gives us access to the `babel-node` command. But `babel-node` is NOT recommended for production use, I will also show you how to build your 
+First lets use the [express-generator](http://expressjs.com/en/starter/generator.html) to make a new Express.js app.
+
+    $ express --view pug --css sass new-app
+    $ cd new-app
+    $ npm install
+
+This generates a new express app in a new folder called new-app. And as you can see, I've told express to use sass for css and pug for the html templating.
+
+### Install Babel
+
+First we need to add 2 babel packages to our apps dev-dependencies.
+
+    $ npm install babel-cli --save-dev
+    $ npm install babel-preset-env --save-dev
+
+babel-preset-env
