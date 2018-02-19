@@ -58,5 +58,3 @@ Business Cardistry is a simple app to design colorful business cards. You can th
 Missionary Memoir has a React frontend and a Node/Express.js backend.
 
 Missionary Memoir is my biggest personal project. Its a business I started to help people print a custom hardcover book from their emails. Its mainly marketed towards missionaries who have sentimental emails from their missionary experiences that they want to keep forever in the form of a hardcover book.
-
-I hope this works
