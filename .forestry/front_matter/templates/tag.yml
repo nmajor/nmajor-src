@@ -1,11 +1,11 @@
 ---
 pages:
+- _my_tags/express.md
+- _my_tags/azure.md
 - _my_tags/es6.md
 - _my_tags/babel.md
-- _my_tags/express.md
 - _my_tags/production.md
 - _my_tags/node.md
-- _my_tags/azure.md
 hide_body: false
 fields:
 - name: layout
