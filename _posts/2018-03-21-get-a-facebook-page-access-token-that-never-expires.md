@@ -11,7 +11,9 @@ With the facebook API, page tokens can often be used in place of user tokens. Th
 {: .lead}  
 <!–-break-–>
 
-First we should talk about some definitions:
+First you have to make sure that your user has permissions to access both the Facebook page and the Facebook groups, and make sure that the Facebook groups are linked to the Facebook page.
+
+Now lets talk about some definitions:
 
 **short-lived user access token**: This is the regular user_access_token, and it typically lasts about 2 hours.
 
