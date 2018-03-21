@@ -6,6 +6,11 @@ hero: "/uploads/2018/03/21/So, let's take it to the streets and celebrate our fr
 tags:
 - facebook
 ---
+With the facebook API, page tokens can often be used in place of user tokens. This is very useful because if you are doing something with a business, its not ideal to have to use your own user token for everything. However, if you don't want to have to recreate a new token all the time, you have to go through the process of getting a long-lived page access token.
+
+{: .lead}  
+<!–-break-–>
+
 First we should talk about some definitions:
 
 **short-lived user access token**: This is the regular user_access_token, and it typically lasts about 2 hours.
