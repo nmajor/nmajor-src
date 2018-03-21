@@ -23,12 +23,47 @@ To get a user access token you first have to have a facebook app, and then the u
 
 The easiest way to do this is to use [Facebook's Graph API Explorer](https://developers.facebook.com/tools/explorer).
 
-Open up the page, then select your app from the dropdown:
+Open up the page, then select your app Application dropdown and select "Get User Access Token" from the other dropdown:
 
+![](/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers-1.png)
 
+Then in the popup, make sure you check the box for `manage_pages` and click "Get Access Token"
 
-Basically you have to first have a facebook app, and then you have to have the 
+![](/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers2.png)
 
+Then your access token will be populated in the Access Token field:
 
+![](/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers3.png)
 
-[https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension](https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension "https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension")
+Ok, then we need to exchange that short-lived token for a long-lived token, and we can do it with this same Facebook Graph API Explorer tool.
+
+We need to make a GET request to the Facebook Graph API to the path `/oauth/access_token` with the following parameters:
+
+    /oauth/access_token?  
+        grant_type=fb_exchange_token&           
+        client_id={app-id}&
+        client_secret={app-secret}&
+        fb_exchange_token={short-lived-token-we-just-made} 
+
+So make a string that looks like this:
+
+    /oauth/access_token?grant_type=fb_exchange_token&client_id=9382767696389008&client_secret=1aac234d48ce90uu57c1b579faa92f00ufa&fb_exchange_token=EAAcZBbBDPXSwBACfeRskLz5LJJCigZBZBDyr4pmZCcVsrpFaoDUDSXthSDzdq4bqO75iEE17TBbpxIyQ1eTR3OIfGq2KPZBloF4xJ0I1GU1hxOnCGJmZBVg0DXU4IrDgcURm4ceKE4M1ZAFdGNmt5y2shsETLxAEKwZD
+
+And paste it into here and you'll get your long-lived access token in the response:
+
+![](/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers4-1.png)
+
+Now that you have your long-lived user access token, we can exchange it by making a GET request in the Facebook Graph API Explorer to get the long-lived page access token.
+
+You need to take that long-lived user access token and paste it into the Access Token field then put this in the path field:
+
+    {fb-page-id}]/?fields=access_token
+
+Then you will get your long-lived page access token in the response!
+
+![](/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers5.png)
+
+Facebook Documentation:
+
+* Access Tokens: [https://developers.facebook.com/docs/facebook-login/access-tokens](https://developers.facebook.com/docs/facebook-login/access-tokens "https://developers.facebook.com/docs/facebook-login/access-tokens")
+* Extending Tokens: [https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension](https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension "https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension")
