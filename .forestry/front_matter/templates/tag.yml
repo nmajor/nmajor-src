@@ -1,13 +1,7 @@
 ---
-pages:
-- _my_tags/facebook.md
-- _my_tags/express.md
-- _my_tags/azure.md
-- _my_tags/es6.md
-- _my_tags/babel.md
-- _my_tags/production.md
-- _my_tags/node.md
+label: Tag
 hide_body: false
+is_partial: false
 fields:
 - name: layout
   label: Layout
@@ -30,3 +24,11 @@ fields:
   type: datetime
   hidden: false
   default: ''
+pages:
+- _my_tags/express.md
+- _my_tags/azure.md
+- _my_tags/babel.md
+- _my_tags/es6.md
+- _my_tags/node.md
+- _my_tags/production.md
+- _my_tags/facebook.md
