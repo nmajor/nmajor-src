@@ -6,7 +6,7 @@ tags:
 - node
 - azure
 - production
-hero: ''
+hero: "/uploads/2018/07/16/Deploying.png"
 
 ---
 I know, I know, I know, Microsoft is not the company you think of when its time to figure out where to host your Node.js app, but Azure has a surprisingly robust suite of services now. And deploying to [Azure App Services](https://azure.microsoft.com/en-us/services/app-service/ "Azure App Service") was easier than I expected.
