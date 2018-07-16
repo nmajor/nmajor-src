@@ -8,21 +8,15 @@ tags:
 - css
 
 ---
-In this article:
-
-* Why I prefer Styled Components
-* Basic installation and examples of Styled Components
-
-I don't really go into some of the other options for CSS with React, so for a nice outline of some of the other approaches check \[this article\]([https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945](https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945 "https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945")) out.   
-  
-You can also see the Official Documentation for Styled Components \[here\]([https://www.styled-components.com/](https://www.styled-components.com/ "https://www.styled-components.com/")).
-
 ## Why I prefer Styled Components
 
 I prefer Styled Components because I feel like it is more inline with the core component philosophy of react. React is all about creating reusable components, and really pushed the idea of bundling the templating (HTML) and behavior (JS) together into components. So it always felt a bit wonky to me to still put my CSS in a separate file and connect my styling using regular CSS `class` and `id` targeting.
 
-Styled Components allow us to bundle the templating (HTML), behavior (JS), and styling (CSS) all together. And similar to how JSX lets us write HTML in with our Javascript, Styled Components let us write classic CSS, but it has many classic JS ways for us to manage our styling logic.  
-  
+{: .lead}  
+<!–-break-–>
+
+Styled Components allow us to bundle the templating (HTML), behavior (JS), and styling (CSS) all together. And similar to how JSX lets us write HTML in with our Javascript, Styled Components let us write classic CSS, but it has many classic JS ways for us to manage our styling logic.
+
 From the \[documentation\]([https://www.styled-components.com/](https://www.styled-components.com/ "https://www.styled-components.com/")): Styled components combine the html element and the rules that style it.
 
 ## Installation and basic use of Styled Components
@@ -136,3 +130,7 @@ There are a few more tricks available. Checkout the \[full documentation\]([http
 Styled Components, allow us to really simplify our display logic while still being able to customize our styling in complex ways. Oh yeah, it also works with React Native.
 
 So give Styled Components a try!
+
+I don't really go into some of the other options for CSS with React, so for a nice outline of some of the other approaches check \[this article\]([https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945](https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945 "https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945")) out.
+
+You can also see the Official Documentation for Styled Components \[here\]([https://www.styled-components.com/](https://www.styled-components.com/ "https://www.styled-components.com/")).
