@@ -13,7 +13,7 @@ In this article:
 * Why I prefer Styled Components
 * Basic installation and examples of Styled Components
 
-I dont really go into some of the other options for CSS with React, so for a nice outline of some of the other approaches check \[this article\]([https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945](https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945 "https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945")) out.   
+I don't really go into some of the other options for CSS with React, so for a nice outline of some of the other approaches check \[this article\]([https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945](https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945 "https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945")) out.   
   
 You can also see the Official Documentation for Styled Components \[here\]([https://www.styled-components.com/](https://www.styled-components.com/ "https://www.styled-components.com/")).
 
