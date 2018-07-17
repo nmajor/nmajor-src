@@ -1,9 +1,12 @@
 ---
-title: Adding ESLint to Your Project - Git Enforced
+title: Adding ESLint to Your Project with a Git Hook
 layout: post
 date: 2018-07-17 00:00:00 +0000
-hero: ''
-tags: []
+hero: "/uploads/2018/07/17/Beautiful Code!.png"
+tags:
+- javascript
+- git
+- eslint
 
 ---
 ## Installation
