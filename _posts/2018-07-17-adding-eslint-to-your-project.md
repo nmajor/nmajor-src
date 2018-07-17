@@ -6,7 +6,6 @@ hero: "/uploads/2018/07/17/Beautiful Code!.png"
 tags:
 - javascript
 - git
-- eslint
 
 ---
 ## Installation
