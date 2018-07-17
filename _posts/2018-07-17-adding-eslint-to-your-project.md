@@ -43,7 +43,7 @@ It creates a file called `eslintrc.json` (the file will be different depending o
 If you open that file it will look like this:
 
     {
-      "extends": "airbnb",
+      "extends": "airbnb"
     }
 
 So it is basically just copying all of airbnb's rules. So if we want to now change the rules we are using we need to manually add them. We can turn off or change any rule and any rule we specify in our file will override the airbnb rule.
