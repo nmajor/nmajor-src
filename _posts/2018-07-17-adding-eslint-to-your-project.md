@@ -8,6 +8,13 @@ tags:
 - git
 
 ---
+Linters can be annoying at first, but I feel like they really help me write better code. Plus they are great for working in teams to make sure everyone is following the same conventions.
+
+We're going to walk through how to setup ESLint and add it to our project using a git pre-commit hook.
+
+{: .lead}  
+<!–-break-–>
+
 ## Installation
 
 First install the package eslint:
