@@ -24,4 +24,5 @@ fields:
   hidden: false
   default: ''
 pages:
+- _posts/rails-storing-arrays-and-hashes-in-a-database-column.md
 - projects.md
