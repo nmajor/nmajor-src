@@ -2,8 +2,13 @@
 title: Using Action Cable with Redux - Websocket Redux Middleware
 layout: post
 date: 2018-07-25 00:00:00 +0000
-hero: ''
-tags: []
+hero: "/uploads/2018/07/25/Action Cable.png"
+tags:
+- redux
+- javascript
+- websockets
+- action cable
+- react
 
 ---
 Middleware is one of the most useful and powerful features of redux. If you're unfamiliar with redux middleware, basically it is a way to insert extra behavior into dispatched redux actions.
