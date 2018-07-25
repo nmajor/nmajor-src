@@ -7,9 +7,9 @@ tags:
 - redux
 - javascript
 - websockets
-- action cable
 - react
 - rails
+- actioncable
 
 ---
 Middleware is one of the most powerful and useful features of redux. If you're unfamiliar with redux middleware, basically it is a way to insert extra behavior into dispatched redux actions.
@@ -50,9 +50,9 @@ First lets make a middleware function, you'll want to export this function from 
         const {
           channel,
           room,
-          received,
           leave,
         } = action;
+        let { received } = action;
     
         if (!channel) {
           return next(action);
@@ -95,8 +95,10 @@ Then we have to apply our new middlware. Check the \[redux documentation\]([http
     
     const store = createStore(
       rootReducer,
-      applyMiddleware(clientMiddleware)
+      applyMiddleware(clientMiddleware())
     );
+
+Our other file is actually exporting a middleware creator function, so don't forget to execute the `clientMiddleware` function when applying it to redux. This will also create the Action Cable connection only once when the store loads so we don't have to worry about creating a new connection every time.
 
 ### Our New Action Creators
 
