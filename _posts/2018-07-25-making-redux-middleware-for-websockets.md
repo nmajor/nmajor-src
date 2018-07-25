@@ -12,14 +12,14 @@ tags:
 - rails
 
 ---
-Middleware is one of the most powerful and useful features of redux. If you're unfamiliar with redux middleware, basically it is a way to insert extra behavior into dispatched redux actions. 
+Middleware is one of the most powerful and useful features of redux. If you're unfamiliar with redux middleware, basically it is a way to insert extra behavior into dispatched redux actions.
 
 Today we're going to use it to make a clean and powerful way to manage our subscriptions to different Action Cable channels+rooms this also means taking the data sent to use through action cable and dispatching the appropriate redux actions to mutate the state.
 
 {: .lead}  
 <!–-break-–>
 
-If you are unfamiliar with redux middleware, check out the \[documentation here\]([https://redux.js.org/advanced/middleware](https://redux.js.org/advanced/middleware "https://redux.js.org/advanced/middleware")). The code below is inspired by reading through the source of \[this example redux app\]([https://github.com/erikras/react-redux-universal-hot-example](https://github.com/erikras/react-redux-universal-hot-example "https://github.com/erikras/react-redux-universal-hot-example")), specifically \[this middleware\]([https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js](https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js "https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js")), so you may also want to check that out as well.
+If you are unfamiliar with redux middleware, check out the \[documentation here](https://redux.js.org/advanced/middleware). The code below is inspired by reading through the source of \[this example redux app\]([https://github.com/erikras/react-redux-universal-hot-example](https://github.com/erikras/react-redux-universal-hot-example "https://github.com/erikras/react-redux-universal-hot-example")), specifically \[this middleware\]([https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js](https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js "https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js")), so you may also want to check that out as well.
 
 ### Typical Redux Actions
 
