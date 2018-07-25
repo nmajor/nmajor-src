@@ -1,5 +1,5 @@
 ---
-title: Redux Middleware for Websockets and Profit
+title: Using Action Cable with Redux - Websocket Redux Middleware
 layout: post
 date: 2018-07-25 00:00:00 +0000
 hero: ''
@@ -7,8 +7,6 @@ tags: []
 
 ---
 Middleware is one of the most useful and powerful features of redux. If you're unfamiliar with redux middleware, basically it is a way to insert extra behavior into dispatched redux actions.
-
-In this post I'll show you 2 different websocket redux middleware functions I use to manage event listening and subscribing to different rooms, etc...
 
 {: .lead}  
 <!–-break-–>
@@ -25,6 +23,93 @@ Redux actions have 1 required attribute, `type`. Anything else is just extra and
 
 By using redux middleware we can define our own action patterns and structures. Then when any action is dispatched we can check if the action matches a specific pattern and have it do different things.
 
-## Redux Middleware for Action Cable
+The goal was to allow an easy way to manage subscribe and unsubscribe to different channels and rooms. But part of the subscription is connecting different events to specific redux actions. Basically we want to say when `some_event` happens in Action Cable, then dispatch a certain redux action, to change the state with that new data.
 
-Anyways, I dont want to spend too much time on this, but I was so impressed with how powerful this is that when it came time to add websockets to my app I 
+First lets take a look at the action creators:
+
+    export function subscribeConversation(conversationId) {
+      return {
+        channel: 'conversations',
+        room: `conversation_${conversationId}`,
+        received: NEW_MESSAGE,
+      }
+    }
+    
+    export function unsubscribeConversation(conversationId) {
+      return {
+        channel: 'conversations',
+        room: `conversation_${conversationId}`,
+        leave: true,
+      }
+    }
+
+You'll notice these actions don't even have the required `type` attribute, this is because when they are dispatched we hijack the action and do out own thing, so this particular action never makes it to the reducer.
+
+Instead we have a `channel`, `room`, and `received` attributes required to subscribe to a channel+room, and `channel`, `room`, and `leave`, attributes required to unsubscribe from a channel+room.
+
+The important part here is that `received` is an action to dispatch when new data is sent to the channel+room. Then we can use our reducer to take whatever data sent into the channel+room and use that to change our state.
+
+And, here's the middleware code:
+
+    import ActionCable from 'actioncable';
+    
+    export default function cableMiddleware() {
+      const cable = ActionCable.createConsumer('/cable');
+    
+      return ({ dispatch, getState }) => next => (action) => {
+        if (typeof(action) === 'function') {
+          return next(action)
+        }
+    
+        const {
+          channel,
+          room,
+          received,
+          leave,
+        } = action;
+    
+        if (!channel) {
+          return next(action);
+        }
+    
+        if (leave) {
+          const subscription = _.find(
+            cable.subscriptions.subscriptions,
+            sub => sub.identifier === JSON.stringify({ channel, room }),
+          );
+    
+          return cable.subscriptions.remove(subscription);
+        }
+    
+        if (typeof(received) === 'string') {
+          received = result => dispatch({ type: received, result })
+        }
+    
+        return cable.subscriptions.create({ channel, room }, { received });
+      };
+    }
+
+Basically we first skip our middleware if the action is a function or if there is no `channel` attribute in our action.
+
+Then if there is a `leave` attribute, then we remove the action cable subscription to the channel+room.
+
+Else we create a subscription to the channel+room.
+
+But you will notice that we are doing some quick logic to check if the `received` attribute is a string. And if it is we are changing its value to be a function that dispatches a new action with the received data.
+
+But this also means we can set received to be a function itself like this:
+
+    export function subscribeConversation(conversationId) {
+      return dispatch => dispatch({
+        channel: 'conversations',
+        room: `conversation_${conversationId}`,
+        received: data => dispatch({
+          type: NEW_MESSAGE,
+          payload: data.conversation,
+        }),
+      });
+    }
+
+And that function will be triggered anytime we get data from the channel+room.
+
+This makes our middleware quite powerful, and we can subscribe and unsubscribe to rooms and channels very easily, as well as handle the data from the server in very robust and dynamic ways.
