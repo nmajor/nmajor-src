@@ -9,6 +9,7 @@ tags:
 - websockets
 - action cable
 - react
+- rails
 
 ---
 Middleware is one of the most powerful and useful features of redux. If you're unfamiliar with redux middleware, basically it is a way to insert extra behavior into dispatched redux actions. 
