@@ -24,6 +24,7 @@ fields:
 pages:
 - _posts/2018-07-16-react-css-styled-components.md
 - _posts/rails-storing-arrays-and-hashes-in-a-database-column.md
+- _posts/making-redux-middleware-for-websockets.md
 - _posts/sentiment-analysis-with-amazon-comprehend.md
 - _posts/2018-07-17-adding-eslint-to-your-project.md
 - _posts/2018-01-29-serverless-back-end-for-react-your-introduction-to-serverless-architecture.md
