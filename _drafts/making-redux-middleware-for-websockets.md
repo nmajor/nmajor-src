@@ -74,6 +74,8 @@ First lets make a middleware function, you'll want to export this function from 
       };
     }
 
+Lets break down this code:
+
 Basically we first skip our middleware if the action is a function or if there is no `channel` attribute in our action.
 
 Then if there is a `leave` attribute, then we remove the action cable subscription to the channel+room.
