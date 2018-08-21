@@ -16,7 +16,7 @@ This article uses ActionCable as the websocket library. If you want to see a ver
 
 ***
 
-Middleware is one of the most powerful and useful features of redux. If you're unfamiliar with redux middleware, like any middleware, it is a way to insert extra behavior into dispatched redux actions.
+Middleware is one of the most powerful and useful features of redux. If you're unfamiliar with redux middleware, it is a way to insert extra behavior into dispatched redux actions.
 
 Today we're going to use it to make a clean and powerful way to manage our subscriptions to different Action Cable channels+rooms this also means taking the data sent to use through action cable and dispatching the appropriate redux actions to mutate the state.
 
