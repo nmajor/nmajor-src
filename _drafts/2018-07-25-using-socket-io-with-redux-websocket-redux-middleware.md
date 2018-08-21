@@ -128,6 +128,6 @@ The important part here is that `handle` is either an action string to dispatch 
 
 ### Conclusion
 
-I'm now a huge fan of redux middleware, I love how it cleans up and simplifies doing complex repetative things in our action creators.
+I'm now a huge fan of redux middleware, I love how it cleans up and simplifies doing complex repetitive things in our action creators.
 
 Now we've set this up we can subscribe and unsubscribe to socket.io events really easily just by dispatching one of our new action creators.
