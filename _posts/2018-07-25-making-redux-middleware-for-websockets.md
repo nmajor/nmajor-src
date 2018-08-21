@@ -18,7 +18,7 @@ This article uses ActionCable as the websocket library. If you want to see a ver
 
 Middleware is one of the most powerful and useful features of redux. If you're unfamiliar with redux middleware, it is a way to insert extra behavior into dispatched redux actions.
 
-Today we're going to use it to make a clean and powerful way to manage our subscriptions to different Action Cable channels+rooms this also means taking the data sent to use through action cable and dispatching the appropriate redux actions to mutate the state.
+Today we're going to use it to make a clean and powerful way to manage our subscriptions to different Action Cable channels+rooms. This also means taking the data sent to use through action cable and dispatching the appropriate redux actions to mutate the state.
 
 {: .lead}  
 <!–-break-–>
@@ -33,7 +33,7 @@ Basically redux action, by default, looks like this:
 
 Redux actions have 1 required attribute, `type`. Anything else is just extra and is usually meant to be used by the reducer to mutate the state.
 
-By using redux middleware we can define our own action patterns and structures. Then when any action is dispatched we can check if the action matches a specific pattern and have it do different things.
+By using redux middleware we can define our own action patterns and structures. The middleware will check if the action has other specific attributes and handle that action differently than the others. That way all we have to do to trigger some custom redux behavior is dispatch an action with our specific attributes and it will automatically be handled differently.
 
 Specifically we are going to create a new kind of action that will subscribe or unsubscribe to specific Action Cable channels+rooms.
 
@@ -87,22 +87,26 @@ Then if there is a `leave` attribute, then we remove the action cable subscripti
 
 Else we create a subscription to the channel+room.
 
-But you will notice that we are doing some quick logic to check if the `received` attribute is a string. And if it is we are changing its value to be a function that dispatches a new action with the received data. So basically our `received` attribute can take both an action type string or an actual function. This gives us an extra level of control over how we handle the data coming in from Action Cable.
+But you will notice that we are doing some quick logic to check if the `received` attribute is a string. And if it is, we are changing its value to a function that dispatches a new action with the received data. So basically our `received` attribute can take both an action type string or an actual function. This gives us an extra level of control over how we handle the data coming in from Action Cable.
+
+And any data that is sent from the socket.io server is included in the `result` attribute of the action. So the reducer can have easy access to any data the server sent. Also any extra action attributes (`...rest`) are just passed directly through to the dispatched action.
+
+Also notice that the function that we are executing is returning another function. This is an example of a [Higher-order function](https://en.wikipedia.org/wiki/Higher-order_function "https://en.wikipedia.org/wiki/Higher-order_function") and is a very useful pattern in Javascript. We will execute the outside function when we apply the middleware to redux which will create the ActionCable connection only once and give the inner function access to that cable connection going forward.
 
 ### Add Middleware to Redux
 
 Then we have to apply our new middlware. Check the \[redux documentation\]([https://redux.js.org/advanced/middleware#attempt-6-naively-applying-the-middleware](https://redux.js.org/advanced/middleware#attempt-6-naively-applying-the-middleware "https://redux.js.org/advanced/middleware#attempt-6-naively-applying-the-middleware")) for how to do this. But you will probably need to do something like this when setting up your store:
 
     import { createStore, applyMiddleware } from 'redux';
-    import clientMiddleware from './middleware/clientMiddleware';
+    import cableMiddleware from './middleware/cableMiddleware';
     import rootReducer from './reducers/index';
     
     const store = createStore(
       rootReducer,
-      applyMiddleware(clientMiddleware())
+      applyMiddleware(cableMiddleware())
     );
 
-Our other file is actually exporting a middleware creator function, so don't forget to execute the `clientMiddleware` function when applying it to redux. This will also create the Action Cable connection only once when the store loads so we don't have to worry about creating a new connection every time.
+Our other file is actually exporting a middleware creator function, so don't forget to execute the cableMiddleware function when applying it to redux. This will also create the Action Cable connection only once when the store loads so we don't have to worry about creating a new connection every time.
 
 ### Our New Action Creators
 
