@@ -10,7 +10,7 @@ This article uses socket.io as the websocket library. If you want to see a versi
 
 ***
 
-Middleware is one of the most powerful and useful features of redux. If you're unfamiliar with redux middleware, like any middleware, it is a way to insert extra behavior into dispatched redux actions.
+Middleware is one of the most powerful and useful features of redux. If you're unfamiliar with redux middleware, it is a way to insert extra behavior into dispatched redux actions.
 
 Today we're going to use it to make a clean and powerful way to manage our socket.io events. Basically we want to subscribe to specific events and then dispatch specific redux actions anytime those events are broadcast to us from the socket.io server.
 
