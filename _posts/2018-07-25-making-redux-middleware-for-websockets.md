@@ -89,9 +89,9 @@ Else we create a subscription to the channel+room.
 
 But you will notice that we are doing some quick logic to check if the `received` attribute is a string. And if it is, we are changing its value to a function that dispatches a new action with the received data. So basically our `received` attribute can take both an action type string or an actual function. This gives us an extra level of control over how we handle the data coming in from Action Cable.
 
-And any data that is sent from the socket.io server is included in the `result` attribute of the action. So the reducer can have easy access to any data the server sent. Also any extra action attributes (`...rest`) are just passed directly through to the dispatched action.
+And any data that is sent from the ActionCable server is included in the `result` attribute of the action. So the reducer can have easy access to any data the server sent. Also any extra action attributes (`...rest`) are just passed directly through to the dispatched action.
 
-Also notice that the function that we are executing is returning another function. This is an example of a [Higher-order function](https://en.wikipedia.org/wiki/Higher-order_function "https://en.wikipedia.org/wiki/Higher-order_function") and is a very useful pattern in Javascript. We will execute the outside function when we apply the middleware to redux which will create the ActionCable connection only once and give the inner function access to that cable connection going forward.
+Also notice that the function that we are exporting is returning another function. This is an example of a [Higher-order function](https://en.wikipedia.org/wiki/Higher-order_function "https://en.wikipedia.org/wiki/Higher-order_function") and is a very useful pattern in Javascript. We will execute the outside function when we apply the middleware to redux which will create the ActionCable connection only once and give the inner function access to that cable connection going forward.
 
 ### Add Middleware to Redux
 
@@ -106,7 +106,7 @@ Then we have to apply our new middlware. Check the \[redux documentation\]([http
       applyMiddleware(cableMiddleware())
     );
 
-Our other file is actually exporting a middleware creator function, so don't forget to execute the cableMiddleware function when applying it to redux. This will also create the Action Cable connection only once when the store loads so we don't have to worry about creating a new connection every time.
+Since other file is actually exporting a higher-order function, don't forget to execute the cableMiddleware function when applying it to redux. This will also create the Action Cable connection only once when the store loads so we don't have to worry about creating a new connection every time.
 
 ### Our New Action Creators
 
