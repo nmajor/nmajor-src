@@ -25,17 +25,17 @@ fields:
   hidden: false
   default: ''
 pages:
-- _my_tags/express.md
-- _my_tags/css.md
-- _my_tags/redux.md
 - _my_tags/rails.md
-- _my_tags/websockets.md
 - _my_tags/action-cable.md
-- _my_tags/javascript.md
+- _my_tags/websockets.md
+- _my_tags/redux.md
 - _my_tags/git.md
-- _my_tags/azure.md
-- _my_tags/babel.md
+- _my_tags/javascript.md
+- _my_tags/css.md
 - _my_tags/es6.md
-- _my_tags/node.md
-- _my_tags/production.md
+- _my_tags/azure.md
 - _my_tags/facebook.md
+- _my_tags/production.md
+- _my_tags/node.md
+- _my_tags/express.md
+- _my_tags/babel.md

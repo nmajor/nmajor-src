@@ -22,13 +22,13 @@ fields:
   name: date
   label: Date
 pages:
-- _posts/2018-07-16-react-css-styled-components.md
-- _posts/rails-storing-arrays-and-hashes-in-a-database-column.md
+- _posts/using-socket-io-with-redux-websocket-redux-middleware.md
 - _posts/2018-07-25-making-redux-middleware-for-websockets.md
 - _posts/sentiment-analysis-with-amazon-comprehend.md
-- _posts/using-socket-io-with-redux-websocket-redux-middleware.md
+- _posts/rails-storing-arrays-and-hashes-in-a-database-column.md
 - _posts/2018-07-17-adding-eslint-to-your-project.md
-- _posts/2018-01-29-serverless-back-end-for-react-your-introduction-to-serverless-architecture.md
-- _posts/2018-02-14-deploying-a-node-js-app-on-azure-app-services.md
-- _posts/2018-02-16-express-js-with-es6-and-babel.md
+- _posts/2018-07-16-react-css-styled-components.md
 - _posts/2018-03-21-get-a-facebook-page-access-token-that-never-expires.md
+- _posts/2018-02-16-express-js-with-es6-and-babel.md
+- _posts/2018-02-14-deploying-a-node-js-app-on-azure-app-services.md
+- _posts/2018-01-29-serverless-back-end-for-react-your-introduction-to-serverless-architecture.md
