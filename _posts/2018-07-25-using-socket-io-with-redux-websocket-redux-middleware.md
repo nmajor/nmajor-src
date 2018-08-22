@@ -11,7 +11,7 @@ tags:
 - socket.io
 
 ---
-This article uses socket.io as the websocket library. If you want to see a version of this article using ActionCable, [click here](/posts/making-redux-middleware-for-websockets "/posts/making-redux-middleware-for-websockets")
+This article uses socket.io as the websocket library. If you want to see a version of this article using Rails' ActionCable library, [click here](/posts/making-redux-middleware-for-websockets "/posts/making-redux-middleware-for-websockets")
 
 ***
 
