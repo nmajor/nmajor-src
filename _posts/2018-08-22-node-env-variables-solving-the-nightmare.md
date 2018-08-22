@@ -3,7 +3,8 @@ title: Node Env Variables - dotenv Workaround
 layout: post
 date: 2018-08-22 00:00:00 +0000
 hero: ''
-tags: []
+tags:
+- node
 
 ---
 The library that everyone uses to manage environmental variables in node is [dotenv](https://www.npmjs.com/package/dotenv "https://www.npmjs.com/package/dotenv"). I don't think I've ever had so much trouble with such a popular module.
