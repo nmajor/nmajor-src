@@ -276,3 +276,5 @@ export function loadOne(_id) {
 ```
 
 And the tokens are automatically refreshed and persisted.
+
+I still have some cleaning up to do with my setup, but it seems to be pretty functional and reliable so far. I'll be sure to update this article if I discover any problems or brittleness with this implementation.
