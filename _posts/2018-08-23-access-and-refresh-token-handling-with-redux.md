@@ -253,6 +253,8 @@ And I can dispatch really clean actions that look like this:
 
 And the tokens are automatically refreshed and persisted.
 
-I still have some cleaning up to do with my setup, but it seems to be pretty functional and reliable so far. I'll be sure to update this article if I discover any problems or brittleness with this implementation.
+I still have some cleaning up to do with my setup. I'd like to modularize that refresh token bit. I first tried to put it into its own middleware, but the existing client middleware dispatches an initial action (LOAD in the example above) that triggers the loading state and adds spinners. Having the refresh token part in its own middleware delayed the loading state until after the refresh so it made for a bad user experience.
+
+It seems to be pretty functional and reliable so far. I'll be sure to update this article if I discover any problems or brittleness with this implementation.
 
 If you notice any mistakes in here, or if you have any ideas on how to improve this setup, please let me know in the comments. :)
