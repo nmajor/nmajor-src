@@ -110,16 +110,169 @@ And I was able to refresh the page and the auth tokens persist. So it works!
 
 ### Automatic Token Refreshing
 
-Now this step is going to vary a lot depending on your implementation. Personally I was greatly inspired by [this library](https://github.com/erikras/react-redux-universal-hot-example) which uses middleware that looks like [this](https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js), so you can dispatch API requests that look like redux actions. Really cool.
+I debated whether or not to include this part 
 
-Regardless, I'm going to create another middleware and load it into redux ahead of my API middleware. This new piece of middleware will check if the dispatched action is an API request, and if it is, it will check if the accessToken is expired. If it's not, it will `next()` and if it is it will refresh the token, dispatch a redux action to store the new set of tokens inside `state.auth.tokens` and then `next()` so the request has the new accessToken to use.
+Now this step is going to vary a lot depending on your implementation. I was greatly inspired by [this library (erikras/react-redux-universal-hot-example)](https://github.com/erikras/react-redux-universal-hot-example) which has a really nice middleware setup for making API requests by dispatching redux actions.
 
-The middleware is in a file called `tokenMiddleware.js` and looks like this:
+Although my final implementation looks much more like that the middleware found in the [erikras/react-redux-universal-hot-example](https://github.com/erikras/react-redux-universal-hot-example) mentioned above, here is an exmample of how you might do a simplified version of some API request middleware with the refresh token.
+
+I'm assuming you are using a function dispatcher middleware like [redux-thunk](https://github.com/reduxjs/redux-thunk) and [superagent](https://github.com/visionmedia/superagent) as the request library.
+
+You'll also notice that I loaded my tokens with an `expires_at` attribute to help calculate when a refresh is needed.
+
+The middleware is in a file called `requestMiddleware.js` and looks something like this like this:
+
+```
+export default function requestMiddleware() {
+  return ({ dispatch, getState }) => next => (action) => {
+    const {
+      request,
+    } = action;
+
+    if (!request) {
+      return next(action);
+    }
+
+    const { tokens } = getState().auth;
+
+    // 5 minutes from now
+    const refreshThreshold = (new Date.getTime() + 300000);
+
+    if (tokens.refresh_token && refreshThreshold > tokens.expires_at) {
+      return superagent.post('/path/to/renew')
+        .send({ refresh_token: tokens.refresh_token })
+        .end((err, { body } = {}) => {
+          dispatch({ type: 'SET_TOKENS', payload: body });
+          request(body);
+        });
+    }
+    return request(tokens);
+  };
+}
+```
+
+Dont forget to apply the middleware:
+
+```
+import { createStore, applyMiddleware } from 'redux';
+import requestMiddleware from './middleware/requestMiddleware';
+import rootReducer from './reducers/index';
+
+const store = createStore(
+  rootReducer,
+  applyMiddleware(requestMiddleware())
+);
+```
+
+Add a reducer to capture the `SET_TOKEN` action:
+
+```
+export default function reducer(state = initialState, action = {}) {
+  switch (action.type) {
+    case SET_TOKENS:
+      return {
+        ...state,
+        auth: { tokens: action.payload },
+      };
+    default:
+      return state;
+  }
+}
+```
+
+And now we can dispatch actions like this:
+
+```
+export default function sendAnyRequest() {
+  return (dispatch) => {
+    return {
+      request: (tokens) => superagent.post('/some/random/request')
+        .send({ foo: 'bar' })
+        .end((err, { body } = {}) => {
+          dispatch({ type: 'SOME_EVENT', payload: body });
+        });
+    }
+  }
+}
+```
+
+### Wrap it up
+
+And before making any request it will first check the validity of the refresh token and refresh it if needed. And if a refresh does occur it will set the new token in the redux store, which will be automatically written to the localStorage by the subscriber.
+
+Noice!
+
+I highly recommend you read through the code of this project [erikras/react-redux-universal-hot-example](https://github.com/erikras/react-redux-universal-hot-example), specifically the `ApiClient.js`, `clientMiddleware.js`, and see how the request actions are dispatched.
+
+As I said, I used that example heavily when setting up my redux store. Here is what my middleware file looks like:
+
+```
+import { SIGN_OUT, SET_TOKENS } from '../modules/auth';
+const refreshThreshold = (new Date().getTime() + 300000); // 5 minutes from now
+
+export default function clientMiddleware(client) {
+  return ({ dispatch, getState }) => next => (action) => {
+    if (typeof action === 'function') {
+      return action(dispatch, getState);
+    }
+
+    const {
+      promise, types, ...rest
+    } = action;
+    if (!promise) {
+      return next(action);
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    client.token = (getState().auth.tokens || {}).access_token;
+
+    const [REQUEST, SUCCESS, FAILURE] = types;
+    next({ ...rest, type: REQUEST });
+
+    let actionPromise = Promise.resolve();
+    const { tokens } = getState().auth;
+
+    if (tokens.refresh_token && refreshThreshold > tokens.expires_at) {
+      actionPromise = client.post('/my-server/renew', { data: { refresh_token: tokens.refresh_token } })
+        .then(
+          (result) => {
+            client.token = result.access_token;
+            return next({
+              ...rest, result, type: SET_TOKENS,
+            });
+          },
+          errors => next({
+            ...rest, errors, type: SIGN_OUT,
+          }),
+        )
+        .then(() => promise(client));
+    } else {
+      actionPromise = promise(client);
+    }
+
+    actionPromise.then(
+      result => next({ ...rest, result, type: SUCCESS }),
+      errors => next({ ...rest, errors, type: FAILURE }),
+    ).catch((error) => {
+      console.error('MIDDLEWARE ERROR:', error);
+      next({ ...rest, error, type: FAILURE });
+    });
+
+    return actionPromise;
+  };
+}
 
 ```
 
+And I can dispatch really clean actions that look like this:
+
+```
+export function loadOne(_id) {
+  return {
+    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+    promise: client => client.get('/items/'),
+  };
+}
 ```
 
-You'll notice I already loaded the tokens with a `expires_at` attribute. I had to calculate this myself when I got the response back from the auth server.
-
-
+And the tokens are automatically refreshed and persisted.
