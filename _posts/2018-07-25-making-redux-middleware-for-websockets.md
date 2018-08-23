@@ -23,7 +23,7 @@ Today we're going to use it to make a clean and powerful way to manage our subsc
 {: .lead}  
 <!–-break-–>
 
-If you are unfamiliar with redux middleware, check out the \[documentation here\]([https://redux.js.org/advanced/middleware](https://redux.js.org/advanced/middleware "https://redux.js.org/advanced/middleware")). The code below is inspired by reading through the source of \[this example redux app\]([https://github.com/erikras/react-redux-universal-hot-example](https://github.com/erikras/react-redux-universal-hot-example "https://github.com/erikras/react-redux-universal-hot-example")), specifically \[this middleware\]([https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js](https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js "https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js")), so you may also want to check that out as well.
+If you are unfamiliar with redux middleware, check out the [documentation here](https://redux.js.org/advanced/middleware "https://redux.js.org/advanced/middleware"). The code below is inspired by reading through the source of [this example redux app](https://github.com/erikras/react-redux-universal-hot-example "https://github.com/erikras/react-redux-universal-hot-example"), specifically [this middleware](https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js "https://github.com/erikras/react-redux-universal-hot-example/blob/master/src/redux/middleware/clientMiddleware.js"), so you may also want to check that out as well.
 
 ### Typical Redux Actions
 
@@ -95,7 +95,7 @@ Also notice that the function that we are exporting is returning another functio
 
 ### Add Middleware to Redux
 
-Then we have to apply our new middlware. Check the \[redux documentation\]([https://redux.js.org/advanced/middleware#attempt-6-naively-applying-the-middleware](https://redux.js.org/advanced/middleware#attempt-6-naively-applying-the-middleware "https://redux.js.org/advanced/middleware#attempt-6-naively-applying-the-middleware")) for how to do this. But you will probably need to do something like this when setting up your store:
+Then we have to apply our new middlware. Check the [redux documentation](https://redux.js.org/advanced/middleware#attempt-6-naively-applying-the-middleware "https://redux.js.org/advanced/middleware#attempt-6-naively-applying-the-middleware") for how to do this. But you will probably need to do something like this when setting up your store:
 
     import { createStore, applyMiddleware } from 'redux';
     import cableMiddleware from './middleware/cableMiddleware';
