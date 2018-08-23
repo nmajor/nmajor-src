@@ -1,5 +1,5 @@
 ---
-title: Token Handling (Automatic Refresh) with React + Redux
+title: Access Token Handling (Automatic Refresh) with React + Redux
 layout: post
 date: 2018-08-23 00:00:00 +0000
 hero: ''
