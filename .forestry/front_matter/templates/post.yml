@@ -26,7 +26,6 @@ pages:
 - _posts/2018-08-22-node-env-variables-solving-the-nightmare.md
 - _posts/2018-07-25-using-socket-io-with-redux-websocket-redux-middleware.md
 - _posts/2018-07-25-making-redux-middleware-for-websockets.md
-- _posts/sentiment-analysis-with-amazon-comprehend.md
 - _posts/2018-07-17-adding-eslint-to-your-project.md
 - _posts/2018-07-16-react-css-styled-components.md
 - _posts/2018-03-21-get-a-facebook-page-access-token-that-never-expires.md
