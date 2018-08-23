@@ -20,8 +20,8 @@ Here is the approach I've used recently and it seems to work out pretty well. It
 
 ### Get the Token to the Client
 
-In my case, I'm authenticating with Microsofts Oauth2 service. and the tokens are being sent to the server via a RedirectURI callback, that means I need to pass the tokens from the server to the client. I don't store it in the session or database, Instead I pass it back to the client using :
+In my case, I'm authenticating with Microsofts Oauth2 service. and the tokens are being sent to the server via a RedirectURI callback, that means I need to pass the tokens from the server to the client. I don't store it in the session or database, Instead I pass it back to the client using the `window.__PRELOADED_STATE__` technique mentioned in the Server Rendering Redux documentation
 
     window.__PRELOADED_STATE__
 
-Which is 
+Which is
