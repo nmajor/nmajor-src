@@ -257,4 +257,4 @@ I still have some cleaning up to do with my setup. I'd like to modularize that r
 
 It seems to be pretty functional and reliable so far. I'll be sure to update this article if I discover any problems or brittleness with this implementation.
 
-If you notice any mistakes in here, or if you have any ideas on how to improve this setup, please let me know in the comments. :)
+If you notice any mistakes in here, or if you have any ideas on how to improve this setup, please let me know in the comments. I'm always looking for better patterns to follow.
