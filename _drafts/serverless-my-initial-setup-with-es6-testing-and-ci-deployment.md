@@ -1,24 +1,25 @@
 ---
-title: Serverless REST API Boilerplate with ES6, API Folder Structure, Testing (Mocha
-  + Chai), ESLint, and Environmental Variables
+title: Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha
+  + Chai), and ESLint
 layout: post
 date: 2018-08-25 00:00:00 +0000
 hero: ''
 tags: []
 
 ---
-As a Rails developer turned Javascript Zealot, I sometimes miss the structure and opinions of the Ruby on Rails world. Its amazing how bare bones many javascript libraries are. They are so modular and self contained (good things) that, unless you take the time to add some structure and organization to your code, its easy for your project to feel chaotic an unorganized. So I'm always looking for and trying to find some good patterns and structure to follow.
+As a Rails developer turned Javascript Zealot, I sometimes miss the structure and opinions of the Ruby on Rails world. Its amazing how bare bones many javascript libraries are. They are so modular and self contained (good things) that, unless you take the time to add some structure and organization to your code, its easy for your project to feel chaotic an unorganized. So I'm always looking for and trying to find good patterns and structure to follow with my javascript projects.
 
-The serverless framework is a good example of this. Its so minimal in its setup that it may be difficult to know where to start to give it some structure. So here I'll share with you my current initial setup I use when starting a new serverless API project.
+The serverless framework is a good example of this. Its so minimal in its setup that it may be difficult to know where to start to give it some structure. So here I'll share with you one possible way to structure a serverless API project.
 
-This includes:
+Basically before I start any serious project I like to have a few things setup:
 
-* File structure
-* API structure
-* Testing boilerplate
-* Automated deployment with Travis CI
+* ES6/ES7 Webpack and Babel (From Starter)
+* A good offline dev workflow (From Starter)
+* ESLint
+* Folder structure
+* Testing
 
-I hope this isnt too obscure of a topic, but I'm not actually going to cover how to build a CRUD API, but more a breakdown of the structure and boilerplate I add before I start a project. I've found once I've set this up with some basic automated integration test and Travis CI deployment, then beginning a new project goes much better.
+I hope this isnt too obscure of a topic, but I'm not actually going to cover how to build a CRUD API, this is just an example starting boilerplate before you begin coding your project.
 
 I'm assuming you've at least tried using the serverless framework before. If you are new to serverless, I have an article that breaks it down from the beginning here:
 
@@ -43,7 +44,7 @@ The starter basically includes all this stuff (From the the [starter description
   * No need to add a new entry to your `webpack.config.js`
 * **Add environment variables for your stages**
 
-This is a great place to start. So lets get started.
+If you dont use this starter, you have to add a lot of this stuff one by one by including and configuring the right packages and plugins. So this gives us a great place to start.
 
 ### Create a New Project
 
@@ -83,7 +84,6 @@ It gives us a `serverless.yml` file that looks like this:
           - http:
               path: hello
               method: get
-    
 
 And a handler.js file that looks like this:
 
@@ -103,21 +103,37 @@ And a handler.js file that looks like this:
         resolve(`${rest.copy} (with a delay)`);
       }, time * 1000)
     );
-    
 
 It also gives us a test folder with an example test.
 
+    # tests/handler.test.js
+    
+    import * as handler from '../handler';
+    
+    test('hello', async () => {
+      const event = 'event';
+      const context = 'context';
+      const callback = (error, response) => {
+        expect(response.statusCode).toEqual(200);
+        expect(typeof response.body).toBe("string");
+      };
+    
+      await handler.hello(event, context, callback);
+    });
+
 ### Add ESLint
+
+I always work with a linter these days, there's no better way to keep clean code and enforce best practices with a language like javascript where its so easy to write messy and ugly code.
 
 Lets add `eslint` and some plugins:
 
-    yarn add --dev eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-mocha eslint-plugin-promise
+    yarn add --dev eslint eslint-config-airbnb eslint-plugin-mocha eslint-plugin-promise
 
 And then make a new `.eslintrc.json` file in the root of our project.
 
     touch .eslintrc.json
 
-This is my current eslint configuration:
+And add this to the new file:
 
     {
       "extends": ["airbnb/base", "plugin:promise/recommended"],
@@ -129,7 +145,7 @@ Add a `.eslintignore` file:.
 
     touch .eslintignore
 
-And ignore the webpack config 
+And ignore the webpack config:
 
     # .eslintignore
     
@@ -201,7 +217,7 @@ We can now remove our original handler.js file since we dont need it anymore:
 
     rm handler.js
 
-I also create a `models` folder where I can put my models:
+We wont be using this today, but lets also create a `models` folder where I can put our models:
 
     mkdir models
     touch models/todo.js
@@ -266,6 +282,7 @@ And we'll only add 1 test for now for our `todos/index` handler:
 Then we can run it by first adding this script to our `package.json` file:
 
       "scripts": {
+        "lint": "node_modules/.bin/eslint .",
         "test": "NODE_ENV=test node_modules/.bin/mocha --recursive --require babel-core/register"
       },
 
