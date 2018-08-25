@@ -1,5 +1,6 @@
 ---
-title: Serverless Initial Setup With ES6, Testing, and CI Deployment
+title: Serverless REST API Boilerplate with ES6, API Folder Structure, Testing (Mocha
+  + Chai), ESLint, and Environmental Variables
 layout: post
 date: 2018-08-25 00:00:00 +0000
 hero: ''
@@ -10,10 +11,6 @@ As a Rails developer turned Javascript Zealot, I sometimes miss the structure an
 
 The serverless framework is a good example of this. Its so minimal in its setup that it may be difficult to know where to start to give it some structure. So here I'll share with you my current initial setup I use when starting a new serverless API project.
 
-I'm assuming you've at least tried using the serverless framework before. If you are new to serverless, I have an article that breaks it down from the beginning here:
-
-[Serverless Back-End for React - Your Introduction to Serverless Architecture](/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture "/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture")
-
 This includes:
 
 * File structure
@@ -21,9 +18,17 @@ This includes:
 * Testing boilerplate
 * Automated deployment with Travis CI
 
+I hope this isnt too obscure of a topic, but I'm not actually going to cover how to build a CRUD API, but more a breakdown of the structure and boilerplate I add before I start a project. I've found once I've set this up with some basic automated integration test and Travis CI deployment, then beginning a new project goes much better.
+
+I'm assuming you've at least tried using the serverless framework before. If you are new to serverless, I have an article that breaks it down from the beginning here:
+
+[Serverless Back-End for React - Your Introduction to Serverless Architecture](/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture "/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture")
+
+### The Starter
+
 Lets start with the great [Serverless Node.js Starter](https://serverless-stack.com/chapters/serverless-nodejs-starter.html "https://serverless-stack.com/chapters/serverless-nodejs-starter.html") ([github](https://github.com/AnomalyInnovations/serverless-nodejs-starter "https://github.com/AnomalyInnovations/serverless-nodejs-starter")) from the awesome [Serverless Stack](https://serverless-stack.com/ "https://serverless-stack.com/") project. If you're not familiar with that project be sure to check it out.
 
-Check out [this page](https://serverless-stack.com/chapters/serverless-nodejs-starter.html "https://serverless-stack.com/chapters/serverless-nodejs-starter.html") for all the information about the starter, but it basically includes all this stuff:
+The starter basically includes all this stuff (From the the [starter description page](https://serverless-stack.com/chapters/serverless-nodejs-starter.html "https://serverless-stack.com/chapters/serverless-nodejs-starter.html")):
 
 * **Use ES7 syntax in your handler functions**
 * **Package your functions using Webpack**
@@ -80,17 +85,209 @@ It gives us a `serverless.yml` file that looks like this:
               method: get
     
 
-But, you'll see that even though the starter gives us a bunch of great stuff, it gives us no folder structure to work with
+And a handler.js file that looks like this:
+
+    export const hello = async (event, context, callback) => {
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: `Go Serverless v1.0! ${(await message({ time: 1, copy: 'Your function executed successfully!'}))}`,
+        }),
+      };
+    
+      callback(null, response);
+    };
+    
+    const message = ({ time, ...rest }) => new Promise((resolve, reject) => 
+      setTimeout(() => {
+        resolve(`${rest.copy} (with a delay)`);
+      }, time * 1000)
+    );
+    
+
+It also gives us a test folder with an example test.
+
+### Add ESLint
+
+Lets add `eslint` and some plugins:
+
+    yarn add --dev eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-jsx-a11y eslint-plugin-mocha eslint-plugin-promise
+
+And then make a new `.eslintrc.json` file in the root of our project.
+
+    touch .eslintrc.json
+
+This is my current eslint configuration:
+
+    {
+      "extends": ["airbnb/base", "plugin:promise/recommended"],
+      "plugins": ["promise"],
+      "rules": {}
+    }
+
+Add a `.eslintignore` file:.
+
+    touch .eslintignore
+
+And ignore the webpack config 
+
+    # .eslintignore
+    
+    webpack.config.js
+
+And then add a `lint` script to our `package.json`:
+
+      "scripts": {
+        "lint": "node_modules/.bin/eslint ."
+      },
+
+Then you can run the linter with this command:
+
+    yarn lint
+    # or 
+    npm run lint
 
 ### API Folder Structure
 
-When building an api I like to organize the paths and the folder structure
+When I'm building a serverless api I like to give my functions, paths, and folder a api-like structure. So I'll create some directories to organize my handlers. This may be a bit overkill for small projects, but I dont think there are any downsides of having this kind of extra organization right off the bat.
 
-### Jest to Mocha
+    mkdir -p handlers/api/v1/todos
 
-The the first thing I like to do is replace jest with mocha:
+I think you can think of these handlers as controllers, and so if you're building CRUD endpoints for a model, you can add a different file for each of the 5 main API actions:
+
+    touch handlers/api/v1/todos/index.js
+    touch handlers/api/v1/todos/show.js
+    touch handlers/api/v1/todos/create.js
+    touch handlers/api/v1/todos/update.js
+    touch handlers/api/v1/todos/delete.js
+
+Then the functions part of your `serverless.yml` file would look something like this:
+
+    functions:
+      api/v1/todos/index:
+        handler: handlers/api/v1/todos/index
+        events:
+          - http:
+              path: api/v1/todos
+              method: get
+      api/v1/todos/show:
+        handler: handlers/api/v1/todos/show
+        events:
+          - http:
+              path: api/v1/todos/{id}
+              method: get
+      api/v1/todos/create:
+        handler: handlers/api/v1/todos/create
+        events:
+          - http:
+              path: api/v1/todos
+              method: post
+      api/v1/todos/update:
+        handler: handlers/api/v1/todos/update
+        events:
+          - http:
+              path: api/v1/todos/{id}
+              method: put
+      api/v1/todos/delete:
+        handler: handlers/api/v1/todos/delete
+        events:
+          - http:
+              path: api/v1/todos/{id}
+              method: delete
+
+As you can see this is a pretty typical REST setup.
+
+We can now remove our original handler.js file since we dont need it anymore:
+
+    rm handler.js
+
+I also create a `models` folder where I can put my models:
+
+    mkdir models
+    touch models/todo.js
+
+Then the individual handlers will include the models to handle the crud operations.
+
+Now I'm going to add a basic handler for `todos/index.js` so we have something to test:
+
+    # handlers/api/v1/index.js
+    
+    export default (event, context, callback) => {
+      const response = {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: 'Hello from todos/index',
+        }),
+      };
+    
+      callback(null, response);
+    };
+
+### Setup Testing
+
+By default the starter comes with `jest` but I prefer `mocha` so lets swap `jest` for `mocha` and add a bit of `chai` for the assertions.
 
     mv tests test
-    yarn remove jest
-    yarn add mocha
+    rm test/handler.test.js
+    yarn remove --dev jest
+    yarn add --dev mocha chai
     touch test/test_helper.js
+
+Now lets add some test files for our endpoints:
+
+    mkdir -p test/api/v1/todos/
+    touch test/api/v1/todos/index.test.js
+    touch test/api/v1/todos/show.test.js
+    touch test/api/v1/todos/create.test.js
+    touch test/api/v1/todos/update.test.js
+    touch test/api/v1/todos/delete.test.js
+
+And we'll only add 1 test for now for our `todos/index` handler:
+
+    import { expect } from 'chai';
+    
+    import todosIndex from '../../../../handlers/api/v1/todos';
+    
+    describe('Fetching list of todos', () => {
+      it('returns a valid response', (done) => {
+        const event = 'event';
+        const context = 'context';
+        const callback = (error, response) => {
+          expect(response.statusCode).to.equal(200);
+          expect(typeof response.body).to.equal('string');
+          expect(response.body).to.contain('Hello from todos/index');
+          done();
+        };
+    
+        todosIndex(event, context, callback);
+      });
+    });
+
+Then we can run it by first adding this script to our `package.json` file:
+
+      "scripts": {
+        "test": "NODE_ENV=test node_modules/.bin/mocha --recursive --require babel-core/register"
+      },
+
+We have to add the `--recursive` tag so it will find the tests in our subfolders, and the `--require babel-core/register` tag to make ES7 work with our tests.
+
+Then we can run our tests with the command:
+
+    yarn test
+    # or
+    npm test
+
+Now we also need a different `.eslintrc.json` file for our testing so if we put a new one in our test tile the tests will play by different eslint rules.
+
+    touch test/.eslintrc.json
+
+With these contents so it will ignore mocha keywords:
+
+    {
+      "extends": ["airbnb/base", "plugin:promise/recommended"],
+      "plugins": ["promise", "mocha"],
+      "env": {
+        "mocha": true
+      },
+      "rules": {}
+    }
