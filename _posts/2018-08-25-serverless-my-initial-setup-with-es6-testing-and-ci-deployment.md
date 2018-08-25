@@ -192,31 +192,31 @@ Then the functions part of your `serverless.yml` file would look something like 
 
     functions:
       api/v1/todos/index:
-        handler: handlers/api/v1/todos/index
+        handler: handlers/api/v1/todos/index.default
         events:
           - http:
               path: api/v1/todos
               method: get
       api/v1/todos/show:
-        handler: handlers/api/v1/todos/show
+        handler: handlers/api/v1/todos/show.default
         events:
           - http:
               path: api/v1/todos/{id}
               method: get
       api/v1/todos/create:
-        handler: handlers/api/v1/todos/create
+        handler: handlers/api/v1/todos/create.default
         events:
           - http:
               path: api/v1/todos
               method: post
       api/v1/todos/update:
-        handler: handlers/api/v1/todos/update
+        handler: handlers/api/v1/todos/update.default
         events:
           - http:
               path: api/v1/todos/{id}
               method: put
       api/v1/todos/delete:
-        handler: handlers/api/v1/todos/delete
+        handler: handlers/api/v1/todos/delete.default
         events:
           - http:
               path: api/v1/todos/{id}
