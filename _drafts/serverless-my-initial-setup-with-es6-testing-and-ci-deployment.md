@@ -121,6 +121,10 @@ It also gives us a test folder with an example test.
       await handler.hello(event, context, callback);
     });
 
+We can run this command to start the offline server for a good development workflow:
+
+    serverless offline start
+
 ### Add ESLint
 
 I always work with a linter these days, there's no better way to keep clean code and enforce best practices with a language like javascript where its so easy to write messy and ugly code.
@@ -308,3 +312,27 @@ With these contents so it will ignore mocha keywords:
       },
       "rules": {}
     }
+
+### Wrap it up
+
+Now we can start our offline server:
+
+    serverless offline start
+
+We can test our code:
+
+    yarn test
+    # or
+    npm test
+
+...and we can lint our code:
+
+    yarn lint
+    # or
+    npm run lint
+
+And we have some good folder structure to start building our API.
+
+Thanks for reading, I hope this can be of help to someone.
+
+As always if you notice anything I did that could be improved, please reach out. I'm always looking to improve.
