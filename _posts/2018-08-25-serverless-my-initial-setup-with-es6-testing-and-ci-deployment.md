@@ -138,7 +138,7 @@ I always work with a linter these days, there's no better way to keep clean code
 
 Lets add `eslint` and some plugins:
 
-    yarn add --dev eslint eslint-config-airbnb eslint-plugin-mocha eslint-plugin-promise
+    yarn add --dev eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-mocha eslint-plugin-promise
 
 And then make a new `.eslintrc.json` file in the root of our project.
 
