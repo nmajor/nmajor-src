@@ -15,6 +15,9 @@ As a Rails developer turned Javascript Zealot, I sometimes miss the structure an
 
 The serverless framework is a good example of this. Its so minimal in its setup that it may be difficult to know where to start to give it some structure. So here I'll share with you one possible way to structure a serverless API project.
 
+{: .lead}  
+<!–-break-–>
+
 Basically before I start any serious project I like to have a few things setup:
 
 * ES6/ES7 Webpack and Babel (From Starter)
