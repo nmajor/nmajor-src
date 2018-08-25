@@ -3,7 +3,7 @@ title: Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mo
   + Chai), and ESLint
 layout: post
 date: 2018-08-25 00:00:00 +0000
-hero: ''
+hero: "/uploads/2018/08/25/robust.png"
 tags:
 - serverless
 - eslint
