@@ -138,7 +138,7 @@ I always work with a linter these days, there's no better way to keep clean code
 
 Lets add `eslint` and some plugins:
 
-    yarn add --dev eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-mocha eslint-plugin-promise
+    , yarn add --dev eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-mocha eslint-plugin-promise
 
 And then make a new `.eslintrc.json` file in the root of our project.
 
@@ -249,6 +249,8 @@ Now I'm going to add a basic handler for `todos/index.js` so we have something t
     
       callback(null, response);
     };
+
+And if you are following along, you'll have to add an export to all the handler files in order to run the offline server.
 
 ### Setup Testing
 
