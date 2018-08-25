@@ -22,6 +22,7 @@ fields:
   name: date
   label: Date
 pages:
+- _posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment.md
 - _posts/2018-08-23-access-and-refresh-token-handling-with-redux.md
 - _posts/2018-08-22-node-env-variables-solving-the-nightmare.md
 - _posts/2018-07-25-using-socket-io-with-redux-websocket-redux-middleware.md
