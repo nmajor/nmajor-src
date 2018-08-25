@@ -4,7 +4,11 @@ title: Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mo
 layout: post
 date: 2018-08-25 00:00:00 +0000
 hero: ''
-tags: []
+tags:
+- serverless
+- eslint
+- javascript
+- es6
 
 ---
 As a Rails developer turned Javascript Zealot, I sometimes miss the structure and opinions of the Ruby on Rails world. Its amazing how bare bones many javascript libraries are. They are so modular and self contained (good things) that, unless you take the time to add some structure and organization to your code, its easy for your project to feel chaotic an unorganized. So I'm always looking for and trying to find good patterns and structure to follow with my javascript projects.
