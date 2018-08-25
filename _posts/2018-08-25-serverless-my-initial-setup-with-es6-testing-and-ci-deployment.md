@@ -132,6 +132,16 @@ We can run this command to start the offline server for a good development workf
 
     serverless offline start
 
+This will start an offline server that you can use to make API requests and test all the endpoints.
+
+I also like to add a script in the `package.json` file to make this easy to launch:
+
+      "scripts": {
+      	"start": "serverless offline start",
+        "lint": "node_modules/.bin/eslint .",
+        "test": "NODE_ENV=test node_modules/.bin/mocha --recursive --require babel-core/register"
+      },
+
 ### Add ESLint
 
 I always work with a linter these days, there's no better way to keep clean code and enforce best practices with a language like javascript where its so easy to write messy and ugly code.
@@ -165,7 +175,8 @@ And ignore the webpack config:
 And then add a `lint` script to our `package.json`:
 
       "scripts": {
-        "lint": "node_modules/.bin/eslint ."
+      	"start": "serverless offline start",
+        "lint": "node_modules/.bin/eslint .",
       },
 
 Then you can run the linter with this command:
@@ -295,6 +306,7 @@ And we'll only add 1 test for now for our `todos/index` handler:
 Then we can run it by first adding this script to our `package.json` file:
 
       "scripts": {
+      	"start": "serverless offline start",
         "lint": "node_modules/.bin/eslint .",
         "test": "NODE_ENV=test node_modules/.bin/mocha --recursive --require babel-core/register"
       },
