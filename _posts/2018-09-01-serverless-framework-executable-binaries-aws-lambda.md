@@ -1,5 +1,5 @@
 ---
-title: Serverless Framework Executables with Webpack - AWS Lambda
+title: Serverless Framework with Webpack - Executables - AWS Lambda
 layout: post
 date: 2018-09-01 00:00:00 +0000
 hero: "/uploads/2018/09/02/Serverless Framework with Webpack-Executables.png"
