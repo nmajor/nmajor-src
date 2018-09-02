@@ -14,6 +14,9 @@ Many web apps rely on executable binaries to function. For example if you want t
 
 So, if you ever want to build a sophisticated web app with the serverless framework, you need to be able to upload and use executable binaries. And its best if you can upload them in such a way that the library knows how to find them without any extra configuration.
 
+{: .lead}  
+<!–-break-–>
+
 ### The Approach
 
 Basically we need to:
@@ -99,7 +102,7 @@ And then when [serverless-webpack]() builds it will automatically copy everythin
 
 ### Executable Path
 
-According to the [aws lambda documentation](https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html "https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html"), lambda functions run in a linux environment. And libraries are used to having access to ready to run executables. That means that in a terminal you can just type in the name of the program without referencing the whole path. If you're not familiar with how this works take a look at [this page by linfo.org](http://www.linfo.org/path_env_var.html "http://www.linfo.org/path_env_var.html"). 
+According to the [aws lambda documentation](https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html "https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html"), lambda functions run in a linux environment. And libraries are used to having access to ready to run executables. That means that in a terminal you can just type in the name of the program without referencing the whole path. If you're not familiar with how this works take a look at [this page by linfo.org](http://www.linfo.org/path_env_var.html "http://www.linfo.org/path_env_var.html").
 
 To make an executable ready-to-run without referencing its path, we have to set the `$PATH` environmental variable and tell linux to look inside our own `bin` folder when searching for valid ready-to-run executables.
 
