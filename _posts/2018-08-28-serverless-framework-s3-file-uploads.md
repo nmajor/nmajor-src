@@ -13,6 +13,9 @@ This really isn't a complicated problem, but I want to document this for later.
 
 Its hard to find a good title for this. Usually you will never us a lambda function to upload to S3. For user submitted files, the right way to upload to S3 is generate a temporary signed upload URL and the user will submit directly to S3 without sending the file to the serverless function.
 
+{: .lead}  
+<!–-break-–>
+
 But I do a lot of PDF generation with one of my projects so I need to be able to put S3 objects from the serverless function, so I need a bit of setup to do that.
 
 I created a new bucket in S3.
