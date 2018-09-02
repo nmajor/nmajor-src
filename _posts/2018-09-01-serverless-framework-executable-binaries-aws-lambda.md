@@ -2,7 +2,7 @@
 title: Serverless Framework Executables with Webpack - AWS Lambda
 layout: post
 date: 2018-09-01 00:00:00 +0000
-hero: ''
+hero: "/uploads/2018/09/02/Serverless Framework with Webpack-Executables.png"
 tags:
 - serverless
 - javascript
