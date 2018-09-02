@@ -32,6 +32,6 @@ Luckily thats as easy as adding this to the `serverless.yml` file:
         - Effect: "Allow"
           Action:
            - "s3:*"
-          Resource: { "Fn::Join": ["", ["arn:aws:s3:::BUCKET_NAME", "/*" ] ] }
+          Resource: { "Fn::Join": ["", ["arn:aws:s3:::pdf-shop-uploads", "/*" ] ] }
 
 [This stackoverflow question](https://stackoverflow.com/questions/46098173/how-to-add-iamrolestatements-to-s3-trigger-bucket-in-serverless-framework "https://stackoverflow.com/questions/46098173/how-to-add-iamrolestatements-to-s3-trigger-bucket-in-serverless-framework") was helpful in figuring this out. Also it probably would help if I understood cloudformation and aws IAM users more.
