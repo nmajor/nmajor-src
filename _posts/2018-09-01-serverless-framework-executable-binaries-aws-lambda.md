@@ -1,5 +1,5 @@
 ---
-title: Serverless Framework with Webpack - Executables - AWS Lambda
+title: Executable Binary Files with Serverless Framework and Webpack - AWS Lambda
 layout: post
 date: 2018-09-01 00:00:00 +0000
 hero: "/uploads/2018/09/02/Serverless Framework with Webpack-Executables.png"
@@ -87,6 +87,10 @@ So here's the simple plugin I whipped up:
     module.exports = WebpackBinPermission;
 
 As you can see, its pretty simple and all it does it changes the permissions of everything in the `/bin` folder to `755`. And for me it works like a charm.
+
+Put that plugin code in a new file called `webpack-bin-permissions.js`.Then at the top of your webpack config file, import it like this: 
+
+    const WebpackBinPermission = require('webpack-bin-permissions')
 
 To then to use it, you just have to pair it with the [copy-webpack-plugin](https://webpack.js.org/plugins/copy-webpack-plugin/ "https://webpack.js.org/plugins/copy-webpack-plugin/") in your webpack config like this:
 
