@@ -22,6 +22,7 @@ fields:
   name: date
   label: Date
 pages:
+- _posts/multi-tenancy-with-expressmongoose.md
 - _posts/2018-02-14-deploying-a-node-js-app-on-azure-app-services.md
 - _posts/2018-07-16-react-css-styled-components.md
 - _posts/2018-07-17-adding-eslint-to-your-project.md
