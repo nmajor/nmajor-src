@@ -25,6 +25,7 @@ fields:
   hidden: false
   default: ''
 pages:
+- _my_tags/redis.md
 - _my_tags/mongoose.md
 - _my_tags/rails.md
 - _my_tags/websockets.md
