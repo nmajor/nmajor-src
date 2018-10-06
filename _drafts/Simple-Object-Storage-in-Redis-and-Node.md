@@ -6,13 +6,13 @@ hero: ''
 tags: []
 
 ---
-[Redis](https://redis.io/ "https://redis.io/") is just a simple key value store and is highly optimized for fast reads and writes. I found myself in a situation where I wanted to offload some app task logging from our document store (mongoDB) to redis.
+[Redis](https://redis.io/ "https://redis.io/") is a simple key value store and is highly optimized for fast reads and writes. I found myself in a situation where I wanted to offload some app task logging from our document store (mongoDB) to redis.
 
 There are a few important things to consider when making this kind of change.
 
 **First** it was important for our use case to have some basic kind of indexing and sorting based on when the document was created.
 
-**Second**, since we do a lot of logging, we needed to make sure that all documents clean up after themselves and expire nicely.
+**Second**, since we do a lot of logging, we needed to make sure that all documents clean up after themselves and expire nicely so we don't run out of space in redis, and we don't really care about keeping these logs indefinitely.
 
 **Third**, our logs are javascript objects, so we needed some kind of customizable serialization/deserialization.
 
@@ -50,7 +50,7 @@ Here is what our basic schema will look like:
       },
     };
 
-As you can see we set information about our `attributes`, `indexes` and a `namespace` that we will use for our redis keys.
+As you can see we set information about our `attributes`, `indexes` and a `namespace` that we will use for our redis keys. The `namespace` is mostly useful if you plan on storing multiple kinds of objects in redis.
 
 ### Creating
 
@@ -133,7 +133,7 @@ We'll start by creating a new class and constructor inside of a new file called 
 
 First of all you'll notice I'm using the [lodash]() for its useful helper methods, and [shortid](https://www.npmjs.com/package/shortid "https://www.npmjs.com/package/shortid") to help generate unique ids for our redis keys.
 
-Notice that we are using the `multi` redis behavior.
+We are using the `multi` redis behavior.
 
     const multi = client.multi();
     // ...
@@ -144,7 +144,7 @@ Notice that we are using the `multi` redis behavior.
 
 This allows us to do multiple calls in one redis transaction, and if one of the calls fails, the whole transaction will fail. This reduces the chances that we'll have stray data being stored in the database.
 
-We're also using our schema namespace to build a unique redis key for our object. 
+We're also using our schema namespace to build a unique redis key for our object.
 
     const redisKey = this._buildRedisKey(id);
     
@@ -159,7 +159,7 @@ You can see that we're using a [redis hash](https://redis.io/topics/data-types#h
 
     multi.hmset(redisKey, hashValues);
 
-The [hmset](https://redis.io/commands/hmset "https://redis.io/commands/hmset") function takes an array of key value pairs, and one think to remember about redis hashes is that the values have to be strings, so this `_buildHashValues` function takes our data and converts it to an array of strings based on the key/value pairs and attribute types in the schema.
+The [hmset](https://redis.io/commands/hmset "https://redis.io/commands/hmset") function takes an array of key value pairs. Redis hashes require the values to be strings, so our `_buildHashValues` function takes our data and converts it to an array of strings based on the key/value pairs and attribute types in the schema.
 
       _buildHashValues(data) {
         const { schema: { attributes } } = this.props;
@@ -276,7 +276,8 @@ Remember from our schema, indexes look like this:
       getValue: data => new Date(data.createdAt).getTime(),
     }
 
-`getName` is a function because I've found it useful to be able to create some indexes that are isolated in different ways. For example I've sometimes added indexes that are based on the ID of the user who created the log, this lets me easily get a list of all the user's most recent indexes. And in that case the `getName` looks like this `getName: data => (`user:${data.user._id}:createdAt`)`.
+`getName` is a function because I've found it useful to be able to create some indexes that are isolated in different ways. For example I've sometimes added indexes that are based on the ID of the user who created the log, this lets me easily get a list of all the user's most recent indexes. And in that case the `getName` looks like this `getName: data => ('user:'+data.user._id+':createdAt')`.
+    
 
 `shouldIndex` lets us not index any object we want, and `getValue` gives us the actual value of the index, so this actually lets us create sorted lists using any different attribute not just createdAt. Just remember that `getValue` has to return a number.
 
@@ -327,12 +328,14 @@ Now we can easily retrieve the top objects from any index with a function like t
 
     export default class RedisModel {
       // ...
-      _clearOldIndexes(fullIndexName) {
-        const { client } = this.props;
+      _clearOldIndexes(indexName) {
+        const { client, schema } = this.props;
         return new Promise((resolve, reject) => {
+          const now = new Date().getTime();
+          const secondsPerDay = 86400;
           const args = [
-            fullIndexName,
-            (expSeconds() * 1000),
+            this._buildIndexName(schema, indexName),
+            (now + (expSeconds() - secondsPerDay) * 1000),
             '-inf',
           ];
     
@@ -365,8 +368,61 @@ Now we can easily retrieve the top objects from any index with a function like t
       }
     }
 
-Notice that inside `_getIndexedIds` we first `_clearOldIndexes`. This is because redis does not allow us to set expiration times for entries inside of a list so I get around this by first removing all entries who's created  
+Notice that inside `_getIndexedIds` we first `_clearOldIndexes`. This is because redis does not allow us to set expiration times for entries inside of a list so I get around this by first removing all entries that are expired before actually getting a list of all the entries in the list.
 
-* Key expiration
-* Basic sorting and indexing
-* Object serialization/deserialization
+Then it gets a list of all the ids using the [zrangebyscore]() function. Then it converts each one into its full object using the `findOne` function that we already made.
+
+### Usage
+
+Now that we have our basic `RedisModel` class we can create new models by just exporting an instance with our schema. For example we could have a `models/log.js` file that looks like this:
+
+    // models/log.js
+    import RedisModel from '../lib/redis';
+    
+    const logSchema = {
+      namespace: 'logs',
+      indexes: [
+        {
+          getName: () => 'createdAt',
+          shouldIndex: () => true,
+          addNonTenantIndex: () => true,
+          getValue: data => new Date(data.createdAt).getTime(),
+        },
+      ],
+      attributes: {
+        source: { kind: 'string' },
+        user: { kind: 'object' },
+        body: { kind: 'object' },
+        createdAt: { kind: 'time' },
+      },
+    };
+    
+    export default new RedisModel(schema);
+
+Then in other parts of our program we can do things like this:
+
+    import Log from '../models/log';
+    
+    // Get a list of logs
+    const logList = Log.fromIndex('createdAt');
+    
+    // Find a specific log
+    Log.findOne('123456');
+    
+    // Create a new log
+    Log.create({
+      source: 'Web',
+      body: 'An error happened',
+      user: { email: 'joe@cool.com',  },
+      createdAt: new Date(),
+    });
+
+And based on how we built it, we think about our individual objects in terms of `ids` and not keys.
+
+### Conclusion
+
+You can see a [gist with the full RedisModel class here](https://gist.github.com/nmajor/e772d0dd166c8c3bbffb2bee00faa8a2 "https://gist.github.com/nmajor/e772d0dd166c8c3bbffb2bee00faa8a2"). Keep in mind this is mostly just to give a possible starting point. Its possible there are some bugs in here since I had to water down my implementation a bit to keep this post concise.
+
+As always, please let me know if you see any issues with the code, or possible problems with my implementation or design choices. I'm always learning.
+
+Thanks for reading!
