@@ -332,7 +332,7 @@ Now we can easily retrieve the top objects from any index with a function like t
         return new Promise((resolve, reject) => {
           const args = [
             fullIndexName,
-            expSeconds(),
+            (expSeconds() * 1000),
             '-inf',
           ];
     
@@ -365,7 +365,7 @@ Now we can easily retrieve the top objects from any index with a function like t
       }
     }
 
-Notice that inside `_getIndexedIds` we first 
+Notice that inside `_getIndexedIds` we first `_clearOldIndexes`. This is because redis does not allow us to set expiration times for entries inside of a list so I get around this by first removing all entries who's created  
 
 * Key expiration
 * Basic sorting and indexing
