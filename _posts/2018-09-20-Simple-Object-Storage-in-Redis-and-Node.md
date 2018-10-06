@@ -1,7 +1,7 @@
 ---
 title: Simple Object Storage in Redis (Node.js)
 layout: post
-date: 2018-09-20 00:00:00 +0000
+date: 2018-10-05 18:27:12 +0100
 hero: "/uploads/2018/10/06/object Storage.png"
 tags:
 - node
