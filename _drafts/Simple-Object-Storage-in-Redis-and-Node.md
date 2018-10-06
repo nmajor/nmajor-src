@@ -13,6 +13,9 @@ tags:
 
 There are a few important things to consider when making this kind of change.
 
+{: .lead}  
+<!–-break-–>
+
 **First** it was important for our use case to have some basic kind of indexing and sorting based on when the document was created.
 
 **Second**, since we do a lot of logging, we needed to make sure that all documents clean up after themselves and expire nicely so we don't run out of space in redis, and we don't really care about keeping these logs indefinitely.
@@ -280,7 +283,6 @@ Remember from our schema, indexes look like this:
     }
 
 `getName` is a function because I've found it useful to be able to create some indexes that are isolated in different ways. For example I've sometimes added indexes that are based on the ID of the user who created the log, this lets me easily get a list of all the user's most recent indexes. And in that case the `getName` looks like this `getName: data => ('user:'+data.user._id+':createdAt')`.
-    
 
 `shouldIndex` lets us not index any object we want, and `getValue` gives us the actual value of the index, so this actually lets us create sorted lists using any different attribute not just createdAt. Just remember that `getValue` has to return a number.
 
