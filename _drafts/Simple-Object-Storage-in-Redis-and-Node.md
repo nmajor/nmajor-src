@@ -3,7 +3,10 @@ title: Simple Object Storage in Redis (Node.js)
 layout: post
 date: 2018-09-20 00:00:00 +0000
 hero: ''
-tags: []
+tags:
+- node
+- redis
+- javascript
 
 ---
 [Redis](https://redis.io/ "https://redis.io/") is a simple key value store and is highly optimized for fast reads and writes. I found myself in a situation where I wanted to offload some app task logging from our document store (mongoDB) to redis.
