@@ -3,7 +3,11 @@ title: Multi Tenancy with Express/Mongoose
 layout: post
 date: 2018-09-28 00:00:00 +0000
 hero: ''
-tags: []
+tags:
+- mongoose
+- express
+- node
+- javascript
 
 ---
 Multi tenant apps are apps where multiple users share the same database but their data is isolated from one another. This can basically describe almost any app with multiple users. For example users can often only see and change their own data.
