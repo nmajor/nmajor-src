@@ -1,7 +1,7 @@
 ---
 title: Serverless Framework S3 Permissions (Serverless IAM Permissions)
 layout: post
-date: 2018-08-28 00:00:00 +0000
+date: 2018-09-13 01:00:00 +0100
 hero: ''
 tags:
 - serverless
