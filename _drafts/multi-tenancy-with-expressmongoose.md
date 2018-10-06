@@ -6,15 +6,18 @@ hero: ''
 tags: []
 
 ---
-Multi tenant apps are apps where multiple users share the same database but their data is isolated from one another. This can basically describe almost any app with multiple users. For example users can often only see and change their own data. 
+Multi tenant apps are apps where multiple users share the same database but their data is isolated from one another. This can basically describe almost any app with multiple users. For example users can often only see and change their own data.
 
 However, personally, I define multi tenant apps as having a layer of data isolation above the level of the user. For example you could have a data model called an `organization` and the the user can only see and interact with the data related to that organization.
+
+{: .lead}  
+<!–-break-–>
 
 Adding this kind of layer to apps is really useful and powerful and can really level up some apps.
 
 The most important thing with multi tenant apps is that the data isolation must be perfect. If a user ever sees data not related to their tenant, it can result it a huge loss of customer trust especially these days when user data is such a hot issue.
 
-We cant rely on developers writing queries and logic to keep this data isolation, so the best thing to do is to tackle this at a high level with powerful patterns.
+We should NOT rely on developers writing queries and logic to keep this data isolation, so the best thing to do is to tackle this at a high level with powerful patterns.
 
 Here's a possible implementation:
 
@@ -25,17 +28,15 @@ The plan:
 * **Mongoose Discriminator** - For every tenant create an on-the-fly discriminator model, so all actions performed by the model are in the context of the current tenant.
 * **Model Wrapper** - Add a wrapper around Mongoose models so that every time that model is used it actually gets a different version of the model specific to the current tenant.
 
-By setting it up this way all mongoose queries and actions will automatically by isolated to their tenent, which makes it data leaking across tenents very very unlikely.
-
-I'm assuming you have a basic understanding of express and mongoose. I'm also not going to focus on code organization and will let you figure out 
+I'm assuming you have a basic understanding of express and mongoose.
 
 ### Continuation-Local Storage
 
 I recently found this great library called [node-continuation-local-storage](https://github.com/othiym23/node-continuation-local-storage "https://github.com/othiym23/node-continuation-local-storage"). Basically you can think of most things in javascript as a chain of functions calling functions. What this library does is lets you define variables at the beginning of the function chain, and then every function further down the chain has access to those variables.
 
-So the first thing we'll do is set this library up with express. We do that by first binding the context using an express middleware function, this gives continuous-local-storage a namespace and context to store our variables.
+The first thing we'll do is set this library up with express. We do that by first binding the context using an express middleware function, this gives continuous-local-storage a namespace and context to store our variables.
 
-Lets create a file called `lib/storage.js` and create an express middleware function to bind the context as well as a few exportable getter and setter functions for our `tenantId` variable.
+Lets create a file called `lib/storage.js` and create an express middleware function to bind the storage context as well as a few exportable getter and setter functions for our `tenantId` variable.
 
     // lib/storage.js
     import { createNamespace } from 'continuation-local-storage';
@@ -68,7 +69,9 @@ Now inside your express bootstrap file, usually called `app.js` we add the `bind
     
     app.use(bindCurrentNamespace);
 
-This basically creates a context that every express can use. Then next we'll add another middleware function that will use our `setCurrentTenantId` function to set that data for every other function in the chain.
+This creates a context that every express request can use.
+
+Next we'll add another middleware function that will use our `setCurrentTenantId` function to set that data for every other function in the chain.
 
 ### Express Middleware
 
@@ -76,7 +79,7 @@ No here is where you'll probably want to tie into any existing authentication sy
 
 Some of the most common approaches here is to connect it with a session or use a bearer token with each request. But this is one area where many people will have different implementations.
 
-But basically we'll figure out which user the request is connected to, and once we have the user, you should be able to tell which tenant the user belongs to:
+We nee to figure out which user the request is connected to, and once we have the user, you should be able to tell which tenant the user belongs to:
 
     // app.js
     
@@ -160,18 +163,19 @@ Here is where we actually build a new discriminator based on the current tenant.
 
 Remember discriminators are basically just augmented mongoose models. The common use case is when you want to simulate model inheritance and basically have one model be the same as another but with extra behavior. The discriminator name is the name of the new augmented model. We're sort of hacking this feature for its built in data isolation.
 
-We're basically telling mongoose that there will be a different version of each model for each tenant. So if a user belongs to the tenant with the id of `123456` and we want to find all the documents in a model called `page` then we're not looking up all the `page`s we're looking up all the `page-123456`s. 
+We're basically telling mongoose that there will be a different version of each model for each tenant. So if a user belongs to the tenant with the id of `123456` and we want to find all the documents in a model called `page` then we're not looking up all the `page`s we're looking up all the `page-123456`s.
 
 That is why we have to set the model name to `${Model.modelName}-${tenantId}` because we cant have multiple models with the same name.
 
-Then its important to check if the model name already exists so we don't end up creating multiple versions of the same discriminator. Also mongoose will yell at you if you try.
+Then its important to check if the model name already exists so we don't end up creating multiple versions of the same discriminator. Also mongoose will yell at you if you try. So that is what this line is about:
+
+    const existingDiscriminator = (Model.discriminators || {})[discriminatorName];
 
 ### Model Wrapper
 
-So now that we have these higher order functions we now have to wrap our existing mongoose models in them in order for them to work. This is actually pretty easy. Here are a couple examples:
+So now that we have these higher order functions we have to user them to wrap our existing mongoose models. This is actually pretty easy. Here are a couple examples:
 
     // models/page.js
-    
     import { tenantModel } from '../lib/multiTenant';
     
     const PageSchema = new Schema({
@@ -181,8 +185,9 @@ So now that we have these higher order functions we now have to wrap our existin
     
     export default tenantModel('page', PageSchema);
 
+And:
+
     // models/user.js
-    
     import { tenantModel } from '../lib/multiTenant';
     
     const UserSchema = new Schema({
@@ -228,7 +233,11 @@ For example to search EVERY user in our database, not just the ones associated w
 
 ### Benefits
 
-Now, whats really great about this approach is because we are always dealing with tenant isolated versions of every model, then any model that is created by a logged in user is **automatically** assigned to the correct tenant.
+You'll notice that this implementation really doesn't require a lot of code.
+
+It also gives us a lot of useful abstraction layers to add extra behavior to our models. 
+
+But, whats really great about this approach is that because we are always dealing with tenant isolated versions of every model, then any model that is created by a logged in user is **automatically** assigned to the correct tenant.
 
 And all queries and lookups are **automatically** isolated to the tenant.
 
@@ -238,7 +247,7 @@ We don't have to rely on developers coding correct logic. And we can easily add 
 
 ### Extra Customization
 
-Because our higher order functions have access to the schema of each model, we can do lots of things to our models. For example we can add new middleware to any model that has a tenant. Here's just one simple example of making sure every tenantModel has a tenant using the before save mongoose middleware:
+Because our higher order functions have access to the schema of each model, we can do lots of things to our models. For example we can add new middleware to any model that has a tenant. Here's just one simple example of making sure every `tenantModel` has a tenant using the before save mongoose middleware:
 
     export function tenantModel(name, schema, options) {
       return (props = {}) => {
@@ -279,3 +288,8 @@ I hope this at least gives you some ideas of how to add a solid multi-tenant lay
 As always, if you notice any problems in my code or flaws in my approach, please let me know. I'm always looking to learn and improve.
 
 Thanks for reading!
+
+Thanks to these libraries for inspiration:
+
+* [https://www.npmjs.com/package/mongoose-multitenant](https://www.npmjs.com/package/mongoose-multitenant "https://www.npmjs.com/package/mongoose-multitenant")
+* [https://www.npmjs.com/package/mongoose-multitenancy](https://www.npmjs.com/package/mongoose-multitenant "https://www.npmjs.com/package/mongoose-multitenant")
