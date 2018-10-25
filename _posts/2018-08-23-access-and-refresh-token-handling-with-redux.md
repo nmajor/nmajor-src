@@ -187,7 +187,6 @@ I highly recommend you read through the code of this project [erikras/react-redu
 As I said, I used that example heavily when setting up my redux store. Here is what my middleware file looks like:
 
     import { SIGN_OUT, SET_TOKENS } from '../modules/auth';
-    const refreshThreshold = (new Date().getTime() + 300000); // 5 minutes from now
     
     export default function clientMiddleware(client) {
       return ({ dispatch, getState }) => next => (action) => {
@@ -210,6 +209,8 @@ As I said, I used that example heavily when setting up my redux store. Here is w
     
         let actionPromise = Promise.resolve();
         const { tokens } = getState().auth;
+    
+        const refreshThreshold = (new Date().getTime() + 300000); // 5 minutes from now
     
         if (tokens.refresh_token && refreshThreshold > tokens.expires_at) {
           actionPromise = client.post('/my-server/renew', { data: { refresh_token: tokens.refresh_token } })
@@ -240,7 +241,6 @@ As I said, I used that example heavily when setting up my redux store. Here is w
         return actionPromise;
       };
     }
-    
 
 And I can dispatch really clean actions that look like this:
 
