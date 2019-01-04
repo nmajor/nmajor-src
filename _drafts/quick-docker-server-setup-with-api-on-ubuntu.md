@@ -101,4 +101,8 @@ Now we can do a quick test. This command should return an empty array since we d
     curl -X GET http://localhost:2375/images/json
     # []
 
+You can also test it from another computer with this command:
+
+    DOCKER_HOST=tcp://<DOCKER_HOST_IP_GOES_HERE>:2375 docker ps -a
+
 Now we should be done.
