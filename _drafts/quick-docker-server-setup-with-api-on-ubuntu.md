@@ -70,6 +70,8 @@ Add this to the file:
     ExecStart=
     ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
 
+_You can change the PORT your API listens on here if you want to._
+
 Restart docker service:
 
     sudo systemctl daemon-reload
@@ -93,3 +95,8 @@ Check output of this command. It should have `-H tcp://0.0.0.0:2375` in the dock
     #            └─3791 /usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
     #
     # .... Logs down here should say something like Started Docker Application Container Engine. at some point          
+
+Now we can do a quick test. This command should return an empty array since we don't have any images on our fresh docker host:
+
+    curl -X GET http://localhost:2375/images/json
+    # []
