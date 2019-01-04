@@ -100,3 +100,5 @@ Now we can do a quick test. This command should return an empty array since we d
 
     curl -X GET http://localhost:2375/images/json
     # []
+
+Now we should be done.
