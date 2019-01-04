@@ -50,7 +50,15 @@ Then check the output of this command. Docker should be loaded and active:
 
 Here is where we tell docker to listen to incoming API requests.
 
-Make a new `/etc/systemd/system/docker.service.d/docker.conf` file and open it for editing:
+***
+
+#### Important!!!
+
+Before doing this step you should make sure you have a proper firewall implemented. There is no out of the box authentication for the docker API, and many hackers know docker. Once your docker instance is listening for requests, unless your docker port is protected by a firewall or something else, hackers WILL start running random containers on your docker server. 
+
+***
+
+Now make a new file called `/etc/systemd/system/docker.service.d/docker.conf` and open it for editing:
 
     sudo mkdir /etc/systemd/system/docker.service.d
     sudo touch /etc/systemd/system/docker.service.d/docker.conf
