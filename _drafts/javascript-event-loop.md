@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Javascript Event Loop Basics
-hero: ''
+hero: "/uploads/2019/10/08/Event Loop basics.png"
 tags:
 - javascript
 date: 
