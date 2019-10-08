@@ -21,6 +21,7 @@ fields:
   name: date
   label: Date
 pages:
+- _posts/javascript-event-loop.md
 - _posts/2019-10-07-quick-docker-server-setup-with-api-on-ubuntu.md
 - _posts/2018-08-22-node-env-variables-solving-the-nightmare.md
 - _posts/2018-07-25-using-socket-io-with-redux-websocket-redux-middleware.md
