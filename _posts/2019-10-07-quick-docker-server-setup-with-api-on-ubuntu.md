@@ -11,7 +11,7 @@ This is mostly just a quick reference for me to use when I need to whip up a doc
 
 # Install Docker
 
-First prepare the app registry:
+First prepare the app registry: 
 
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -54,7 +54,7 @@ Here is where we tell docker to listen to incoming API requests.
 
 #### Important!!!
 
-Before doing this step you should make sure you have a proper firewall implemented. There is no out of the box authentication for the docker API, and many hackers know docker. Once your docker instance is listening for requests, unless your docker port is protected by a firewall or something else, hackers WILL start running random containers on your docker server. 
+Before doing this step you should make sure you have a proper firewall implemented. There is no out of the box authentication for the docker API, and many hackers know docker. Once your docker instance is listening for requests, unless your docker port is protected by a firewall or something else, hackers WILL start running random containers on your docker server.
 
 ***
 
