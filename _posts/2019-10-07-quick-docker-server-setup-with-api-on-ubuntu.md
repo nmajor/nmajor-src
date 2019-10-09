@@ -4,7 +4,7 @@ title: Quick Docker Server Setup with API on Ubuntu
 hero: "/uploads/2019/10/07/Docker on Ubuntu.png"
 tags:
 - docker
-date: 
+date: 2019-10-06 00:00:00 +0100
 
 ---
 This is mostly just a quick reference for me to use when I need to whip up a docker server. This is on Ubuntu 16.04.
