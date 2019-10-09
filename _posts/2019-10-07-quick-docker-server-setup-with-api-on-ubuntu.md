@@ -46,6 +46,10 @@ Then check the output of this command. Docker should be loaded and active:
     # 
     # .... Logs down here should say something like Started Docker Application Container Engine. at some point
 
+Add your current user to the docker user group so it can access the docker socket
+
+    sudo usermod -a -G docker $USER
+
 # Configure Docker API
 
 Here is where we tell docker to listen to incoming API requests.
