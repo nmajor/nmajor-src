@@ -24,10 +24,10 @@ fields:
   hidden: false
   default: ''
 pages:
+- _my_tags/mongoose.md
 - _my_tags/redis.md
 - _my_tags/node.md
 - _my_tags/es6.md
-- _my_tags/mongoose.md
 - _my_tags/authentication.md
 - _my_tags/azure.md
 - _my_tags/javascript.md
