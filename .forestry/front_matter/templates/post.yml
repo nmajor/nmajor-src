@@ -21,6 +21,7 @@ fields:
   name: date
   label: Date
 pages:
+- _posts/create-a-new-linux-user-with-ssh-access.md
 - _posts/2018-09-20-Simple-Object-Storage-in-Redis-and-Node.md
 - _posts/2018-07-25-making-redux-middleware-for-websockets.md
 - _posts/2018-07-16-react-css-styled-components.md
@@ -37,5 +38,4 @@ pages:
 - _posts/2018-08-22-node-env-variables-solving-the-nightmare.md
 - _posts/2019-10-07-quick-docker-server-setup-with-api-on-ubuntu.md
 - _posts/javascript-event-loop.md
-- _posts/create-a-new-linux-user-with-ssh-access.md
 - _posts/2018-08-28-serverless-framework-s3-file-uploads.md
