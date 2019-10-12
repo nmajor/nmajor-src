@@ -21,7 +21,7 @@ fields:
   name: date
   label: Date
 pages:
-- _posts/create-a-new-linux-user-with-ssh-access.md
+- _posts/2019-10-11-create-a-new-linux-user-with-ssh-access.md
 - _posts/2018-09-20-Simple-Object-Storage-in-Redis-and-Node.md
 - _posts/2018-07-25-making-redux-middleware-for-websockets.md
 - _posts/2018-07-16-react-css-styled-components.md
