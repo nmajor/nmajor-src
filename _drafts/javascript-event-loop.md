@@ -10,7 +10,7 @@ date: 2019-10-09 00:00:00 +0100
 ---
 #### The event loop is not technically part of javascript
 
-The first important point about the Javascript Event Loop is that, although its an important part of javascript, its technically not part of javascript. The event loop comes from the runtime environment, so depending on your environment there will be small differences in the event loop.
+The first important point about the Javascript Event Loop is that, although its an important part of javascript, its technically not part of javascript. The event loop comes from the runtime environment, so depending on your environment there will be small differences in the event loop. 
 
 Chrome has  a slightly different event loop than Node for example, but they
 
