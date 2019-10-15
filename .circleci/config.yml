@@ -73,6 +73,7 @@ jobs:
               git config user.email "circleci@nmajor.com"
               git config user.name "CircleCI"
               git commit --allow-empty -m "Page release ${CIRCLE_BUILD_NUM} from ${CIRCLE_BRANCH}"
+
               # Push quietly to prevent showing the token in log
               git push -q --force https://${GITHUB_TOKEN}@github.com/nmajor/nmajor.com.git ${CIRCLE_BRANCH}:gh-pages
               git tag -a "release_${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}" -m "Release based on build ${CIRCLE_BUILD_NUM}"
@@ -86,6 +87,7 @@ workflows:
           filters:
             branches:
               ignore:
+                - gh-pages
                 - gh-pages
       - bundle_dependencies:
           requires:
