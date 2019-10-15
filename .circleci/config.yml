@@ -58,7 +58,6 @@ jobs:
           key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/repo
-
   deploy:
     machine: true
     working_directory: ~/repo
