@@ -72,7 +72,6 @@ jobs:
               git checkout --orphan build
               bash -c "ls -a | grep -v -e _site -e CNAME | xargs rm -rf" || :
               cp -r _site/* ./
-              git clean -dfx
 
               git config credential.helper 'cache --timeout=120'
               git config user.email "circleci@nmajor.com"
