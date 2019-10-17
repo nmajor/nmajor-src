@@ -67,25 +67,25 @@ jobs:
             - v1-assets-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo ${CIRCLE_BRANCH}
       - run:
-        name: Clean files
-        command: |
-          git checkout --orphan build
-          echo "ho 0"
-          bash -c "ls -a | grep -v -e _site -e CNAME | xargs rm -rf" || :
-          echo "ho 1"
-          git clean -dfx
-          echo "ho 2"
-          cp -r _site/* ./
-          echo "ho 3"
+          name: Clean files
+          command: |
+            git checkout --orphan build
+            echo "ho 0"
+            bash -c "ls -a | grep -v -e _site -e CNAME | xargs rm -rf" || :
+            echo "ho 1"
+            git clean -dfx
+            echo "ho 2"
+            cp -r _site/* ./
+            echo "ho 3"
       - run:
-        name: Commit
-        command: |
-          git config credential.helper 'cache --timeout=120'
-          git config user.email "circleci@nmajor.com"
-          git config user.name "CircleCI"
+          name: Commit
+          command: |
+            git config credential.helper 'cache --timeout=120'
+            git config user.email "circleci@nmajor.com"
+            git config user.name "CircleCI"
 
-          git add --all
-          git commit --allow-empty -m "Page release ${CIRCLE_BUILD_NUM} from ${CIRCLE_BRANCH}"
+            git add --all
+            git commit --allow-empty -m "Page release ${CIRCLE_BUILD_NUM} from ${CIRCLE_BRANCH}"
       - run:
           name: Deploy build to GitHub Pages
           command: |
