@@ -73,7 +73,6 @@ jobs:
             echo "ho 0"
             bash -c "ls -a | grep -v -e _site -e CNAME -e .git | xargs rm -rf" > /dev/null || :
             echo "ho 1"
-            git clean -dfx
             echo "ho 2"
             cp -r _site/* ./
             echo "ho 3"
