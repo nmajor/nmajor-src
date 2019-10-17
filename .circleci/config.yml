@@ -70,9 +70,13 @@ jobs:
         name: Clean files
         command: |
           git checkout --orphan build
+          echo "ho 0"
           bash -c "ls -a | grep -v -e _site -e CNAME | xargs rm -rf" || :
+          echo "ho 1"
           git clean -dfx
+          echo "ho 2"
           cp -r _site/* ./
+          echo "ho 3"
       - run:
         name: Commit
         command: |
