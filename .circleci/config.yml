@@ -71,7 +71,7 @@ jobs:
           command: |
               git checkout --orphan build
               bash -c "ls -t | grep -v _site | xargs git rm -rf" || :
-              mv -r _site/* ./
+              cp -r _site/* ./
               rm -r _site
               git clean -dfx
 
