@@ -71,8 +71,8 @@ jobs:
           command: |
               git checkout --orphan build
               bash -c "ls -t | grep -v _site | xargs git rm -rf" || :
-              mv _site/* ./
-              rm -r site
+              mv -r _site/* ./
+              rm -r _site
               git clean -dfx
 
               git config credential.helper 'cache --timeout=120'
