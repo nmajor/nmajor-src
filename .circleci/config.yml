@@ -53,7 +53,7 @@ jobs:
             bundle --path vendor/bundle
       - run:
           name: Precompile Assets
-          command: bundle exec jekyll build --destination _site
+          command: bundle exec jekyll build
       - save_cache:
           key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
           paths:
@@ -70,7 +70,7 @@ jobs:
           name: Deploy build to GitHub Pages
           command: |
               git checkout --orphan build
-              bash -c "ls -t | grep -v -e _site -e CNAME | xargs rm -rf" || :
+              bash -c "ls -a | grep -v -e _site -e CNAME | xargs rm -rf" || :
               cp -r _site/* ./
               git clean -dfx
 
@@ -93,9 +93,8 @@ workflows:
       - checkout_code:
           filters:
             branches:
-              ignore:
-                - gh-pages
-                - gh-pages
+              only:
+                - master
       - bundle_dependencies:
           requires:
             - checkout_code
@@ -108,4 +107,4 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - gh-pages
