@@ -98,13 +98,21 @@ workflows:
       - bundle_dependencies:
           requires:
             - checkout_code
+          filters:
+            branches:
+              only:
+                - master
       - precompile:
           requires:
             - bundle_dependencies
+          filters:
+            branches:
+              only:
+                - master
       - deploy:
           requires:
             - precompile
           filters:
             branches:
               only:
-                - gh-pages
+                - master
