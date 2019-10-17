@@ -1,0 +1,81 @@
+<header>
+    <div class="menu">
+      <div class="logo">
+        <img src="{{ site.author.photo }}" />
+        <a href="{{ '/' | prepend: site.baseurl }}">{{ site.blog.title }}</a>
+      </div>
+
+        <ul>
+            <li><a href="{{ '/about' | prepend: site.baseurl }}">About</a></li>
+            <li><a href="{{ '/projects' | prepend: site.baseurl }}">Projects</a></li>
+            <li><a href="{{ '/archive' | prepend: site.baseurl }}">Archive</a></li>
+        </ul>
+    </div>
+    <div class="social">
+      <ul>
+        {% if site.author.github %}
+        <li>
+            <a href="https://github.com/{{ site.author.github }}" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+        </li>
+        {% endif %}
+        {% if site.author.twitter %}
+        <li>
+            <a href="https://twitter.com/{{ site.author.twitter }}" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+        </li>
+        {% endif %}
+        {% if site.author.linkedin %}
+        <li>
+            <a href="https://linkedin.com/{{ site.author.linkedin }}" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+        </li>
+        {% endif %}
+        {% if site.author.blog %}
+        <li>
+            <a href="{{ site.author.blog }}" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+        </li>
+        {% endif %}
+        {% if site.author.instagram %}
+        <li>
+            <a href="https://instagram.com/{{ site.author.instagram }}" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+        </li>
+        {% endif %}
+        {% if site.author.youtube %}
+        <li>
+            <a href="https://youtube.com/{{ site.author.youtube }}" target="_blank" class="smaller">
+              <span class="icon-youtube"></span>
+            </a>
+        </li>
+        {% endif %}
+        {% if site.author.stackoverflow %}
+        <li>
+            <a href="https://stackoverflow.com/{{ site.author.stackoverflow }}" target="_blank" class="smaller">
+              <span class="icon-stackoverflow"></span>
+            </a>
+        </li>
+        {% endif %}
+        {% if site.author.mail %}
+        <li>
+            <a href="mailto:{{ site.author.mail }}" target="_blank">
+              <span class="icon-mail_outline"></span>
+            </a>
+        </li>
+        {% endif %}
+        {% if site.author.rss == true %}
+        <li>
+            <a href="{{ '/feed.xml' | prepend: site.baseurl }}" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+</header>
