@@ -91,11 +91,11 @@ jobs:
 
               # Push quietly to prevent showing the token in log
               echo "hi 10"
-              git push -q --force https://${GITHUB_TOKEN}@github.com/nmajor/nmajor.com.git ${CIRCLE_BRANCH}:gh-pages
-              echo "hi 11"
-              git tag -a "release_${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}" -m "Release based on build ${CIRCLE_BUILD_NUM}"
-              echo "hi 12"
-              git push -q --tags https://${GITHUB_TOKEN}@github.com/nmajor/nmajor.com.git
+              git push -q --force https://${GITHUB_TOKEN}@github.com/nmajor/nmajor.com.git gh-pages
+              # echo "hi 11"
+              # git tag -a "release_${CIRCLE_BRANCH}_${CIRCLE_BUILD_NUM}" -m "Release based on build ${CIRCLE_BUILD_NUM}"
+              # echo "hi 12"
+              #git push -q --tags https://${GITHUB_TOKEN}@github.com/nmajor/nmajor.com.git
 
 workflows:
   version: 2
