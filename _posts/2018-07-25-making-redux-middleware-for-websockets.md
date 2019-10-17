@@ -29,8 +29,9 @@ If you are unfamiliar with redux middleware, check out the [documentation here](
 
 Basically redux action, by default, looks like this:
 
-    { type: 'MY_ACTION_TYPE' ...some_data }
-
+```javascript
+{ type: 'MY_ACTION_TYPE', other: 'data' }
+```
 Redux actions have 1 required attribute, `type`. Anything else is just extra and is usually meant to be used by the reducer to mutate the state.
 
 By using redux middleware we can define our own action patterns and structures. The middleware will check if the action has other specific attributes and handle that action differently than the others. That way all we have to do to trigger some custom redux behavior is dispatch an action with our specific attributes and it will automatically be handled differently.
@@ -42,39 +43,39 @@ Specifically we are going to create a new kind of action that will subscribe or 
 First lets make a middleware function, you'll want to export this function from a file. I called my file \`cableMiddleware.js\`:
 
     import ActionCable from 'actioncable';
-    
+
     export default function cableMiddleware() {
       const cable = ActionCable.createConsumer('/cable');
-    
+
       return ({ dispatch, getState }) => next => (action) => {
         if (typeof(action) === 'function') {
           return next(action)
         }
-    
+
         const {
           channel,
           room,
           leave,
         } = action;
         let { received } = action;
-    
+
         if (!channel) {
           return next(action);
         }
-    
+
         if (leave) {
           const subscription = _.find(
             cable.subscriptions.subscriptions,
             sub => sub.identifier === JSON.stringify({ channel, room }),
           );
-    
+
           return cable.subscriptions.remove(subscription);
         }
-    
+
         if (typeof(received) === 'string') {
           received = result => dispatch({ type: received, result })
         }
-    
+
         return cable.subscriptions.create({ channel, room }, { received });
       };
     }
@@ -100,7 +101,7 @@ Then we have to apply our new middlware. Check the [redux documentation](https:/
     import { createStore, applyMiddleware } from 'redux';
     import cableMiddleware from './middleware/cableMiddleware';
     import rootReducer from './reducers/index';
-    
+
     const store = createStore(
       rootReducer,
       applyMiddleware(cableMiddleware())
@@ -121,7 +122,7 @@ Here are some example action creators using our new middleware.
         received: NEW_MESSAGE,
       }
     }
-    
+
     export function unsubscribeConversation(conversationId) {
       return {
         channel: 'conversations',
@@ -129,7 +130,7 @@ Here are some example action creators using our new middleware.
         leave: true,
       }
     }
-    
+
     // Action creator with received function:
     export function subscribeConversation(conversationId) {
       return dispatch => dispatch({
