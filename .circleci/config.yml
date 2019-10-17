@@ -67,20 +67,24 @@ jobs:
             - v1-assets-{{ .Environment.CIRCLE_SHA1 }}
       - run: echo ${CIRCLE_BRANCH}
       - run:
+        name: Clean files
+        command: |
+          git checkout --orphan build
+          bash -c "ls -a | grep -v -e _site -e CNAME | xargs rm -rf" || :
+          git clean -dfx
+          cp -r _site/* ./
+      - run:
+        name: Commit
+        command: |
+          git config credential.helper 'cache --timeout=120'
+          git config user.email "circleci@nmajor.com"
+          git config user.name "CircleCI"
+
+          git add --all
+          git commit --allow-empty -m "Page release ${CIRCLE_BUILD_NUM} from ${CIRCLE_BRANCH}"
+      - run:
           name: Deploy build to GitHub Pages
           command: |
-              git checkout --orphan build
-              bash -c "ls -a | grep -v -e _site -e CNAME | xargs rm -rf" || :
-              git clean -dfx
-              cp -r _site/* ./
-
-              git config credential.helper 'cache --timeout=120'
-              git config user.email "circleci@nmajor.com"
-              git config user.name "CircleCI"
-
-              git add --all
-              git commit --allow-empty -m "Page release ${CIRCLE_BUILD_NUM} from ${CIRCLE_BRANCH}"
-
               git remote rm origin
               git remote add origin https://nmajor:${GITHUB_TOKEN}@github.com/nmajor/nmajor.com.git
 
