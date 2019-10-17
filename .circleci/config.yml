@@ -70,7 +70,7 @@ jobs:
           name: Deploy build to GitHub Pages
           command: |
               git checkout --orphan build
-              bash -c "ls -t | grep -v _site | xargs git rm -rf" || :
+              bash -c "ls -t | grep -v -e _site -e uploads | xargs git rm -rf" || :
               cp -r _site/* ./
               rm -r _site
               git clean -dfx
