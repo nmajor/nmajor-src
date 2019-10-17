@@ -89,6 +89,7 @@ jobs:
               echo "hi 9"
               git commit --allow-empty -m "Page release ${CIRCLE_BUILD_NUM} from ${CIRCLE_BRANCH}"
 
+              git remote rm origin
               git remote add origin https://nmajor:${GITHUB_TOKEN}@github.com/nmajor/nmajor.com.git
 
               echo "hi 10"
