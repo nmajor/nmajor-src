@@ -53,7 +53,7 @@ jobs:
             bundle --path vendor/bundle
       - run:
           name: Precompile Assets
-          command: bundle exec jekyll build
+          command: bundle exec jekyll build --destination ./
       - save_cache:
           key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
           paths:
@@ -69,6 +69,12 @@ jobs:
       - run:
           name: Deploy build to GitHub Pages
           command: |
+              git checkout --orphan build
+              ls -t | grep -v _site | xargs git rm -rf
+              mv _site/* ./
+              rm -r site
+              git clean -dfx
+
               git config credential.helper 'cache --timeout=120'
               git config user.email "circleci@nmajor.com"
               git config user.name "CircleCI"
