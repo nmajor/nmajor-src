@@ -53,7 +53,7 @@ jobs:
             bundle --path vendor/bundle
       - run:
           name: Precompile Assets
-          command: bundle exec jekyll build --destination ./
+          command: bundle exec jekyll build --destination _site
       - save_cache:
           key: v1-assets-{{ .Environment.CIRCLE_SHA1 }}
           paths:
