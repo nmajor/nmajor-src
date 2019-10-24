@@ -97,10 +97,8 @@ There are many ways to implement this. For me, at this time, I prefer this:
 * The response to a successful strong authentication includes a JWT (that includes the expiration time inside the token) and a refresh token.
 * The client is responsible for keeping their JWT up to date by monitoring the expiration time and refreshing using the refresh token.
 
-### Implementation
+### Alternatives to JWT
 
-The first point is only resolved by using a solid implementation and algorithm.
-
-The second point I think can be solved with a refresh token strategy. You can generate refresh tokens for each user and store/manage them in the database of an authentication service. Then whenever the client gets a new JWT from the authentication server it also will get the expiration time of the token as well as a refresh token. The client is then responsible for refreshing the tokens with the authentication service before sending to any api. This allows for easy token invalidation by invalidating the refresh token. Of course there is a compromise with
-
-I've settled on a kind of hybrid solution that I think addresses both of these points.
+* PASETO - [https://paseto.io](https://paseto.io "https://paseto.io")
+  * Main stateless alternative to JWT it has restrictions on algorithms and other things to help prevent developers from making common mistakes.
+  * 
