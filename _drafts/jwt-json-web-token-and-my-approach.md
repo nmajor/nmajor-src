@@ -10,7 +10,7 @@ This is not an introduction to JSON Web Tokens. There are plenty of those on the
 
 If you want a good intro check out [this post](https://jwt.io/introduction/ "https://jwt.io/introduction/") and [this post](https://blog.angular-university.io/angular-jwt/ "https://blog.angular-university.io/angular-jwt/").
 
-First of all, why are JWT or JSON Web Token useful and so widely used.
+First of all, why are JWT or JSON Web Token useful and so widely used. 
 
 * **Stateless** - They don't require storing sessions in a database.
 * **Portable** - They can easily be used with multiple different backends and services.
@@ -84,7 +84,7 @@ Here are some resources to help:
 
 ### Stateless Auth Downsides
 
-Here is where some personal preference comes in. One of the biggest downsides to stateless authentication is that there is no way of invalidating the tokens once they are issued. This is a potential security issue as well as an inconvenience. 
+Here is where some personal preference comes in. One of the biggest downsides to stateless authentication is that there is no way of invalidating the tokens once they are issued. This is a potential security issue as well as an inconvenience.
 
 But I think this can be solved by using a stateful refresh token.
 
