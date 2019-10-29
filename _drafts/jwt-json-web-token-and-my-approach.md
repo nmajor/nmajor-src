@@ -1,14 +1,19 @@
 ---
 layout: post
 title: How to Make JWT Authentication Not Suck
-hero: ''
-tags: []
-date: 
+hero: "/uploads/2019/10/29/You are Sunshine.png"
+tags:
+- javascript
+- authentication
+- jwt
+date: 2019-10-29 00:00:00 +0000
 
 ---
-This is not an introduction to JSON Web Tokens. There are plenty of those on the internet already. I'm trying to outline and compile my thoughts and research about when to implement JWT and how to not do it poorly.
+This is not an introduction to JSON Web Tokens. There are plenty of those on the internet already. I'm trying to outline and compile my thoughts and research about when to implement JWT and how to do it safely.
 
-If you want a good intro check out [this post](https://jwt.io/introduction/ "https://jwt.io/introduction/") and [this post](https://blog.angular-university.io/angular-jwt/ "https://blog.angular-university.io/angular-jwt/"). 
+TLDR: Its easy to shoot yourself in the foot with JWT, but its very widely used and has some clear benefits. Be sure to research before trying and use a solid library.
+
+If you want a good intro check out [this post](https://jwt.io/introduction/ "https://jwt.io/introduction/") and [this post](https://blog.angular-university.io/angular-jwt/ "https://blog.angular-university.io/angular-jwt/").
 
 First of all, why are JWT or JSON Web Token useful and so widely used.
 
@@ -25,9 +30,7 @@ JWTs are interesting in that they are widely used and also widely criticized. Mo
 * **Library/Implementation Vulnerabilities** - Criticizing vulnerabilities in particular JWT libraries or implementations.
 * **Stateless Auth Downsides** - Generally criticizing the practice of using any "stateless" client tokens. Because there's no great way to revoke them early while remaining stateless, etc.
 
-I'm going to try to give my best shot at addressing all of these issues and outline an approach that might work for some people.
-
-At the bottom of this post I've listed some alternative API authentication methods to to explore.
+I'm going to try to give my best shot at addressing some of these issues.
 
 ### Overkill
 
@@ -84,7 +87,7 @@ Here are some resources to help:
 
 Don't skip the reading, but some of the main things to do are:
 
-##### Enforce App
+##### Enforce Approved Algorithms
 
 Have a short list of allowed (approved) algorithms, and ensure that your token verify function checks that the algorithm shown in the header is one of the approved algorithms.
 
@@ -93,7 +96,18 @@ Do some research to select the approved algorithms, but the most common seem to 
 * HMAC + SHA256
 * RSASSA-PKCS1-v1_5 + SHA256
 * ECDSA + P-256 + SHA256
- 
+
+##### Handle Asymmetric and Symmetric Algorithm Tokens Separately
+
+Read about this more in the best practices article above, but this helps mitigate an attack where the public key of an asymmetric key (which is often easier for an attacker to get their hands on) can be used as a private key of a symmetrically signed token.
+
+##### Secret Key Length
+
+Make sure your secret key is long enough. The rule of thumb is to make it as long as the hash output. So for a SHA256 output algorithm like HS256, the secret key should be at least 256 characters long.
+
+##### Others
+
+There are other considerations depending on your implementation.
 
 ### Stateless Auth Downsides
 
@@ -114,4 +128,4 @@ There are many ways to implement this. For me, at this time, I prefer this:
 
 * PASETO - [https://paseto.io](https://paseto.io "https://paseto.io")
   * Main stateless alternative to JWT it has restrictions on algorithms and other things to help prevent developers from making common mistakes.
-  *
+  * The main drawback is that its not very popular.
