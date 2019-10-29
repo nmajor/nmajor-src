@@ -8,9 +8,9 @@ date:
 ---
 This is not an introduction to JSON Web Tokens. There are plenty of those on the internet already. I'm trying to outline and compile my thoughts and research about when to implement JWT and how to not do it poorly.
 
-If you want a good intro check out [this post](https://jwt.io/introduction/ "https://jwt.io/introduction/") and [this post](https://blog.angular-university.io/angular-jwt/ "https://blog.angular-university.io/angular-jwt/").
+If you want a good intro check out [this post](https://jwt.io/introduction/ "https://jwt.io/introduction/") and [this post](https://blog.angular-university.io/angular-jwt/ "https://blog.angular-university.io/angular-jwt/"). 
 
-First of all, why are JWT or JSON Web Token useful and so widely used. 
+First of all, why are JWT or JSON Web Token useful and so widely used.
 
 * **Stateless** - They don't require storing sessions in a database.
 * **Portable** - They can easily be used with multiple different backends and services.
@@ -82,6 +82,19 @@ Here are some resources to help:
 * JWT Best Current Practices - [https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/](https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/ "https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/")
 * Critical vulnerabilities in JSON Web Token libraries - [https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/](https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/ "https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/")
 
+Don't skip the reading, but some of the main things to do are:
+
+##### Enforce App
+
+Have a short list of allowed (approved) algorithms, and ensure that your token verify function checks that the algorithm shown in the header is one of the approved algorithms.
+
+Do some research to select the approved algorithms, but the most common seem to be:
+
+* HMAC + SHA256
+* RSASSA-PKCS1-v1_5 + SHA256
+* ECDSA + P-256 + SHA256
+ 
+
 ### Stateless Auth Downsides
 
 Here is where some personal preference comes in. One of the biggest downsides to stateless authentication is that there is no way of invalidating the tokens once they are issued. This is a potential security issue as well as an inconvenience.
@@ -101,4 +114,4 @@ There are many ways to implement this. For me, at this time, I prefer this:
 
 * PASETO - [https://paseto.io](https://paseto.io "https://paseto.io")
   * Main stateless alternative to JWT it has restrictions on algorithms and other things to help prevent developers from making common mistakes.
-  * 
+  *
