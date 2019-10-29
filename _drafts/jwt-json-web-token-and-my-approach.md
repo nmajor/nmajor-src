@@ -38,8 +38,6 @@ First you should decide if your need/want the benefits of JWT.
 
 Because JWT has so many moving parts (less than other forms of authentication but more than others), in my opinion, you should only do it if you need some of the unique benefits of JWT.
 
-Be sure to checkout some of the alternatives to JWT that I've listed below.
-
 I would say the following 2 things describe you then JWT might be worth implementing:
 
 * I have multiple services/backends share authentication.
