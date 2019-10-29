@@ -1,6 +1,6 @@
 ---
 layout: post
-title: How to Make JWT Authentication Not Suck
+title: JWT - What You Should Know
 hero: "/uploads/2019/10/29/You are Sunshine.png"
 tags:
 - javascript
