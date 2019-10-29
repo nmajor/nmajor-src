@@ -99,13 +99,21 @@ Do some research to select the approved algorithms, but the most common seem to 
 
 Read about this more in the best practices article above, but this helps mitigate an attack where the public key of an asymmetric key (which is often easier for an attacker to get their hands on) can be used as a private key of a symmetrically signed token.
 
-##### Secret Key Length
+##### Strong Keys
 
 Make sure your secret key is long enough. The rule of thumb is to make it as long as the hash output. So for a SHA256 output algorithm like HS256, the secret key should be at least 256 characters long.
 
-##### Others
+##### Validate Nested Tokens
 
-There are other considerations depending on your implementation.
+If using nested tokens, for example to hide sensitive information in the token body, be sure to validate all the way down.
+
+##### Limit Token Utility
+
+Avoid 1 token fits all if possible. When issuing a token make it clear in the claims what it should be used for and when validating the token make sure the claims match the requested use.
+
+##### Validate Token Content
+
+Be sure to validate the content of the token as well as the validity of the token. Use claims like `aud`, `typ`, `iss`, and `sub` and validate each individual claim after token validation and decoding to ensure that the right token is being used for the right thing.
 
 ### Stateless Auth Downsides
 
