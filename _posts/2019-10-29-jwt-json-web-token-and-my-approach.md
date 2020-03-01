@@ -11,7 +11,10 @@ date: 2019-10-29 00:00:00 +0000
 ---
 This is not an introduction to JSON Web Tokens. There are plenty of those on the internet already. I'm trying to outline and compile my thoughts and research about when to implement JWT and how to do it safely.
 
-TLDR: Its easy to shoot yourself in the foot with JWT, but its very widely used and has some clear benefits. Be sure to research before trying and use a solid library.
+TLDR: It's easy to shoot yourself in the foot with JWT, but it's very widely used and has some clear benefits. Be sure to research before trying and use a solid library.
+
+{: .lead}  
+<!–-break-–>
 
 If you want a good intro check out [this post](https://jwt.io/introduction/ "https://jwt.io/introduction/") and [this post](https://blog.angular-university.io/angular-jwt/ "https://blog.angular-university.io/angular-jwt/").
 
