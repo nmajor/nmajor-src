@@ -8,6 +8,9 @@ tags:
 date: 2019-10-11T23:00:00.000+00:00
 
 ---
+{: .lead}  
+<!–-break-–>  
+  
 Generate the key for the user. This should be done on the local machine:
 
     ssh-keygen -t rsa -b 4096 -o -a 100
