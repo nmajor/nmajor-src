@@ -48,8 +48,9 @@ jobs:
       - run:
           name: Install Builder
           command : |
-            gem update --system
             gem install bundler -v '>= 2.0.0'
+            gem update --system
+            bundle update --bundler
       - run:
           name: Link Bundle Path
           command : |
