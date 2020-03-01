@@ -25,9 +25,7 @@ jobs:
       - run:
           name: install builder
           command : |
-            gem update --system
-            gem install bundler -v '>= 1.17.1'
-
+            gem install bundler
       - run: bundle install --path vendor/bundle
       - save_cache:
           key: v1-bundle-{{ checksum "Gemfile.lock" }}
@@ -48,9 +46,7 @@ jobs:
       - run:
           name: Install Builder
           command : |
-            gem install bundler -v '>= 1.17.1'
-            gem update --system
-            bundle update --bundler
+            gem install bundler
       - run:
           name: Link Bundle Path
           command : |
