@@ -25,9 +25,7 @@ jobs:
       - run:
           name: install builder
           command : |
-            gem install bundler
-            gem update --system
-            bundler update --bundler
+            gem install bundler -v 2
       - run: bundle install --path vendor/bundle
       - save_cache:
           key: v1-bundle-{{ checksum "Gemfile.lock" }}
