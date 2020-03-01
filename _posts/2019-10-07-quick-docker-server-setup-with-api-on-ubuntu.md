@@ -4,14 +4,17 @@ title: Quick Docker Server Setup with API on Ubuntu
 hero: "/uploads/2019/10/07/Docker on Ubuntu.png"
 tags:
 - docker
-date: 2019-10-06 00:00:00 +0100
+date: 2019-10-05T23:00:00.000+00:00
 
 ---
 This is mostly just a quick reference for me to use when I need to whip up a docker server. This is on Ubuntu 16.04.
 
+{: .lead}  
+<!–-break-–>
+
 # Install Docker
 
-First prepare the app registry: 
+First prepare the app registry:
 
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
