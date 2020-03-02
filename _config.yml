@@ -27,10 +27,10 @@ blog:
 author:
   fullname                  : Nicholas Major
   rss                       : true
-  mail                      : nick@nmajor.com
+  # mail                      : nick@nmajor.com
   twitter                   : _nmajor
   github                    : nmajor
-  youtube                   : channel/UCV_jmt214-hitQUiczsYhsQ
+  # youtube                   : channel/UCV_jmt214-hitQUiczsYhsQ
   stackoverflow             :
   disqus                    : nmajor # your disqus site name
   google_analytics          : UA-48130330-1
