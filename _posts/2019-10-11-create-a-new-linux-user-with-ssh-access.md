@@ -8,9 +8,8 @@ tags:
 date: 2019-10-11T23:00:00.000+00:00
 
 ---
-{: .lead}  
-<!–-break-–>  
-  
+This is just a personal reference.
+
 Generate the key for the user. This should be done on the local machine:
 
     ssh-keygen -t rsa -b 4096 -o -a 100
@@ -18,6 +17,9 @@ Generate the key for the user. This should be done on the local machine:
 Create a new user on the remote machine. The `-m` adds a deuser fault user home directory.
 
     useradd -m new-user
+
+{: .lead}  
+<!–-break-–>
 
 Switch to the new user:
 
