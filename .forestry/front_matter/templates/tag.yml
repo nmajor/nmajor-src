@@ -39,6 +39,7 @@ pages:
 - _my_tags/production.md
 - _my_tags/rails.md
 - _my_tags/redis-1.md
+- _my_tags/redis-2.md
 - _my_tags/redis.md
 - _my_tags/redux.md
 - _my_tags/socket-io.md
