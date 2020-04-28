@@ -40,4 +40,5 @@ pages:
 - _posts/2019-10-11-create-a-new-linux-user-with-ssh-access.md
 - _posts/2019-10-29-jwt-json-web-token-and-my-approach.md
 - _posts/document-with-jsdoc-swagger.md
+- _posts/fusionauth-authentication-service-with-docker.md
 - _posts/javascript-event-loop.md
