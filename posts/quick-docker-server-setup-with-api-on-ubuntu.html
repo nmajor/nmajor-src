@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Quick Docker Server Setup with API on Ubuntu &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="This is mostly just a quick reference for me to use when I need to whip up a docker server. This is on Ubuntu 16.04.
+">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="docker">
+<link rel="canonical" href="/posts/quick-docker-server-setup-with-api-on-ubuntu">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Quick Docker Server Setup with API on Ubuntu" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quick Docker Server Setup with API on Ubuntu">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/quick-docker-server-setup-with-api-on-ubuntu">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          Quick Docker Server Setup with API on Ubuntu
+     </h1>
+      <span class="published-at">Published Oct 5, 2019</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/docker">#docker</a>
+      </span>
+          <a href="/posts/quick-docker-server-setup-with-api-on-ubuntu" title="Quick Docker Server Setup with API on Ubuntu"><img class="hero-image" src="/uploads/2019/10/07/Docker on Ubuntu.png" /></a>
+   </div>
+ </div>
+   <p>This is mostly just a quick reference for me to use when I need to whip up a docker server. This is on Ubuntu 16.04.
+<p class="lead">
+<h1 id="install-docker">Install Docker</h1>
+<p>First prepare the app registry:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt-get update
+</pre></table>
+</div>
+</div>
+<p>Then check the output of this command. It should have no docker installed but there should be a candidate:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8</pre><td class="code"><pre>apt-cache policy docker-ce
+
+# docker-ce:
+#   Installed: (none)
+#   Candidate: 5:18.09.0~3-0~ubuntu-xenial
+#   Version table:
+#      5:18.09.0~3-0~ubuntu-xenial 500
+#   ...
+</pre></table>
+</div>
+</div>
+<p>Then install docker:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>sudo apt-get install -y docker-ce
+</pre></table>
+</div>
+</div>
+<p>Then check the output of this command. Docker should be loaded and active:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre><td class="code"><pre>sudo systemctl status docker
+
+# ● docker.service - Docker Application Container Engine
+#    Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+#    Active: active (running) since Fri 2019-01-04 22:45:48 UTC; 1min 22s ago
+#      Docs: https://docs.docker.com
+#  Main PID: 3538 (dockerd)
+#    CGroup: /system.slice/docker.service
+#            └─3538 /usr/bin/dockerd -H unix://
+# 
+# .... Logs down here should say something like Started Docker Application Container Engine. at some point
+</pre></table>
+</div>
+</div>
+<p>Add your current user to the docker user group so it can access the docker socket
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>sudo usermod -a -G docker $USER
+</pre></table>
+</div>
+</div>
+<h1 id="configure-docker-api">Configure Docker API</h1>
+<p>Here is where we tell docker to listen to incoming API requests.
+<hr />
+<h4 id="important">Important!!!</h4>
+<p>Before doing this step you should make sure you have a proper firewall implemented. There is no out of the box authentication for the docker API, and many hackers know docker. Once your docker instance is listening for requests, unless your docker port is protected by a firewall or something else, hackers WILL start running random containers on your docker server.
+<hr />
+<p>Now make a new file called <code class="highlighter-rouge">/etc/systemd/system/docker.service.d/docker.conf</code> and open it for editing:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>sudo mkdir /etc/systemd/system/docker.service.d
+sudo touch /etc/systemd/system/docker.service.d/docker.conf
+sudo vim /etc/systemd/system/docker.service.d/docker.conf
+</pre></table>
+</div>
+</div>
+<p>Add this to the file:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
+</pre></table>
+</div>
+</div>
+<p><em>You can change the PORT your API listens on here if you want to.</em>
+<p>Restart docker service:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre><td class="code"><pre>sudo systemctl daemon-reload
+sudo systemctl restart docker.service
+</pre></table>
+</div>
+</div>
+<p>Check output of this command. It should have <code class="highlighter-rouge">-H tcp://0.0.0.0:2375</code> in the docker command.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre><td class="code"><pre>sudo systemctl status docker.service
+
+# ● docker.service - Docker Application Container Engine
+#    Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+#   Drop-In: /etc/systemd/system/docker.service.d
+#            └─docker.conf
+#    Active: active (running) since Fri 2019-01-04 22:54:49 UTC; 3s ago
+#      Docs: https://docs.docker.com
+#  Main PID: 3791 (dockerd)
+#     Tasks: 8
+#    Memory: 30.0M
+#       CPU: 178ms
+#    CGroup: /system.slice/docker.service
+#            └─3791 /usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
+#
+# .... Logs down here should say something like Started Docker Application Container Engine. at some point          
+</pre></table>
+</div>
+</div>
+<p>Now we can do a quick test. This command should return an empty array since we don’t have any images on our fresh docker host:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre><td class="code"><pre>curl -X GET http://localhost:2375/images/json
+# []
+</pre></table>
+</div>
+</div>
+<p>You can also test it from another computer with this command:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>DOCKER_HOST=tcp://&lt;DOCKER_HOST_IP_GOES_HERE&gt;:2375 docker ps -a
+</pre></table>
+</div>
+</div>
+<p>Now we should be done.
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

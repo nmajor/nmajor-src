@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>JWT - What You Should Know &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="This is not an introduction to JSON Web Tokens. There are plenty of those on the internet already. I’m trying to outline and compile my thoughts and research about when to implement JWT and how to do it safely. TLDR: It’s easy to shoot yourself in the foot with JWT,...">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="javascript, authentication, jwt">
+<link rel="canonical" href="/posts/jwt-json-web-token-and-my-approach">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="JWT - What You Should Know" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JWT - What You Should Know">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/jwt-json-web-token-and-my-approach">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          JWT - What You Should Know
+     </h1>
+      <span class="published-at">Published Oct 29, 2019</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/javascript">#javascript</a>
+            <a href="/tag/authentication">#authentication</a>
+            <a href="/tag/jwt">#jwt</a>
+      </span>
+          <a href="/posts/jwt-json-web-token-and-my-approach" title="JWT - What You Should Know"><img class="hero-image" src="/uploads/2019/10/29/You are Sunshine.png" /></a>
+   </div>
+ </div>
+   <p>This is not an introduction to JSON Web Tokens. There are plenty of those on the internet already. I’m trying to outline and compile my thoughts and research about when to implement JWT and how to do it safely.
+<p>TLDR: It’s easy to shoot yourself in the foot with JWT, but it’s very widely used and has some clear benefits. Be sure to research before trying and use a solid library.
+<p class="lead">
+<p>If you want a good intro check out <a href="https://jwt.io/introduction/" title="https://jwt.io/introduction/">this post</a> and <a href="https://blog.angular-university.io/angular-jwt/" title="https://blog.angular-university.io/angular-jwt/">this post</a>.
+<p>First of all, why are JWT or JSON Web Token useful and so widely used.
+<ul>
+ <li><strong>Stateless</strong> - They don’t require storing sessions in a database.
+ <li><strong>Portable</strong> - They can easily be used with multiple different backends and services.
+ <li><strong>No cookies</strong> - They can easily be used as bearer tokens by multiple different kinds of clients (mobile, browser, etc…)
+ <li><strong>Verbose</strong> - They include useful information in the token itself like user roles and other claims about the user.
+</ul>
+<p>Is there any reason NOT to use JWT.
+<p>JWTs are interesting in that they are widely used and also widely criticized. Most criticisms of JWT fall into 2 categories:
+<ul>
+ <li><strong>Overkill</strong> - There are a lot of moving parts with JWT. Its probably overkill for many useless.
+ <li><strong>Library/Implementation Vulnerabilities</strong> - Criticizing vulnerabilities in particular JWT libraries or implementations.
+ <li><strong>Stateless Auth Downsides</strong> - Generally criticizing the practice of using any “stateless” client tokens. Because there’s no great way to revoke them early while remaining stateless, etc.
+</ul>
+<p>I’m going to try to give my best shot at addressing some of these issues.
+<h3 id="overkill">Overkill</h3>
+<p>First you should decide if your need/want the benefits of JWT.
+<p>Because JWT has so many moving parts (less than other forms of authentication but more than others), in my opinion, you should only do it if you need some of the unique benefits of JWT.
+<p>I would say the following 2 things describe you then JWT might be worth implementing:
+<ul>
+ <li>I have multiple services/backends share authentication.
+ <li>I have non-browser clients that use my service.
+ <li>I am willing to take the time to understand JWT before implementing it.
+ <li>I am willing to keep my implementation up to date.
+</ul>
+<p>If you are willing to take the time to understand JWT, then there are some resources to get you started.
+<ul>
+ <li>Intro to JWT - <a href="https://jwt.io/introduction/" title="https://jwt.io/introduction/">https://jwt.io/introduction/</a>
+ <li>The Complete Guide to JSON Web Tokens - <a href="https://blog.angular-university.io/angular-jwt/" title="https://blog.angular-university.io/angular-jwt/">https://blog.angular-university.io/angular-jwt/</a>
+</ul>
+<h3 id="libraryimplementation-vulnerabilities">Library/Implementation Vulnerabilities</h3>
+<p>It seems like this is an easy one to address. Just use a good library and good implementation. lol.
+<h5 id="library">Library</h5>
+<p>But seriously JWT as a concept is supported strongly by the company Auth.io and they curate a list of approved JWT libraries for many different libraries and approved hashing algorithms.
+<p>That <a href="https://jwt.io/#libraries" title="https://jwt.io/#libraries">list of approved libraries can be found here</a>.
+<p>Since The other important part of this concern is keeping the library up to date.However this is an issue with all opensource projects.
+<p>If security is a primary concern, then you should already have a strategy to keep notified of the vulnerabilities in the libraries you are using.
+<p>If you work with Node.js then the <code class="highlighter-rouge">npm audit</code> command should be an important part of your deployment workflow. Of course its limited to known and reported library vulnerabilities, but its much better than doing nothing.
+<p>More info on <a href="https://blog.npmjs.org/post/173719309445/npm-audit-identify-and-fix-insecure" title="https://blog.npmjs.org/post/173719309445/npm-audit-identify-and-fix-insecure">npm audit</a> and <a href="">npm security advisories</a>.
+<p>If you’re working in a language other than Node.js then you’ll need to have your own strategy of staying appraised of library vulnerabilities.
+<h5 id="implementation">Implementation</h5>
+<p>Good implementation comes from understanding. I think its safe to say that blindly copy/pasting solutions from stack overflow really increases your likelihood of having a poor implementation.
+<p>This is authentication we’re talking about. And given how catastrophic the consequences can be, make sure you educate yourself and tread carefully when building your implementation.
+<p>Avoid blind copy/pasta unless you understand what its doing. Also personally I like to avoid using big black box libraries and build the minimum functional system.
+<p>Here are some resources to help:
+<ul>
+ <li>JWT Best Current Practices - <a href="https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/" title="https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/">https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/</a>
+ <li>Critical vulnerabilities in JSON Web Token libraries - <a href="https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/" title="https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/">https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/</a>
+</ul>
+<p>Don’t skip the reading, but some of the main things to do are:
+<h5 id="enforce-approved-algorithms">Enforce Approved Algorithms</h5>
+<p>Have a short list of allowed (approved) algorithms, and ensure that your token verify function checks that the algorithm shown in the header is one of the approved algorithms.
+<p>Do some research to select the approved algorithms, but the most common seem to be:
+<ul>
+ <li>HMAC + SHA256
+ <li>RSASSA-PKCS1-v1_5 + SHA256
+ <li>ECDSA + P-256 + SHA256
+</ul>
+<h5 id="handle-asymmetric-and-symmetric-algorithm-tokens-separately">Handle Asymmetric and Symmetric Algorithm Tokens Separately</h5>
+<p>Read about this more in the best practices article above, but this helps mitigate an attack where the public key of an asymmetric key (which is often easier for an attacker to get their hands on) can be used as a private key of a symmetrically signed token.
+<h5 id="strong-keys">Strong Keys</h5>
+<p>Make sure your secret key is long enough. The rule of thumb is to make it as long as the hash output. So for a SHA256 output algorithm like HS256, the secret key should be at least 256 characters long.
+<h5 id="validate-nested-tokens">Validate Nested Tokens</h5>
+<p>If using nested tokens, for example to hide sensitive information in the token body, be sure to validate all the way down.
+<h5 id="limit-token-utility">Limit Token Utility</h5>
+<p>Avoid 1 token fits all if possible. When issuing a token make it clear in the claims what it should be used for and when validating the token make sure the claims match the requested use.
+<h5 id="validate-token-content">Validate Token Content</h5>
+<p>Be sure to validate the content of the token as well as the validity of the token. Use claims like <code class="highlighter-rouge">aud</code>, <code class="highlighter-rouge">typ</code>, <code class="highlighter-rouge">iss</code>, and <code class="highlighter-rouge">sub</code> and validate each individual claim after token validation and decoding to ensure that the right token is being used for the right thing.
+<h3 id="stateless-auth-downsides">Stateless Auth Downsides</h3>
+<p>Here is where some personal preference comes in. One of the biggest downsides to stateless authentication is that there is no way of invalidating the tokens once they are issued. This is a potential security issue as well as an inconvenience.
+<p>But I think this can be solved by using a stateful refresh token.
+<p>This does add more moving parts to the authentication machine, but it solves the important issue of revoking token access.
+<p>There are many ways to implement this. For me, at this time, I prefer this:
+<ul>
+ <li>Refresh tokens are stored in the database of an authentication service. One user can have many refresh tokens.
+ <li>Refresh tokens can only be issued with a full authentication process like sending a valid password, single sign on flow, etc….
+ <li>The response to a successful strong authentication includes a JWT (that includes the expiration time inside the token) and a refresh token.
+ <li>The client is responsible for keeping their JWT up to date by monitoring the expiration time and refreshing using the refresh token.
+</ul>
+<h3 id="alternatives-to-jwt">Alternatives to JWT</h3>
+<ul>
+ <li>PASETO - <a href="https://paseto.io" title="https://paseto.io">https://paseto.io</a>
+   <ul>
+     <li>Main stateless alternative to JWT it has restrictions on algorithms and other things to help prevent developers from making common mistakes.
+     <li>The main drawback is that its not very popular.
+   </ul>
+</ul>
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Get a Facebook Page Access Token That Never Expires &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="With the facebook API, page tokens can often be used in place of user tokens. This is very useful because if you are doing something with a business, its not ideal to have to use your own user token for everything. However, if you don’t want to have to recreate...">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="facebook">
+<link rel="canonical" href="/posts/get-a-facebook-page-access-token-that-never-expires">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Get a Facebook Page Access Token That Never Expires" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Get a Facebook Page Access Token That Never Expires">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/get-a-facebook-page-access-token-that-never-expires">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          Get a Facebook Page Access Token That Never Expires
+     </h1>
+      <span class="published-at">Published Mar 21, 2018</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/facebook">#facebook</a>
+      </span>
+          <a href="/posts/get-a-facebook-page-access-token-that-never-expires" title="Get a Facebook Page Access Token That Never Expires"><img class="hero-image" src="/uploads/2018/03/21/So, let's take it to the streets and celebrate our freedom!.png" /></a>
+   </div>
+ </div>
+   <p>With the facebook API, page tokens can often be used in place of user tokens. This is very useful because if you are doing something with a business, its not ideal to have to use your own user token for everything. However, if you don’t want to have to recreate a new token all the time, you have to go through the process of getting a long-lived page access token.
+<p class="lead">
+<p><strong>IMPORTANT! -</strong> Make sure that your user has permissions to access both the Facebook page and the Facebook groups, and make sure that the Facebook groups are linked to the Facebook page!
+<p>Now lets talk about some definitions:
+<p><strong>short-lived user access token</strong>: This is the regular user_access_token, and it typically lasts about 2 hours.
+<p><strong>long-lived user access token</strong>: This user access token last about 60 days and you get it by extending a short-lived user access token
+<p><strong>page access token</strong>: These are similar to user access tokens and are created using a user access token.
+<p>If you create a page access token using a short-lived user access token, it is also short-lived and expires in about 2 hours.
+<p>But if you create a page access token using a long-lived user access token, then it does not have an expiration date. It lasts until its access is revoked.
+<p>Bingo!
+<p>To get a user access token you first have to have a facebook app, and then the user (in this case, you) has to grant permissions to your app. Specifically your app needs the permission called <code class="highlighter-rouge">manage_pages</code>.
+<p>The easiest way to do this is to use <a href="https://developers.facebook.com/tools/explorer">Facebook’s Graph API Explorer</a>.
+<p>Open up the page, then select your app Application dropdown and select “Get User Access Token” from the other dropdown:
+<p><img src="/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers-1.png" alt="" />
+<p>Then in the popup, make sure you check the box for <code class="highlighter-rouge">manage_pages</code> and click “Get Access Token”
+<p><img src="/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers2.png" alt="" />
+<p>Then your access token will be populated in the Access Token field:
+<p><img src="/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers3.png" alt="" />
+<p>Ok, then we need to exchange that short-lived token for a long-lived token, and we can do it with this same Facebook Graph API Explorer tool.
+<p>We need to make a GET request to the Facebook Graph API to the path <code class="highlighter-rouge">/oauth/access_token</code> with the following parameters:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre><td class="code"><pre>/oauth/access_token?  
+    grant_type=fb_exchange_token&amp;           
+    client_id={app-id}&amp;
+    client_secret={app-secret}&amp;
+    fb_exchange_token={short-lived-token-we-just-made} 
+</pre></table>
+</div>
+</div>
+<p>So make a string that looks like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>/oauth/access_token?grant_type=fb_exchange_token&amp;client_id=9382767696389008&amp;client_secret=1aac234d48ce90uu57c1b579faa92f00ufa&amp;fb_exchange_token=EAAcZBbBDPXSwBACfeRskLz5LJJCigZBZBDyr4pmZCcVsrpFaoDUDSXthSDzdq4bqO75iEE17TBbpxIyQ1eTR3OIfGq2KPZBloF4xJ0I1GU1hxOnCGJmZBVg0DXU4IrDgcURm4ceKE4M1ZAFdGNmt5y2shsETLxAEKwZD
+</pre></table>
+</div>
+</div>
+<p>And paste it into here and you’ll get your long-lived access token in the response:
+<p><img src="/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers4-1.png" alt="" />
+<p>Now that you have your long-lived user access token, we can exchange it by making a GET request in the Facebook Graph API Explorer to get the long-lived page access token.
+<p>You need to take that long-lived user access token and paste it into the Access Token field then put this in the path field:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre><span class="p">{</span><span class="err">fb-page-id</span><span class="p">}</span><span class="err">]/?fields=access_token</span><span class="w">
+</span></pre></table>
+</div>
+</div>
+<p>Then you will get your long-lived page access token in the response!
+<p><img src="/uploads/2018/03/21/Graph_API_Explorer_-_Facebook_for_Developers5.png" alt="" />
+<p>Facebook Documentation:
+<ul>
+ <li>Access Tokens: <a href="https://developers.facebook.com/docs/facebook-login/access-tokens" title="https://developers.facebook.com/docs/facebook-login/access-tokens">https://developers.facebook.com/docs/facebook-login/access-tokens</a>
+ <li>Extending Tokens: <a href="https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension" title="https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension">https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension</a>
+</ul>
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

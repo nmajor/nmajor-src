@@ -1,0 +1,3060 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>NMajor Blog</title>
+    <description>A blog filled with adventures in tech</description>
+    <link>/</link>
+    <atom:link href="/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Tue, 28 Apr 2020 22:09:03 +0000</pubDate>
+    <lastBuildDate>Tue, 28 Apr 2020 22:09:03 +0000</lastBuildDate>
+    <generator>Jekyll v3.8.6</generator>
+    
+      <item>
+        <title>JWT - What You Should Know</title>
+        <description>&lt;p&gt;This is not an introduction to JSON Web Tokens. There are plenty of those on the internet already. I’m trying to outline and compile my thoughts and research about when to implement JWT and how to do it safely.&lt;/p&gt;
+
+&lt;p&gt;TLDR: It’s easy to shoot yourself in the foot with JWT, but it’s very widely used and has some clear benefits. Be sure to research before trying and use a solid library.&lt;/p&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;If you want a good intro check out &lt;a href=&quot;https://jwt.io/introduction/&quot; title=&quot;https://jwt.io/introduction/&quot;&gt;this post&lt;/a&gt; and &lt;a href=&quot;https://blog.angular-university.io/angular-jwt/&quot; title=&quot;https://blog.angular-university.io/angular-jwt/&quot;&gt;this post&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;First of all, why are JWT or JSON Web Token useful and so widely used.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Stateless&lt;/strong&gt; - They don’t require storing sessions in a database.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Portable&lt;/strong&gt; - They can easily be used with multiple different backends and services.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;No cookies&lt;/strong&gt; - They can easily be used as bearer tokens by multiple different kinds of clients (mobile, browser, etc…)&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Verbose&lt;/strong&gt; - They include useful information in the token itself like user roles and other claims about the user.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Is there any reason NOT to use JWT.&lt;/p&gt;
+
+&lt;p&gt;JWTs are interesting in that they are widely used and also widely criticized. Most criticisms of JWT fall into 2 categories:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Overkill&lt;/strong&gt; - There are a lot of moving parts with JWT. Its probably overkill for many useless.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Library/Implementation Vulnerabilities&lt;/strong&gt; - Criticizing vulnerabilities in particular JWT libraries or implementations.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Stateless Auth Downsides&lt;/strong&gt; - Generally criticizing the practice of using any “stateless” client tokens. Because there’s no great way to revoke them early while remaining stateless, etc.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I’m going to try to give my best shot at addressing some of these issues.&lt;/p&gt;
+
+&lt;h3 id=&quot;overkill&quot;&gt;Overkill&lt;/h3&gt;
+
+&lt;p&gt;First you should decide if your need/want the benefits of JWT.&lt;/p&gt;
+
+&lt;p&gt;Because JWT has so many moving parts (less than other forms of authentication but more than others), in my opinion, you should only do it if you need some of the unique benefits of JWT.&lt;/p&gt;
+
+&lt;p&gt;I would say the following 2 things describe you then JWT might be worth implementing:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;I have multiple services/backends share authentication.&lt;/li&gt;
+  &lt;li&gt;I have non-browser clients that use my service.&lt;/li&gt;
+  &lt;li&gt;I am willing to take the time to understand JWT before implementing it.&lt;/li&gt;
+  &lt;li&gt;I am willing to keep my implementation up to date.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you are willing to take the time to understand JWT, then there are some resources to get you started.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Intro to JWT - &lt;a href=&quot;https://jwt.io/introduction/&quot; title=&quot;https://jwt.io/introduction/&quot;&gt;https://jwt.io/introduction/&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;The Complete Guide to JSON Web Tokens - &lt;a href=&quot;https://blog.angular-university.io/angular-jwt/&quot; title=&quot;https://blog.angular-university.io/angular-jwt/&quot;&gt;https://blog.angular-university.io/angular-jwt/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;libraryimplementation-vulnerabilities&quot;&gt;Library/Implementation Vulnerabilities&lt;/h3&gt;
+
+&lt;p&gt;It seems like this is an easy one to address. Just use a good library and good implementation. lol.&lt;/p&gt;
+
+&lt;h5 id=&quot;library&quot;&gt;Library&lt;/h5&gt;
+
+&lt;p&gt;But seriously JWT as a concept is supported strongly by the company Auth.io and they curate a list of approved JWT libraries for many different libraries and approved hashing algorithms.&lt;/p&gt;
+
+&lt;p&gt;That &lt;a href=&quot;https://jwt.io/#libraries&quot; title=&quot;https://jwt.io/#libraries&quot;&gt;list of approved libraries can be found here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Since The other important part of this concern is keeping the library up to date.However this is an issue with all opensource projects.&lt;/p&gt;
+
+&lt;p&gt;If security is a primary concern, then you should already have a strategy to keep notified of the vulnerabilities in the libraries you are using.&lt;/p&gt;
+
+&lt;p&gt;If you work with Node.js then the &lt;code class=&quot;highlighter-rouge&quot;&gt;npm audit&lt;/code&gt; command should be an important part of your deployment workflow. Of course its limited to known and reported library vulnerabilities, but its much better than doing nothing.&lt;/p&gt;
+
+&lt;p&gt;More info on &lt;a href=&quot;https://blog.npmjs.org/post/173719309445/npm-audit-identify-and-fix-insecure&quot; title=&quot;https://blog.npmjs.org/post/173719309445/npm-audit-identify-and-fix-insecure&quot;&gt;npm audit&lt;/a&gt; and &lt;a href=&quot;&quot;&gt;npm security advisories&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you’re working in a language other than Node.js then you’ll need to have your own strategy of staying appraised of library vulnerabilities.&lt;/p&gt;
+
+&lt;h5 id=&quot;implementation&quot;&gt;Implementation&lt;/h5&gt;
+
+&lt;p&gt;Good implementation comes from understanding. I think its safe to say that blindly copy/pasting solutions from stack overflow really increases your likelihood of having a poor implementation.&lt;/p&gt;
+
+&lt;p&gt;This is authentication we’re talking about. And given how catastrophic the consequences can be, make sure you educate yourself and tread carefully when building your implementation.&lt;/p&gt;
+
+&lt;p&gt;Avoid blind copy/pasta unless you understand what its doing. Also personally I like to avoid using big black box libraries and build the minimum functional system.&lt;/p&gt;
+
+&lt;p&gt;Here are some resources to help:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;JWT Best Current Practices - &lt;a href=&quot;https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/&quot; title=&quot;https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/&quot;&gt;https://auth0.com/blog/a-look-at-the-latest-draft-for-jwt-bcp/&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Critical vulnerabilities in JSON Web Token libraries - &lt;a href=&quot;https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/&quot; title=&quot;https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/&quot;&gt;https://auth0.com/blog/critical-vulnerabilities-in-json-web-token-libraries/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Don’t skip the reading, but some of the main things to do are:&lt;/p&gt;
+
+&lt;h5 id=&quot;enforce-approved-algorithms&quot;&gt;Enforce Approved Algorithms&lt;/h5&gt;
+
+&lt;p&gt;Have a short list of allowed (approved) algorithms, and ensure that your token verify function checks that the algorithm shown in the header is one of the approved algorithms.&lt;/p&gt;
+
+&lt;p&gt;Do some research to select the approved algorithms, but the most common seem to be:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;HMAC + SHA256&lt;/li&gt;
+  &lt;li&gt;RSASSA-PKCS1-v1_5 + SHA256&lt;/li&gt;
+  &lt;li&gt;ECDSA + P-256 + SHA256&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h5 id=&quot;handle-asymmetric-and-symmetric-algorithm-tokens-separately&quot;&gt;Handle Asymmetric and Symmetric Algorithm Tokens Separately&lt;/h5&gt;
+
+&lt;p&gt;Read about this more in the best practices article above, but this helps mitigate an attack where the public key of an asymmetric key (which is often easier for an attacker to get their hands on) can be used as a private key of a symmetrically signed token.&lt;/p&gt;
+
+&lt;h5 id=&quot;strong-keys&quot;&gt;Strong Keys&lt;/h5&gt;
+
+&lt;p&gt;Make sure your secret key is long enough. The rule of thumb is to make it as long as the hash output. So for a SHA256 output algorithm like HS256, the secret key should be at least 256 characters long.&lt;/p&gt;
+
+&lt;h5 id=&quot;validate-nested-tokens&quot;&gt;Validate Nested Tokens&lt;/h5&gt;
+
+&lt;p&gt;If using nested tokens, for example to hide sensitive information in the token body, be sure to validate all the way down.&lt;/p&gt;
+
+&lt;h5 id=&quot;limit-token-utility&quot;&gt;Limit Token Utility&lt;/h5&gt;
+
+&lt;p&gt;Avoid 1 token fits all if possible. When issuing a token make it clear in the claims what it should be used for and when validating the token make sure the claims match the requested use.&lt;/p&gt;
+
+&lt;h5 id=&quot;validate-token-content&quot;&gt;Validate Token Content&lt;/h5&gt;
+
+&lt;p&gt;Be sure to validate the content of the token as well as the validity of the token. Use claims like &lt;code class=&quot;highlighter-rouge&quot;&gt;aud&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;typ&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;iss&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;sub&lt;/code&gt; and validate each individual claim after token validation and decoding to ensure that the right token is being used for the right thing.&lt;/p&gt;
+
+&lt;h3 id=&quot;stateless-auth-downsides&quot;&gt;Stateless Auth Downsides&lt;/h3&gt;
+
+&lt;p&gt;Here is where some personal preference comes in. One of the biggest downsides to stateless authentication is that there is no way of invalidating the tokens once they are issued. This is a potential security issue as well as an inconvenience.&lt;/p&gt;
+
+&lt;p&gt;But I think this can be solved by using a stateful refresh token.&lt;/p&gt;
+
+&lt;p&gt;This does add more moving parts to the authentication machine, but it solves the important issue of revoking token access.&lt;/p&gt;
+
+&lt;p&gt;There are many ways to implement this. For me, at this time, I prefer this:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Refresh tokens are stored in the database of an authentication service. One user can have many refresh tokens.&lt;/li&gt;
+  &lt;li&gt;Refresh tokens can only be issued with a full authentication process like sending a valid password, single sign on flow, etc….&lt;/li&gt;
+  &lt;li&gt;The response to a successful strong authentication includes a JWT (that includes the expiration time inside the token) and a refresh token.&lt;/li&gt;
+  &lt;li&gt;The client is responsible for keeping their JWT up to date by monitoring the expiration time and refreshing using the refresh token.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;alternatives-to-jwt&quot;&gt;Alternatives to JWT&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;PASETO - &lt;a href=&quot;https://paseto.io&quot; title=&quot;https://paseto.io&quot;&gt;https://paseto.io&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Main stateless alternative to JWT it has restrictions on algorithms and other things to help prevent developers from making common mistakes.&lt;/li&gt;
+      &lt;li&gt;The main drawback is that its not very popular.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Tue, 29 Oct 2019 00:00:00 +0000</pubDate>
+        <link>/posts/jwt-json-web-token-and-my-approach</link>
+        <guid isPermaLink="true">/posts/jwt-json-web-token-and-my-approach</guid>
+        
+        <category>javascript</category>
+        
+        <category>authentication</category>
+        
+        <category>jwt</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Create a New Linux User With SSH Access</title>
+        <description>&lt;p&gt;This is just a personal reference.&lt;/p&gt;
+
+&lt;p&gt;Generate the key for the user. This should be done on the local machine:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;ssh-keygen -t rsa -b 4096 -o -a 100
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Create a new user on the remote machine. The &lt;code class=&quot;highlighter-rouge&quot;&gt;-m&lt;/code&gt; adds a deuser fault user home directory.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;useradd -m new-user
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;Switch to the new user:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;sudo su new-user
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Make a &lt;code class=&quot;highlighter-rouge&quot;&gt;.ssh&lt;/code&gt; directory for the user:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;mkdir ~/.ssh
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Make an &lt;code class=&quot;highlighter-rouge&quot;&gt;authorized_keys&lt;/code&gt; file.:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;touch ~/.ssh/authorized_keys
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Set the right permissions:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Add the public key you created to the &lt;code class=&quot;highlighter-rouge&quot;&gt;authorized_keys&lt;/code&gt; file.&lt;/p&gt;
+
+&lt;h3 id=&quot;resources&quot;&gt;Resources:&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices&quot; title=&quot;https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices&quot;&gt;https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://help.ubuntu.com/community/SSH/OpenSSH/Keys&quot; title=&quot;https://help.ubuntu.com/community/SSH/OpenSSH/Keys&quot;&gt;https://help.ubuntu.com/community/SSH/OpenSSH/Keys&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Fri, 11 Oct 2019 23:00:00 +0000</pubDate>
+        <link>/posts/create-a-new-linux-user-with-ssh-access</link>
+        <guid isPermaLink="true">/posts/create-a-new-linux-user-with-ssh-access</guid>
+        
+        <category>linux</category>
+        
+        <category>ssh</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Quick Docker Server Setup with API on Ubuntu</title>
+        <description>&lt;p&gt;This is mostly just a quick reference for me to use when I need to whip up a docker server. This is on Ubuntu 16.04.&lt;/p&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;install-docker&quot;&gt;Install Docker&lt;/h1&gt;
+
+&lt;p&gt;First prepare the app registry:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository &quot;deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable&quot;
+sudo apt-get update
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then check the output of this command. It should have no docker installed but there should be a candidate:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;apt-cache policy docker-ce
+
+# docker-ce:
+#   Installed: (none)
+#   Candidate: 5:18.09.0~3-0~ubuntu-xenial
+#   Version table:
+#      5:18.09.0~3-0~ubuntu-xenial 500
+#   ...
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then install docker:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;sudo apt-get install -y docker-ce
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then check the output of this command. Docker should be loaded and active:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;sudo systemctl status docker
+
+# ● docker.service - Docker Application Container Engine
+#    Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+#    Active: active (running) since Fri 2019-01-04 22:45:48 UTC; 1min 22s ago
+#      Docs: https://docs.docker.com
+#  Main PID: 3538 (dockerd)
+#    CGroup: /system.slice/docker.service
+#            └─3538 /usr/bin/dockerd -H unix://
+# 
+# .... Logs down here should say something like Started Docker Application Container Engine. at some point
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Add your current user to the docker user group so it can access the docker socket&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;sudo usermod -a -G docker $USER
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h1 id=&quot;configure-docker-api&quot;&gt;Configure Docker API&lt;/h1&gt;
+
+&lt;p&gt;Here is where we tell docker to listen to incoming API requests.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h4 id=&quot;important&quot;&gt;Important!!!&lt;/h4&gt;
+
+&lt;p&gt;Before doing this step you should make sure you have a proper firewall implemented. There is no out of the box authentication for the docker API, and many hackers know docker. Once your docker instance is listening for requests, unless your docker port is protected by a firewall or something else, hackers WILL start running random containers on your docker server.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Now make a new file called &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/systemd/system/docker.service.d/docker.conf&lt;/code&gt; and open it for editing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;sudo mkdir /etc/systemd/system/docker.service.d
+sudo touch /etc/systemd/system/docker.service.d/docker.conf
+sudo vim /etc/systemd/system/docker.service.d/docker.conf
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Add this to the file:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;[Service]
+ExecStart=
+ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;You can change the PORT your API listens on here if you want to.&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Restart docker service:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;sudo systemctl daemon-reload
+sudo systemctl restart docker.service
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Check output of this command. It should have &lt;code class=&quot;highlighter-rouge&quot;&gt;-H tcp://0.0.0.0:2375&lt;/code&gt; in the docker command.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;sudo systemctl status docker.service
+
+# ● docker.service - Docker Application Container Engine
+#    Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+#   Drop-In: /etc/systemd/system/docker.service.d
+#            └─docker.conf
+#    Active: active (running) since Fri 2019-01-04 22:54:49 UTC; 3s ago
+#      Docs: https://docs.docker.com
+#  Main PID: 3791 (dockerd)
+#     Tasks: 8
+#    Memory: 30.0M
+#       CPU: 178ms
+#    CGroup: /system.slice/docker.service
+#            └─3791 /usr/bin/dockerd -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock
+#
+# .... Logs down here should say something like Started Docker Application Container Engine. at some point          
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we can do a quick test. This command should return an empty array since we don’t have any images on our fresh docker host:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;curl -X GET http://localhost:2375/images/json
+# []
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can also test it from another computer with this command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;DOCKER_HOST=tcp://&amp;lt;DOCKER_HOST_IP_GOES_HERE&amp;gt;:2375 docker ps -a
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we should be done.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 05 Oct 2019 23:00:00 +0000</pubDate>
+        <link>/posts/quick-docker-server-setup-with-api-on-ubuntu</link>
+        <guid isPermaLink="true">/posts/quick-docker-server-setup-with-api-on-ubuntu</guid>
+        
+        <category>docker</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Simple Object Storage in Redis (Node.js)</title>
+        <description>&lt;p&gt;&lt;a href=&quot;https://redis.io/&quot; title=&quot;https://redis.io/&quot;&gt;Redis&lt;/a&gt; is a simple key value store and is highly optimized for fast reads and writes. I found myself in a situation where I wanted to offload some app task logging from our document store (mongoDB) to redis.&lt;/p&gt;
+
+&lt;p&gt;There are a few important things to consider when making this kind of change.&lt;/p&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;First&lt;/strong&gt; it was important for our use case to have some basic kind of indexing and sorting based on when the document was created.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Second&lt;/strong&gt;, since we do a lot of logging, we needed to make sure that all documents clean up after themselves and expire nicely so we don’t run out of space in redis, and we don’t really care about keeping these logs indefinitely.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Third&lt;/strong&gt;, our logs are javascript objects, so we needed some kind of customizable serialization/deserialization.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Fourth&lt;/strong&gt;, I wanted to have a nice abstraction with predictable model-like behavior like &lt;code class=&quot;highlighter-rouge&quot;&gt;findOne&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;create&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;update&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;fromIndex&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;So here is a basic solution I came up with.&lt;/p&gt;
+
+&lt;p&gt;The plan:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Schema&lt;/strong&gt; - Add a schema for &lt;code class=&quot;highlighter-rouge&quot;&gt;redisModels&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Finding, Creating and Updating&lt;/strong&gt; - Use &lt;a href=&quot;&quot;&gt;redis hashes&lt;/a&gt; to store our objects and have functions for adding, finding, and updating.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Indexing and Sorting&lt;/strong&gt; - Use &lt;a href=&quot;https://redis.io/topics/data-types#lists&quot; title=&quot;https://redis.io/topics/data-types#lists&quot;&gt;redis lists&lt;/a&gt; (aka ranges) to maintain a sorted list of object keys.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I’ll be using the main &lt;a href=&quot;https://www.npmjs.com/package/redis&quot; title=&quot;https://www.npmjs.com/package/redis&quot;&gt;redis node&lt;/a&gt; library for this.&lt;/p&gt;
+
+&lt;h3 id=&quot;schema&quot;&gt;Schema&lt;/h3&gt;
+
+&lt;p&gt;Here is what our basic schema will look like:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const logSchema = {
+  namespace: 'logs',
+  indexes: [
+    {
+      getName: () =&amp;gt; 'createdAt',
+      shouldIndex: () =&amp;gt; true,
+      addNonTenantIndex: () =&amp;gt; true,
+      getValue: data =&amp;gt; new Date(data.createdAt).getTime(),
+    },
+  ],
+  attributes: {
+    source: { kind: 'string' },
+    user: { kind: 'object' },
+    body: { kind: 'object' },
+    createdAt: { kind: 'time' },
+  },
+};
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;As you can see we set information about our &lt;code class=&quot;highlighter-rouge&quot;&gt;attributes&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;indexes&lt;/code&gt; and a &lt;code class=&quot;highlighter-rouge&quot;&gt;namespace&lt;/code&gt; that we will use for our redis keys. The &lt;code class=&quot;highlighter-rouge&quot;&gt;namespace&lt;/code&gt; is mostly useful if you plan on storing multiple kinds of objects in redis.&lt;/p&gt;
+
+&lt;h3 id=&quot;creating&quot;&gt;Creating&lt;/h3&gt;
+
+&lt;p&gt;We’ll start by creating a new class and constructor inside of a new file called &lt;code class=&quot;highlighter-rouge&quot;&gt;lib/redis.js&lt;/code&gt;. I know this is a bunch of code to dump in all at once, but I’ll break it down afterwards:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;import shortid from 'shortid';
+import _ from 'lodash';
+
+function getRedisClient() {
+  // IMPLEMENT YOUR OWN METHOD OF GETTING THE REDIS CLIENT,
+}
+
+function expSeconds(days = 30) {
+  const secondsPerDay = 86400;
+  return days * secondsPerDay;
+}
+
+function buildId() { return shortid.generate(); }
+
+const stringify = {
+  string: data =&amp;gt; data,
+  number: data =&amp;gt; data.toString(),
+  date: data =&amp;gt; new Date(data).toISOString(),
+  time: data =&amp;gt; new Date(data).toISOString(),
+  object: data =&amp;gt; JSON.stringify(data),
+};
+
+export default class RedisModel {
+  constructor(schema) {
+    this.props = {
+      schema,
+      client: getRedisClient(),
+    };
+  }
+
+  _buildHashValues(data) {
+    const { schema: { attributes } } = this.props;
+    const hashValues = [];
+
+    _.each(data, (value, key) =&amp;gt; {
+      const type = (attributes[key] || {}).kind;
+      const stringValue = stringify[type] ? stringify[type](value) : undefined;
+      if (!type || !stringValue) return null;
+
+      return hashValues.push(key, stringValue);
+    });
+
+    return _.isEmpty(hashValues) ? undefined : hashValues;
+  }
+
+  _buildRedisKey(id) {
+    const { schema } = this.props;
+    return `${schema.namespace}:${id}`;
+  }
+
+  create(data) {
+    const { client } = this.props;
+
+    return new Promise((resolve, reject) =&amp;gt; {
+      const multi = client.multi();
+      const id = buildId();
+      const redisKey = this._buildRedisKey(id);
+
+      // Handle the hash values
+      const hashValues = this._buildHashValues(data);
+      if (hashValues) {
+        multi.hmset(redisKey, hashValues);
+        multi.hmset(redisKey, 'EX', expSeconds());
+        multi.exec((err) =&amp;gt; {
+          if (err) return reject(err);
+
+          return resolve({ key: redisKey, _id: id, ...data });
+        });
+      } else {
+        reject(new Error('Empty redis hash data'));
+      }
+    });
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;First of all you’ll notice I’m using the &lt;a href=&quot;&quot;&gt;lodash&lt;/a&gt; for its useful helper methods, and &lt;a href=&quot;https://www.npmjs.com/package/shortid&quot; title=&quot;https://www.npmjs.com/package/shortid&quot;&gt;shortid&lt;/a&gt; to help generate unique ids for our redis keys.&lt;/p&gt;
+
+&lt;p&gt;We are using the &lt;code class=&quot;highlighter-rouge&quot;&gt;multi&lt;/code&gt; redis behavior.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const multi = client.multi();
+// ...
+multi.hmset(redisKey, hashValues);
+multi.hmset(redisKey, 'EX', expSeconds());
+multi.exec((err) =&amp;gt; {
+// ...
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This allows us to do multiple calls in one redis transaction, and if one of the calls fails, the whole transaction will fail. This reduces the chances that we’ll have stray data being stored in the database.&lt;/p&gt;
+
+&lt;p&gt;We’re also using our schema namespace to build a unique redis key for our object.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const redisKey = this._buildRedisKey(id);
+
+  _buildRedisKey(id) {
+    const { schema } = this.props;
+    return `${schema.namespace}:${id}`;
+  }
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This isn’t totally necessary, and really only useful if you are storing multiple types of objects in redis, but it does give us the ability to do basic fetching redis for all items with the namespace prefix later if we want.&lt;/p&gt;
+
+&lt;p&gt;You can see that we’re using a &lt;a href=&quot;https://redis.io/topics/data-types#hashes&quot; title=&quot;https://redis.io/topics/data-types#hashes&quot;&gt;redis hash&lt;/a&gt; to store all our object data.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;multi.hmset(redisKey, hashValues);
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;The &lt;a href=&quot;https://redis.io/commands/hmset&quot; title=&quot;https://redis.io/commands/hmset&quot;&gt;hmset&lt;/a&gt; function takes an array of key value pairs. Redis hashes require the values to be strings, so our &lt;code class=&quot;highlighter-rouge&quot;&gt;_buildHashValues&lt;/code&gt; function takes our data and converts it to an array of strings based on the key/value pairs and attribute types in the schema.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;  _buildHashValues(data) {
+    const { schema: { attributes } } = this.props;
+    const hashValues = [];
+
+    _.each(data, (value, key) =&amp;gt; {
+      const type = (attributes[key] || {}).kind;
+      const stringValue = stringify[type] ? stringify[type](value) : undefined;
+      if (!type || !stringValue) return null;
+
+      return hashValues.push(key, stringValue);
+    });
+
+    return _.isEmpty(hashValues) ? undefined : hashValues;
+  }
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And it uses our &lt;code class=&quot;highlighter-rouge&quot;&gt;stringify&lt;/code&gt; object as a map for how to convert the different attributes to strings based on the schema. This gives us some granular control over the serialization of each attribute of our objects.&lt;/p&gt;
+
+&lt;p&gt;And we’re also setting an expiration for our keys so they dont last forever in our database.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;multi.hmset(redisKey, 'EX', expSeconds());
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And that handles our ability to create new objects in our redis model.&lt;/p&gt;
+
+&lt;h3 id=&quot;updating&quot;&gt;Updating&lt;/h3&gt;
+
+&lt;p&gt;Our update function is very similar to our create:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;export default class RedisModel {
+  // ...
+  update(id, data) {
+    const { client } = this.props;
+
+    return new Promise((resolve, reject) =&amp;gt; {
+      const redisKey = this._buildRedisKey(id);
+
+      // Handle the hash values
+      const hashValues = this._buildHashValues(data);
+      if (hashValues) {
+        client.hmset(redisKey, hashValues, (err) =&amp;gt; {
+          if (err) return reject(err);
+
+          return resolve();
+        });
+      } else resolve();
+    });
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Basically it uses the same &lt;code class=&quot;highlighter-rouge&quot;&gt;_buildRedisKey&lt;/code&gt; function so we only have to deal with the id of the object. Then it basically just does the same &lt;code class=&quot;highlighter-rouge&quot;&gt;hmset&lt;/code&gt; function. Redis will keep any attributes in the hash that are not overwritten.&lt;/p&gt;
+
+&lt;h3 id=&quot;finding&quot;&gt;Finding&lt;/h3&gt;
+
+&lt;p&gt;Here’s our find method. This lets us find any object by id and deserialize all the values into their original datatypes based on the schema:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const parsify = {
+  string: data =&amp;gt; data,
+  number: data =&amp;gt; parseInt(data, 10),
+  date: data =&amp;gt; new Date(data),
+  time: data =&amp;gt; new Date(data),
+  object: data =&amp;gt; JSON.parse(data),
+};
+
+export default class RedisModel {
+  // ...
+  _unpackHashValues(data) {
+    const { schema: { attributes } } = this.props;
+    const obj = {};
+
+    _.each(data, (value, key) =&amp;gt; {
+      const type = (attributes[key] || {}).kind;
+      if (!type) return null;
+
+      obj[key] = parsify[type](value);
+      return null;
+    });
+
+    return _.isEmpty(obj) ? undefined : obj;
+  }
+
+  findOne(id) {
+    const { client } = this.props;
+
+    return new Promise((resolve, reject) =&amp;gt; {
+      const redisKey = this._buildRedisKey(id);
+      client.hgetall(redisKey, (err, data) =&amp;gt; {
+        if (err) return reject(err);
+
+        return resolve({
+          key: redisKey,
+          _id: id,
+          ...this._unpackHashValues(data),
+        });
+      });
+    });
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Here is where we use a &lt;code class=&quot;highlighter-rouge&quot;&gt;parsify&lt;/code&gt; method to convert our attribute strings into their original data type.&lt;/p&gt;
+
+&lt;p&gt;And that handles our finding and deserialization.&lt;/p&gt;
+
+&lt;h3 id=&quot;indexing-and-sorting&quot;&gt;Indexing and Sorting&lt;/h3&gt;
+
+&lt;p&gt;Here is the tricky part. Redis, as a key/value store doesnt have any real sense of ordering when it comes to its keys. But its important for our use case to be able to see the most recent logs, and maybe later be able to query date ranges of when the logs were created.&lt;/p&gt;
+
+&lt;p&gt;So what we’re going to do is use the redis function &lt;code class=&quot;highlighter-rouge&quot;&gt;zadd&lt;/code&gt; to add the redis key and timestamp for each object into a sorted redis list.&lt;/p&gt;
+
+&lt;p&gt;Remember from our schema, indexes look like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;getName:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;'createdAt',&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;shouldIndex:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;true,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;getValue:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;err&quot;&gt;Date(data.createdAt).getTime(),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;getName&lt;/code&gt; is a function because I’ve found it useful to be able to create some indexes that are isolated in different ways. For example I’ve sometimes added indexes that are based on the ID of the user who created the log, this lets me easily get a list of all the user’s most recent indexes. And in that case the &lt;code class=&quot;highlighter-rouge&quot;&gt;getName&lt;/code&gt; looks like this &lt;code class=&quot;highlighter-rouge&quot;&gt;getName: data =&amp;gt; ('user:'+data.user._id+':createdAt')&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;shouldIndex&lt;/code&gt; lets us not index any object we want, and &lt;code class=&quot;highlighter-rouge&quot;&gt;getValue&lt;/code&gt; gives us the actual value of the index, so this actually lets us create sorted lists using any different attribute not just createdAt. Just remember that &lt;code class=&quot;highlighter-rouge&quot;&gt;getValue&lt;/code&gt; has to return a number.&lt;/p&gt;
+
+&lt;p&gt;Now we modify our &lt;code class=&quot;highlighter-rouge&quot;&gt;create&lt;/code&gt; function to include a &lt;code class=&quot;highlighter-rouge&quot;&gt;zadd&lt;/code&gt; for each index in our schema:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;_buildIndexName(indexName) {
+    const { schema } = this.props;
+    return `${schema.namespace}:${indexName}`;
+  }
+
+  create(data) {
+    const { schema, client } = this.props;
+
+    return new Promise((resolve, reject) =&amp;gt; {
+      const multi = client.multi();
+      const id = buildId();
+      const redisKey = this._buildRedisKey(id);
+
+      // Handle the hash values
+      const hashValues = this._buildHashValues(data);
+      if (hashValues) {
+        multi.hmset(redisKey, hashValues);
+        multi.hmset(redisKey, 'EX', expSeconds());
+
+        // Handle indexes
+        if (schema.indexes) {
+          _.each(schema.indexes, (index) =&amp;gt; {
+            if (index.shouldIndex(data)) {
+              multi.zadd(this._buildIndexName(index.getName(data)), index.getValue(data), redisKey);
+            }
+          });
+        }
+
+        multi.exec((err) =&amp;gt; {
+          if (err) return reject(err);
+
+          return resolve({ key: redisKey, _id: id, ...data });
+        });
+      } else {
+        reject(new Error('Empty redis hash data'));
+      }
+    });
+  }
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This inserts the &lt;code class=&quot;highlighter-rouge&quot;&gt;redisKey&lt;/code&gt; of each object into a sorted list based on the createdAt timestamp of the object.&lt;/p&gt;
+
+&lt;p&gt;Now we can easily retrieve the top objects from any index with a function like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;export default class RedisModel {
+  // ...
+  _clearOldIndexes(indexName) {
+    const { client, schema } = this.props;
+    return new Promise((resolve, reject) =&amp;gt; {
+      const now = new Date().getTime();
+      const secondsPerDay = 86400;
+      const args = [
+        this._buildIndexName(schema, indexName),
+        (now + (expSeconds() - secondsPerDay) * 1000),
+        '-inf',
+      ];
+
+      client.zremrangebyscore(args, (err, results) =&amp;gt; {
+        if (err) return reject(err);
+
+        return resolve(results);
+      });
+    });
+  }
+
+  _getIndexedIds(indexName, offset, limit) {
+    const { client } = this.props;
+
+    return this._clearOldIndexes(indexName)
+      .then(() =&amp;gt; new Promise((resolve, reject) =&amp;gt; {
+        const args = [indexName, '+inf', '-inf', 'LIMIT', offset || 0, limit || 20];
+
+        client.zrevrangebyscore(args, (err, results) =&amp;gt; {
+          if (err) return reject(err);
+
+          return resolve(results);
+        });
+      }));
+  }
+
+  fromIndex(indexName) {
+    return this._getIndexedIds(indexName, undefined, 250)
+      .then(results =&amp;gt; Promise.all(results.map(result =&amp;gt; this.findOne(result))));
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Notice that inside &lt;code class=&quot;highlighter-rouge&quot;&gt;_getIndexedIds&lt;/code&gt; we first &lt;code class=&quot;highlighter-rouge&quot;&gt;_clearOldIndexes&lt;/code&gt;. This is because redis does not allow us to set expiration times for entries inside of a list so I get around this by first removing all entries that are expired before actually getting a list of all the entries in the list.&lt;/p&gt;
+
+&lt;p&gt;Then it gets a list of all the ids using the &lt;a href=&quot;&quot;&gt;zrangebyscore&lt;/a&gt; function. Then it converts each one into its full object using the &lt;code class=&quot;highlighter-rouge&quot;&gt;findOne&lt;/code&gt; function that we already made.&lt;/p&gt;
+
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;/h3&gt;
+
+&lt;p&gt;Now that we have our basic &lt;code class=&quot;highlighter-rouge&quot;&gt;RedisModel&lt;/code&gt; class we can create new models by just exporting an instance with our schema. For example we could have a &lt;code class=&quot;highlighter-rouge&quot;&gt;models/log.js&lt;/code&gt; file that looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;// models/log.js
+import RedisModel from '../lib/redis';
+
+const logSchema = {
+  namespace: 'logs',
+  indexes: [
+    {
+      getName: () =&amp;gt; 'createdAt',
+      shouldIndex: () =&amp;gt; true,
+      addNonTenantIndex: () =&amp;gt; true,
+      getValue: data =&amp;gt; new Date(data.createdAt).getTime(),
+    },
+  ],
+  attributes: {
+    source: { kind: 'string' },
+    user: { kind: 'object' },
+    body: { kind: 'object' },
+    createdAt: { kind: 'time' },
+  },
+};
+
+export default new RedisModel(schema);
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then in other parts of our program we can do things like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;import Log from '../models/log';
+
+// Get a list of logs
+const logList = Log.fromIndex('createdAt');
+
+// Find a specific log
+Log.findOne('123456');
+
+// Create a new log
+Log.create({
+  source: 'Web',
+  body: 'An error happened',
+  user: { email: 'joe@cool.com',  },
+  createdAt: new Date(),
+});
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And based on how we built it, we think about our individual objects in terms of &lt;code class=&quot;highlighter-rouge&quot;&gt;ids&lt;/code&gt; and not keys.&lt;/p&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;You can see a &lt;a href=&quot;https://gist.github.com/nmajor/e772d0dd166c8c3bbffb2bee00faa8a2&quot; title=&quot;https://gist.github.com/nmajor/e772d0dd166c8c3bbffb2bee00faa8a2&quot;&gt;gist with the full RedisModel class here&lt;/a&gt;. Keep in mind this is mostly just to give a possible starting point. Its possible there are some bugs in here since I had to water down my implementation a bit to keep this post concise.&lt;/p&gt;
+
+&lt;p&gt;As always, please let me know if you see any issues with the code, or possible problems with my implementation or design choices. I’m always learning.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+</description>
+        <pubDate>Fri, 05 Oct 2018 17:27:12 +0000</pubDate>
+        <link>/posts/simple-object-storage-in-redis-and-node</link>
+        <guid isPermaLink="true">/posts/simple-object-storage-in-redis-and-node</guid>
+        
+        <category>node</category>
+        
+        <category>redis</category>
+        
+        <category>javascript</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Multi Tenancy with Express/Mongoose</title>
+        <description>&lt;p&gt;Multi tenant apps are apps where multiple users share the same database but their data is isolated from one another. This can basically describe almost any app with multiple users. For example users can often only see and change their own data.&lt;/p&gt;
+
+&lt;p&gt;However, personally, I define multi tenant apps as having a layer of data isolation above the level of the user. For example you could have a data model called an &lt;code class=&quot;highlighter-rouge&quot;&gt;organization&lt;/code&gt; and the the user can only see and interact with the data related to that organization.&lt;/p&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;Adding this kind of layer to apps is really useful and powerful and can really level up some apps.&lt;/p&gt;
+
+&lt;p&gt;The most important thing with multi tenant apps is that the data isolation must be perfect. If a user ever sees data not related to their tenant, it can result it a huge loss of customer trust especially these days when user data is such a hot issue.&lt;/p&gt;
+
+&lt;p&gt;We should NOT rely on developers writing queries and logic to keep this data isolation, so the best thing to do is to tackle this at a high level with powerful patterns.&lt;/p&gt;
+
+&lt;p&gt;Here’s a possible implementation:&lt;/p&gt;
+
+&lt;p&gt;The plan:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Continuation-Local Storage&lt;/strong&gt; - Use &lt;a href=&quot;&quot;&gt;this library&lt;/a&gt; to easily give every function access to the current tenant at all times.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Express Middleware&lt;/strong&gt; - Add express middleware that will tell set the current tenent for every request.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Mongoose Discriminator&lt;/strong&gt; - For every tenant create an on-the-fly discriminator model, so all actions performed by the model are in the context of the current tenant.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Model Wrapper&lt;/strong&gt; - Add a wrapper around Mongoose models so that every time that model is used it actually gets a different version of the model specific to the current tenant.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I’m assuming you have a basic understanding of express and mongoose.&lt;/p&gt;
+
+&lt;h3 id=&quot;continuation-local-storage&quot;&gt;Continuation-Local Storage&lt;/h3&gt;
+
+&lt;p&gt;I recently found this great library called &lt;a href=&quot;https://github.com/othiym23/node-continuation-local-storage&quot; title=&quot;https://github.com/othiym23/node-continuation-local-storage&quot;&gt;node-continuation-local-storage&lt;/a&gt;. Basically you can think of most things in javascript as a chain of functions calling functions. What this library does is lets you define variables at the beginning of the function chain, and then every function further down the chain has access to those variables.&lt;/p&gt;
+
+&lt;p&gt;The first thing we’ll do is set this library up with express. We do that by first binding the context using an express middleware function, this gives continuous-local-storage a namespace and context to store our variables.&lt;/p&gt;
+
+&lt;p&gt;Lets create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;lib/storage.js&lt;/code&gt; and create an express middleware function to bind the storage context as well as a few exportable getter and setter functions for our &lt;code class=&quot;highlighter-rouge&quot;&gt;tenantId&lt;/code&gt; variable.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;// lib/storage.js
+import { createNamespace } from 'continuation-local-storage';
+
+const namespaceName = 'request';
+const ns = createNamespace(namespaceName);
+
+export function bindCurrentNamespace(req, res, next) {
+  ns.bindEmitter(req);
+  ns.bindEmitter(res);
+
+  ns.run(() =&amp;gt; {
+    next();
+  });
+}
+
+export function setCurrentTenantId(tenantId) {
+  return ns.set('tenantId', tenantId);
+}
+
+export function getCurrentTenantId() {
+  return ns.get('tenantId');
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now inside your express bootstrap file, usually called &lt;code class=&quot;highlighter-rouge&quot;&gt;app.js&lt;/code&gt; we add the &lt;code class=&quot;highlighter-rouge&quot;&gt;bindCurrentNamespace&lt;/code&gt; middleware.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;// app.js
+
+import { bindCurrentNamespace } from 'lib/storage';
+
+app.use(bindCurrentNamespace);
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This creates a context that every express request can use.&lt;/p&gt;
+
+&lt;p&gt;Next we’ll add another middleware function that will use our &lt;code class=&quot;highlighter-rouge&quot;&gt;setCurrentTenantId&lt;/code&gt; function to set that data for every other function in the chain.&lt;/p&gt;
+
+&lt;h3 id=&quot;express-middleware&quot;&gt;Express Middleware&lt;/h3&gt;
+
+&lt;p&gt;No here is where you’ll probably want to tie into any existing authentication system you have. Basically we need to someone figure out which user each request comes from.&lt;/p&gt;
+
+&lt;p&gt;Some of the most common approaches here is to connect it with a session or use a bearer token with each request. But this is one area where many people will have different implementations.&lt;/p&gt;
+
+&lt;p&gt;We nee to figure out which user the request is connected to, and once we have the user, you should be able to tell which tenant the user belongs to:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;// app.js
+
+import { bindCurrentNamespace, setCurrentTenantId } from 'lib/storage';
+
+app.use(bindCurrentNamespace);
+app.use((req, res, next) =&amp;gt; {
+  // Get current user from session or token
+  const user = req.user
+  
+  // Get current tenant from user here
+  // Make sure its a string
+  const tenantId = user.organization._id.toString()
+  
+  setCurrentTenantId('tenantId', tenantId);
+  next();
+});
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;There you have it. Now every function for every request will have access to the current tenant of the user making the request. We’ll next use this behavior to bind our models to the tenant context.&lt;/p&gt;
+
+&lt;h3 id=&quot;mongoose-discriminator&quot;&gt;Mongoose Discriminator&lt;/h3&gt;
+
+&lt;p&gt;So here is where the magic happens. Lets create a new file called &lt;code class=&quot;highlighter-rouge&quot;&gt;lib/multiTenant.js&lt;/code&gt; this file is going to export some higher order functions that will wrap every model with a discriminator based on the tenant id.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;// lib/multiTenant.js
+
+import mongoose, { Schema } from 'mongoose';
+import { getCurrentTenantId } from './storage';
+
+export function tenantModel(name, schema, options) {
+  return (props = {}) =&amp;gt; {
+    schema.add({ tenantId: String });
+    const Model = mongoose.model(name, schema, options);
+
+    const { skipTenant } = props;
+    if (skipTenant) return Model;
+
+    Model.schema.set('discriminatorKey', 'tenantId');
+
+    const tenantId = getCurrentTenantId();
+    const discriminatorName = `${Model.modelName}-${tenantId}`;
+    const existingDiscriminator = (Model.discriminators || {})[discriminatorName];
+    return existingDiscriminator || Model.discriminator(discriminatorName, new Schema({}));
+  };
+}
+
+export function tenantlessModel(name, schema, options) {
+  return () =&amp;gt; mongoose.model(name, schema, options);
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You’ll notice we have two exported higher order functions. If you’re unfamiliar with &lt;a href=&quot;https://eloquentjavascript.net/05_higher_order.html&quot; title=&quot;https://eloquentjavascript.net/05_higher_order.html&quot;&gt;higher order functions&lt;/a&gt;, they are basically just functions that return other functions. Its a very powerful and often used pattern in javascript.&lt;/p&gt;
+
+&lt;p&gt;The function &lt;code class=&quot;highlighter-rouge&quot;&gt;tenantlessModel&lt;/code&gt; is basically just a passthrough function. We can use this function on any model that should not be tenant-isolated. One of the main examples of this is our tenant model itself which we have been calling &lt;code class=&quot;highlighter-rouge&quot;&gt;organization&lt;/code&gt;. So our &lt;code class=&quot;highlighter-rouge&quot;&gt;organization&lt;/code&gt; model will use this function.&lt;/p&gt;
+
+&lt;p&gt;The other function is where all the magic happens. &lt;code class=&quot;highlighter-rouge&quot;&gt;tenantModel&lt;/code&gt; exports another function. And that function returns a modified mongoose model or discriminator.&lt;/p&gt;
+
+&lt;p&gt;Lets break down the code section by section:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;schema.add({ [tenantKey]: String });
+const Model = mongoose.model(name, schema, options);
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;In this line we’re just adding a new attribute to the model schema to hold our &lt;code class=&quot;highlighter-rouge&quot;&gt;tenantId&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const { skipTenant } = props;
+if (skipTenant) return Model;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This is just a useful feature. This allows us to easily bypass our tenant isolation whenever we want. I’ve found this particularly useful in testing. But also for things like looking up the user during authentication when its important to be able to search for all users in the database.&lt;/p&gt;
+
+&lt;p&gt;But this makes it so the norm is the tenant isolation, and we have to explicitly override it if we want access to all the models in the database.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;Model.schema.set('discriminatorKey', 'tenantId');
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This is pretty basic, we’re just telling the model to use the field &lt;code class=&quot;highlighter-rouge&quot;&gt;'tenantId'&lt;/code&gt; as the discriminator key.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const tenantId = getCurrentTenantId();
+const discriminatorName = `${Model.modelName}-${tenantId}`;
+const existingDiscriminator = (Model.discriminators || {})[discriminatorName];
+return existingDiscriminator || Model.discriminator(discriminatorName, new Schema({}));
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Here is where we actually build a new discriminator based on the current tenant.&lt;/p&gt;
+
+&lt;p&gt;Remember discriminators are basically just augmented mongoose models. The common use case is when you want to simulate model inheritance and basically have one model be the same as another but with extra behavior. The discriminator name is the name of the new augmented model. We’re sort of hacking this feature for its built in data isolation.&lt;/p&gt;
+
+&lt;p&gt;We’re basically telling mongoose that there will be a different version of each model for each tenant. So if a user belongs to the tenant with the id of &lt;code class=&quot;highlighter-rouge&quot;&gt;123456&lt;/code&gt; and we want to find all the documents in a model called &lt;code class=&quot;highlighter-rouge&quot;&gt;page&lt;/code&gt; then we’re not looking up all the &lt;code class=&quot;highlighter-rouge&quot;&gt;page&lt;/code&gt;s we’re looking up all the &lt;code class=&quot;highlighter-rouge&quot;&gt;page-123456&lt;/code&gt;s.&lt;/p&gt;
+
+&lt;p&gt;That is why we have to set the model name to &lt;code class=&quot;highlighter-rouge&quot;&gt;${Model.modelName}-${tenantId}&lt;/code&gt; because we cant have multiple models with the same name.&lt;/p&gt;
+
+&lt;p&gt;Then its important to check if the model name already exists so we don’t end up creating multiple versions of the same discriminator. Also mongoose will yell at you if you try. So that is what this line is about:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const existingDiscriminator = (Model.discriminators || {})[discriminatorName];
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;model-wrapper&quot;&gt;Model Wrapper&lt;/h3&gt;
+
+&lt;p&gt;So now that we have these higher order functions we have to user them to wrap our existing mongoose models. This is actually pretty easy. Here are a couple examples:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;// models/page.js
+import { tenantModel } from '../lib/multiTenant';
+
+const PageSchema = new Schema({
+  title: String,
+  body: String,
+});
+
+export default tenantModel('page', PageSchema);
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;// models/user.js
+import { tenantModel } from '../lib/multiTenant';
+
+const UserSchema = new Schema({
+  name: String,
+  email: String,
+});
+
+export default tenantModel('user', UserSchema);
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You’ll notice that its exactly the same as making and exporting a regular mongoose model except instead of exporting &lt;code class=&quot;highlighter-rouge&quot;&gt;mongoose.model&lt;/code&gt; we are exporting our own &lt;code class=&quot;highlighter-rouge&quot;&gt;tenantModel&lt;/code&gt; function.&lt;/p&gt;
+
+&lt;p&gt;Then for models that you want to live outside the tenant isolation you can do this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;// models/organization.js
+
+import { tenantlessModel } from '../lib/multiTenant';
+
+const OrganizationSchema = new Schema({
+  name: String,
+});
+
+export default tenantlessModel('organization', OrganizationSchema);
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Since the &lt;code class=&quot;highlighter-rouge&quot;&gt;tenantlessModel&lt;/code&gt; is just a passthrough, its not totally necessary. But I chose to do it because as you will see below, our usage of higher order functions changes how we actually use our models in the rest of our code. So the &lt;code class=&quot;highlighter-rouge&quot;&gt;tenantlessModel&lt;/code&gt; function makes the usage standardized for all our models regardless of if they are isolated based on the current tenant.&lt;/p&gt;
+
+&lt;h3 id=&quot;usage&quot;&gt;Usage&lt;/h3&gt;
+
+&lt;p&gt;Now this does change how we actually use our models in the rest of our code. Because our default export in our models are higher order functions, we have to execute the returned function before we use each model.&lt;/p&gt;
+
+&lt;p&gt;For example we can NO LONGER DO THIS:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;Page.find({})
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Instead we have to do this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;Page().find({})
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;But this actually turns out to be pretty useful. Remember that &lt;code class=&quot;highlighter-rouge&quot;&gt;skipTenant&lt;/code&gt; thing before? We can actually pass options into our model function like &lt;code class=&quot;highlighter-rouge&quot;&gt;skipTenant&lt;/code&gt; to customize our access to the model even further.&lt;/p&gt;
+
+&lt;p&gt;For example to search EVERY user in our database, not just the ones associated with our current tenant we can do this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;User({ skipTenant: true }).find({ _id: '123456' })
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;benefits&quot;&gt;Benefits&lt;/h3&gt;
+
+&lt;p&gt;You’ll notice that this implementation really doesn’t require a lot of code.&lt;/p&gt;
+
+&lt;p&gt;It also gives us a lot of useful abstraction layers to add extra behavior to our models.&lt;/p&gt;
+
+&lt;p&gt;But, whats really great about this approach is that because we are always dealing with tenant isolated versions of every model, then any model that is created by a logged in user is &lt;strong&gt;automatically&lt;/strong&gt; assigned to the correct tenant.&lt;/p&gt;
+
+&lt;p&gt;And all queries and lookups are &lt;strong&gt;automatically&lt;/strong&gt; isolated to the tenant.&lt;/p&gt;
+
+&lt;p&gt;And it is basically nearly impossible for a user to view, list, update, create, or delete any model outside their own tenant because any mongoose function used to perform those actions is isolated to the users tenant from the get go.&lt;/p&gt;
+
+&lt;p&gt;We don’t have to rely on developers coding correct logic. And we can easily add other authentication logic on top of it and be confident our tenant isolation is secure.&lt;/p&gt;
+
+&lt;h3 id=&quot;extra-customization&quot;&gt;Extra Customization&lt;/h3&gt;
+
+&lt;p&gt;Because our higher order functions have access to the schema of each model, we can do lots of things to our models. For example we can add new middleware to any model that has a tenant. Here’s just one simple example of making sure every &lt;code class=&quot;highlighter-rouge&quot;&gt;tenantModel&lt;/code&gt; has a tenant using the before save mongoose middleware:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;export function tenantModel(name, schema, options) {
+  return (props = {}) =&amp;gt; {
+    schema.add({ tenantId: String });
+
+    schema.pre('save', function (next) {
+      if (!this.tenantId) {
+        const defaultTenantId = // find tenant
+        this.tenantId = defaultTenantId;
+      }
+    });
+  
+    const Model = mongoose.model(name, schema, options);
+
+    // ...
+  };
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You can also insert some authorization logic in here. For example you could set the current user using Continuation-Local Storage and then if the user is an admin, return the unmodified model, like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;import { getCurrentTenantId, getCurrentUser } from './storage';
+
+export function tenantModel(name, schema, options) {
+  return (props = {}) =&amp;gt; {
+    schema.add({ tenantId: String });
+    const Model = mongoose.model(name, schema, options);
+
+    if (getCurrentUser().isAdmin()) return Model;
+
+	// ...
+  };
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;I hope this at least gives you some ideas of how to add a solid multi-tenant layer in your express/mongoose app.&lt;/p&gt;
+
+&lt;p&gt;As always, if you notice any problems in my code or flaws in my approach, please let me know. I’m always looking to learn and improve.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+
+&lt;p&gt;Thanks to these libraries for inspiration:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/mongoose-multitenant&quot; title=&quot;https://www.npmjs.com/package/mongoose-multitenant&quot;&gt;https://www.npmjs.com/package/mongoose-multitenant&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/mongoose-multitenant&quot; title=&quot;https://www.npmjs.com/package/mongoose-multitenant&quot;&gt;https://www.npmjs.com/package/mongoose-multitenancy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Wed, 03 Oct 2018 12:12:59 +0000</pubDate>
+        <link>/posts/multi-tenancy-with-expressmongoose</link>
+        <guid isPermaLink="true">/posts/multi-tenancy-with-expressmongoose</guid>
+        
+        <category>mongoose</category>
+        
+        <category>express</category>
+        
+        <category>node</category>
+        
+        <category>javascript</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Serverless Framework S3 Permissions (Serverless IAM Permissions)</title>
+        <description>&lt;p&gt;This really isn’t a complicated problem, but I want to document this for later.&lt;/p&gt;
+
+&lt;p&gt;Its hard to find a good title for this. Usually you will never us a lambda function to upload to S3. For user submitted files, the right way to upload to S3 is generate a temporary signed upload URL and the user will submit directly to S3 without sending the file to the serverless function.&lt;/p&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;But I do a lot of PDF generation with one of my projects so I need to be able to put S3 objects from the serverless function, so I need a bit of setup to do that.&lt;/p&gt;
+
+&lt;p&gt;I created a new bucket in S3.&lt;/p&gt;
+
+&lt;p&gt;Then the main thing is find the simplest way to grant the serverless project access to the S3 bucket.&lt;/p&gt;
+
+&lt;p&gt;In the past I’ve spent time creating new users and roles and connecting to aws services using the using the secret keys of the user. But one of the main benefits of serverless is the easy integration of other aws services.&lt;/p&gt;
+
+&lt;p&gt;According to &lt;a href=&quot;https://serverless.com/framework/docs/providers/aws/guide/iam/&quot; title=&quot;https://serverless.com/framework/docs/providers/aws/guide/iam/&quot;&gt;this post&lt;/a&gt; the serverless framework automatically creates a IAM user for the serverless project. Of course there are ways to customize this access, but for my purposes its really easy to use the default user and role.&lt;/p&gt;
+
+&lt;p&gt;Then you can give the default user/role access to a service like S3 by simply adding this to the &lt;code class=&quot;highlighter-rouge&quot;&gt;serverless.yml&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;provider:
+  ...
+  iamRoleStatements:
+    - Effect: &quot;Allow&quot;
+      Action:
+       - &quot;s3:*&quot;
+      Resource: { &quot;Fn::Join&quot;: [&quot;&quot;, [&quot;arn:aws:s3:::BUCKET_NAME&quot;, &quot;/*&quot; ] ] }
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Just be sure to replace &lt;code class=&quot;highlighter-rouge&quot;&gt;BUCKET_NAME&lt;/code&gt; with the name of your bucket. This gives the lambda function full access to this bucket.&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/46098173/how-to-add-iamrolestatements-to-s3-trigger-bucket-in-serverless-framework&quot; title=&quot;https://stackoverflow.com/questions/46098173/how-to-add-iamrolestatements-to-s3-trigger-bucket-in-serverless-framework&quot;&gt;This stackoverflow question&lt;/a&gt; was helpful in figuring this out. Also it probably would help if I understood cloudformation and aws IAM users more.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 13 Sep 2018 00:00:00 +0000</pubDate>
+        <link>/posts/serverless-framework-s3-file-uploads</link>
+        <guid isPermaLink="true">/posts/serverless-framework-s3-file-uploads</guid>
+        
+        <category>serverless</category>
+        
+        <category>javascript</category>
+        
+        <category>aws</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Executable Binary Files with Serverless Framework and Webpack - AWS Lambda</title>
+        <description>&lt;p&gt;Many web apps rely on executable binaries to function. For example if you want to do any kind of image processing, usually, in addition to the actual libraries you are using usually you need an program like `imagemagick ` to make it actually work.&lt;/p&gt;
+
+&lt;p&gt;So, if you ever want to build a sophisticated web app with the serverless framework, you need to be able to upload and use executable binaries. And its best if you can upload them in such a way that the library knows how to find them without any extra configuration.&lt;/p&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;the-approach&quot;&gt;The Approach&lt;/h3&gt;
+
+&lt;p&gt;Basically we need to:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Upload the executable binaries with the aws lambda deployment package.&lt;/li&gt;
+  &lt;li&gt;Make sure our executable binaries maintain the correct executable permissions.&lt;/li&gt;
+  &lt;li&gt;Change the &lt;code class=&quot;highlighter-rouge&quot;&gt;$PATH&lt;/code&gt; env variable to include the location of our executables.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And then we should be good to go.&lt;/p&gt;
+
+&lt;h3 id=&quot;upload&quot;&gt;Upload&lt;/h3&gt;
+
+&lt;h5 id=&quot;without-webpack&quot;&gt;Without Webpack&lt;/h5&gt;
+
+&lt;p&gt;If you’re not using the &lt;code class=&quot;highlighter-rouge&quot;&gt;serverless-webpack&lt;/code&gt; plugin, then this is actually pretty easy.&lt;/p&gt;
+
+&lt;p&gt;I like to just create a folder in my project called &lt;code class=&quot;highlighter-rouge&quot;&gt;bin&lt;/code&gt; and put them all in there. I did this in my &lt;a href=&quot;http://nmajor.com/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture&quot; title=&quot;http://nmajor.com/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture&quot;&gt;Serverless Backend for React&lt;/a&gt; post.&lt;/p&gt;
+
+&lt;p&gt;After you put the executables in the &lt;code class=&quot;highlighter-rouge&quot;&gt;bin&lt;/code&gt; folder, put this in your &lt;code class=&quot;highlighter-rouge&quot;&gt;serverless.yml&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;package:
+  include:
+    - bin/*
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Your files should maintain their permissions.&lt;/p&gt;
+
+&lt;h5 id=&quot;with-webpack&quot;&gt;With Webpack:&lt;/h5&gt;
+
+&lt;p&gt;Here is where it gets tricky. The package includes are not honored by the &lt;code class=&quot;highlighter-rouge&quot;&gt;serverless-webpack&lt;/code&gt; plugin, so we have have webpack include the files in our bundle. We’re going to use the official &lt;a href=&quot;https://webpack.js.org/plugins/copy-webpack-plugin/&quot; title=&quot;https://webpack.js.org/plugins/copy-webpack-plugin/&quot;&gt;copy-webpack-plugin&lt;/a&gt; to do this, but here’s the kicker. The &lt;a href=&quot;https://webpack.js.org/plugins/copy-webpack-plugin/&quot; title=&quot;https://webpack.js.org/plugins/copy-webpack-plugin/&quot;&gt;copy-webpack-plugin&lt;/a&gt; does NOT preserve file permission, so we then have to write a custom plugin to set the file permissions of all the files in our &lt;code class=&quot;highlighter-rouge&quot;&gt;bin&lt;/code&gt; folder to &lt;code class=&quot;highlighter-rouge&quot;&gt;755&lt;/code&gt; so they can be executed by lambda.&lt;/p&gt;
+
+&lt;p&gt;But first lets copy our files with &lt;a href=&quot;https://webpack.js.org/plugins/copy-webpack-plugin/&quot; title=&quot;https://webpack.js.org/plugins/copy-webpack-plugin/&quot;&gt;copy-webpack-plugin&lt;/a&gt;. Do do this you can checkout the &lt;a href=&quot;&quot;&gt;documentation here&lt;/a&gt;, or you can add this to your webpack config:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;  plugins: [
+    new CopyWebpackPlugin([{
+      from: 'bin/',
+      to: 'bin/'
+    }]),
+  ]
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Pretty easy.&lt;/p&gt;
+
+&lt;h3 id=&quot;permissions&quot;&gt;Permissions&lt;/h3&gt;
+
+&lt;p&gt;I did find a plugin called &lt;a href=&quot;https://www.npmjs.com/package/webpack-permissions-plugin&quot; title=&quot;https://www.npmjs.com/package/webpack-permissions-plugin&quot;&gt;webpack-permissions-plugin &lt;/a&gt; that helped me solve the issue with the permissions, but I couldn’t get the feature to change all the permissions in the directory to work. So I decided to make my own simplified version of that plugin to simply handle changing the permissions of the files in the bin folder.&lt;/p&gt;
+
+&lt;p&gt;So here’s the simple plugin I whipped up:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const fs = require('fs');
+
+function WebpackBinPermission(options) {
+  this.options = options || {};
+}
+
+WebpackBinPermission.prototype.apply = function (compiler) {
+  compiler.plugin('done', () =&amp;gt; {
+    const permissions = this.options.permissions || '755';
+    const binPath = `${compiler.outputPath}/bin`;
+    fs.readdir(binPath, (err, items) =&amp;gt; {
+      if (items &amp;amp;&amp;amp; items.length &amp;gt; 0) {
+        for (let i = 0; i &amp;lt; items.length; i += 1) {
+          fs.chmodSync(`${binPath}/${items[i]}`, permissions);
+        }
+      }
+    });
+  });
+};
+
+module.exports = WebpackBinPermission;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;As you can see, its pretty simple and all it does it changes the permissions of everything in the &lt;code class=&quot;highlighter-rouge&quot;&gt;/bin&lt;/code&gt; folder to &lt;code class=&quot;highlighter-rouge&quot;&gt;755&lt;/code&gt;. And for me it works like a charm.&lt;/p&gt;
+
+&lt;p&gt;Put that plugin code in a new file called &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack-bin-permissions.js&lt;/code&gt;.Then at the top of your webpack config file, import it like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const WebpackBinPermission = require('webpack-bin-permissions')
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To then to use it, you just have to pair it with the &lt;a href=&quot;https://webpack.js.org/plugins/copy-webpack-plugin/&quot; title=&quot;https://webpack.js.org/plugins/copy-webpack-plugin/&quot;&gt;copy-webpack-plugin&lt;/a&gt; in your webpack config like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;  plugins: [
+    new CopyWebpackPlugin([{
+      from: 'bin/',
+      to: 'bin/'
+    }]),
+    new WebpackBinPermission(),
+  ]
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And then when &lt;a href=&quot;&quot;&gt;serverless-webpack&lt;/a&gt; builds it will automatically copy everything in the bin folder and set the executable permissions correctly.&lt;/p&gt;
+
+&lt;h3 id=&quot;executable-path&quot;&gt;Executable Path&lt;/h3&gt;
+
+&lt;p&gt;According to the &lt;a href=&quot;https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html&quot; title=&quot;https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html&quot;&gt;aws lambda documentation&lt;/a&gt;, lambda functions run in a linux environment. And libraries are used to having access to ready to run executables. That means that in a terminal you can just type in the name of the program without referencing the whole path. If you’re not familiar with how this works take a look at &lt;a href=&quot;http://www.linfo.org/path_env_var.html&quot; title=&quot;http://www.linfo.org/path_env_var.html&quot;&gt;this page by linfo.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To make an executable ready-to-run without referencing its path, we have to set the &lt;code class=&quot;highlighter-rouge&quot;&gt;$PATH&lt;/code&gt; environmental variable and tell linux to look inside our own &lt;code class=&quot;highlighter-rouge&quot;&gt;bin&lt;/code&gt; folder when searching for valid ready-to-run executables.&lt;/p&gt;
+
+&lt;p&gt;Thats actually really easy. According to &lt;a href=&quot;&quot;&gt;this official aws post&lt;/a&gt; we can do it by just putting this line at the top of our handler code:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;process.env.PATH = `${process.env.PATH}:${process.env.LAMBDA_TASK_ROOT}/bin`;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;But I like to also wrap it around some logic so it doesnt interfere with testing:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;if (process.env.LAMBDA_TASK_ROOT) {
+  process.env.PATH = `${process.env.PATH}:${process.env.LAMBDA_TASK_ROOT}/bin`;
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;wrap-it-up&quot;&gt;Wrap it up&lt;/h3&gt;
+
+&lt;p&gt;That is the approach that worked for me. I’m currently doing a lot of stuff with executables, and so I needed a solution that allowed me to possibly put many many files in the bin folder that reference each other, and this approach seems to work well.&lt;/p&gt;
+
+&lt;p&gt;As always, please comment below if you see any room for improvement in my code, approach, or writing.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading!&lt;/p&gt;
+</description>
+        <pubDate>Sat, 01 Sep 2018 00:00:00 +0000</pubDate>
+        <link>/posts/serverless-framework-executable-binaries-aws-lambda</link>
+        <guid isPermaLink="true">/posts/serverless-framework-executable-binaries-aws-lambda</guid>
+        
+        <category>serverless</category>
+        
+        <category>javascript</category>
+        
+        <category>aws</category>
+        
+        <category>webpack</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha + Chai), and ESLint</title>
+        <description>&lt;p&gt;As a Rails developer turned Javascript Zealot, I sometimes miss the structure and opinions of the Ruby on Rails world. Its amazing how bare bones many javascript libraries are. They are so modular and self contained (good things) that, unless you take the time to add some structure and organization to your code, its easy for your project to feel chaotic an unorganized. So I’m always looking for and trying to find good patterns and structure to follow with my javascript projects.&lt;/p&gt;
+
+&lt;p&gt;The serverless framework is a good example of this. Its so minimal in its setup that it may be difficult to know where to start to give it some structure. So here I’ll share with you one possible way to structure a serverless API project.&lt;/p&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;Basically before I start any serious project I like to have a few things setup:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ES6/ES7 Webpack and Babel (From Starter)&lt;/li&gt;
+  &lt;li&gt;A good offline dev workflow (From Starter)&lt;/li&gt;
+  &lt;li&gt;ESLint&lt;/li&gt;
+  &lt;li&gt;Folder structure&lt;/li&gt;
+  &lt;li&gt;Testing&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I hope this isnt too obscure of a topic, but I’m not actually going to cover how to build a CRUD API, this is just an example starting boilerplate before you begin coding your project.&lt;/p&gt;
+
+&lt;p&gt;I’m assuming you’ve at least tried using the serverless framework before. If you are new to serverless, I have an article that breaks it down from the beginning here:&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture&quot; title=&quot;/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture&quot;&gt;Serverless Back-End for React - Your Introduction to Serverless Architecture&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;the-starter&quot;&gt;The Starter&lt;/h3&gt;
+
+&lt;p&gt;Lets start with the great &lt;a href=&quot;https://serverless-stack.com/chapters/serverless-nodejs-starter.html&quot; title=&quot;https://serverless-stack.com/chapters/serverless-nodejs-starter.html&quot;&gt;Serverless Node.js Starter&lt;/a&gt; (&lt;a href=&quot;https://github.com/AnomalyInnovations/serverless-nodejs-starter&quot; title=&quot;https://github.com/AnomalyInnovations/serverless-nodejs-starter&quot;&gt;github&lt;/a&gt;) from the awesome &lt;a href=&quot;https://serverless-stack.com/&quot; title=&quot;https://serverless-stack.com/&quot;&gt;Serverless Stack&lt;/a&gt; project. If you’re not familiar with that project be sure to check it out.&lt;/p&gt;
+
+&lt;p&gt;The starter basically includes all this stuff (From the the &lt;a href=&quot;https://serverless-stack.com/chapters/serverless-nodejs-starter.html&quot; title=&quot;https://serverless-stack.com/chapters/serverless-nodejs-starter.html&quot;&gt;starter description page&lt;/a&gt;):&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Use ES7 syntax in your handler functions&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Package your functions using Webpack&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Run API Gateway locally&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;serverless offline start&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Support for unit tests&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Run &lt;code class=&quot;highlighter-rouge&quot;&gt;npm test&lt;/code&gt; to run your tests&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Sourcemaps for proper error messages&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Error message show the correct line numbers&lt;/li&gt;
+      &lt;li&gt;Works in production with CloudWatch&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Automatic support for multiple handler files&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;No need to add a new entry to your &lt;code class=&quot;highlighter-rouge&quot;&gt;webpack.config.js&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Add environment variables for your stages&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;If you dont use this starter, you have to add a lot of this stuff one by one by including and configuring the right packages and plugins. So this gives us a great place to start.&lt;/p&gt;
+
+&lt;h3 id=&quot;create-a-new-project&quot;&gt;Create a New Project&lt;/h3&gt;
+
+&lt;p&gt;First make sure you have the &lt;code class=&quot;highlighter-rouge&quot;&gt;serverless&lt;/code&gt; module installed globally&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;yarn global add serverless
+# or
+npm install serverless -g
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And then run this command to create a new serverless project using the starter:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;$ serverless install --url https://github.com/AnomalyInnovations/serverless-nodejs-starter --name my-project
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;It gives us a &lt;code class=&quot;highlighter-rouge&quot;&gt;serverless.yml&lt;/code&gt; file that looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;service: my-project
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And a handler.js file that looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;export const hello = async (event, context, callback) =&amp;gt; {
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: `Go Serverless v1.0! ${(await message({ time: 1, copy: 'Your function executed successfully!'}))}`,
+    }),
+  };
+
+  callback(null, response);
+};
+
+const message = ({ time, ...rest }) =&amp;gt; new Promise((resolve, reject) =&amp;gt; 
+  setTimeout(() =&amp;gt; {
+    resolve(`${rest.copy} (with a delay)`);
+  }, time * 1000)
+);
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;It also gives us a test folder with an example test.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;# tests/handler.test.js
+
+import * as handler from '../handler';
+
+test('hello', async () =&amp;gt; {
+  const event = 'event';
+  const context = 'context';
+  const callback = (error, response) =&amp;gt; {
+    expect(response.statusCode).toEqual(200);
+    expect(typeof response.body).toBe(&quot;string&quot;);
+  };
+
+  await handler.hello(event, context, callback);
+});
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We can run this command to start the offline server for a good development workflow:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;serverless offline start
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;This will start an offline server that you can use to make API requests and test all the endpoints.&lt;/p&gt;
+
+&lt;p&gt;I also like to add a script in the &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; file to make this easy to launch:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;  &quot;scripts&quot;: {
+  	&quot;start&quot;: &quot;serverless offline start&quot;,
+    &quot;lint&quot;: &quot;node_modules/.bin/eslint .&quot;,
+    &quot;test&quot;: &quot;NODE_ENV=test node_modules/.bin/mocha --recursive --require babel-core/register&quot;
+  },
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;add-eslint&quot;&gt;Add ESLint&lt;/h3&gt;
+
+&lt;p&gt;I always work with a linter these days, there’s no better way to keep clean code and enforce best practices with a language like javascript where its so easy to write messy and ugly code.&lt;/p&gt;
+
+&lt;p&gt;Lets add &lt;code class=&quot;highlighter-rouge&quot;&gt;eslint&lt;/code&gt; and some plugins:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;, yarn add --dev eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-mocha eslint-plugin-promise
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And then make a new &lt;code class=&quot;highlighter-rouge&quot;&gt;.eslintrc.json&lt;/code&gt; file in the root of our project.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;touch .eslintrc.json
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And add this to the new file:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;extends&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;airbnb/base&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;plugin:promise/recommended&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;promise&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;rules&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Add a &lt;code class=&quot;highlighter-rouge&quot;&gt;.eslintignore&lt;/code&gt; file:.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;touch .eslintignore
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And ignore the webpack config:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;# .eslintignore
+
+webpack.config.js
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And then add a &lt;code class=&quot;highlighter-rouge&quot;&gt;lint&lt;/code&gt; script to our &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;  &quot;scripts&quot;: {
+  	&quot;start&quot;: &quot;serverless offline start&quot;,
+    &quot;lint&quot;: &quot;node_modules/.bin/eslint .&quot;,
+  },
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then you can run the linter with this command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;yarn lint
+# or 
+npm run lint
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;api-folder-structure&quot;&gt;API Folder Structure&lt;/h3&gt;
+
+&lt;p&gt;When I’m building a serverless api I like to give my functions, paths, and folder a api-like structure. So I’ll create some directories to organize my handlers. This may be a bit overkill for small projects, but I dont think there are any downsides of having this kind of extra organization right off the bat.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;mkdir -p handlers/api/v1/todos
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;I think you can think of these handlers as controllers, and so if you’re building CRUD endpoints for a model, you can add a different file for each of the 5 main API actions:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;touch handlers/api/v1/todos/index.js
+touch handlers/api/v1/todos/show.js
+touch handlers/api/v1/todos/create.js
+touch handlers/api/v1/todos/update.js
+touch handlers/api/v1/todos/delete.js
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then the functions part of your &lt;code class=&quot;highlighter-rouge&quot;&gt;serverless.yml&lt;/code&gt; file would look something like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;functions:
+  api/v1/todos/index:
+    handler: handlers/api/v1/todos/index.default
+    events:
+      - http:
+          path: api/v1/todos
+          method: get
+  api/v1/todos/show:
+    handler: handlers/api/v1/todos/show.default
+    events:
+      - http:
+          path: api/v1/todos/{id}
+          method: get
+  api/v1/todos/create:
+    handler: handlers/api/v1/todos/create.default
+    events:
+      - http:
+          path: api/v1/todos
+          method: post
+  api/v1/todos/update:
+    handler: handlers/api/v1/todos/update.default
+    events:
+      - http:
+          path: api/v1/todos/{id}
+          method: put
+  api/v1/todos/delete:
+    handler: handlers/api/v1/todos/delete.default
+    events:
+      - http:
+          path: api/v1/todos/{id}
+          method: delete
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;As you can see this is a pretty typical REST setup.&lt;/p&gt;
+
+&lt;p&gt;We can now remove our original handler.js file since we dont need it anymore:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;rm handler.js
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We wont be using this today, but lets also create a &lt;code class=&quot;highlighter-rouge&quot;&gt;models&lt;/code&gt; folder where I can put our models:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;mkdir models
+touch models/todo.js
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then the individual handlers will include the models to handle the crud operations.&lt;/p&gt;
+
+&lt;p&gt;Now I’m going to add a basic handler for &lt;code class=&quot;highlighter-rouge&quot;&gt;todos/index.js&lt;/code&gt; so we have something to test:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;# handlers/api/v1/index.js
+
+export default (event, context, callback) =&amp;gt; {
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: 'Hello from todos/index',
+    }),
+  };
+
+  callback(null, response);
+};
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And if you are following along, you’ll have to add an export to all the handler files in order to run the offline server.&lt;/p&gt;
+
+&lt;h3 id=&quot;setup-testing&quot;&gt;Setup Testing&lt;/h3&gt;
+
+&lt;p&gt;By default the starter comes with &lt;code class=&quot;highlighter-rouge&quot;&gt;jest&lt;/code&gt; but I prefer &lt;code class=&quot;highlighter-rouge&quot;&gt;mocha&lt;/code&gt; so lets swap &lt;code class=&quot;highlighter-rouge&quot;&gt;jest&lt;/code&gt; for &lt;code class=&quot;highlighter-rouge&quot;&gt;mocha&lt;/code&gt; and add a bit of &lt;code class=&quot;highlighter-rouge&quot;&gt;chai&lt;/code&gt; for the assertions.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;mv tests test
+rm test/handler.test.js
+yarn remove --dev jest
+yarn add --dev mocha chai
+touch test/test_helper.js
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now lets add some test files for our endpoints:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;mkdir -p test/api/v1/todos/
+touch test/api/v1/todos/index.test.js
+touch test/api/v1/todos/show.test.js
+touch test/api/v1/todos/create.test.js
+touch test/api/v1/todos/update.test.js
+touch test/api/v1/todos/delete.test.js
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And we’ll only add 1 test for now for our &lt;code class=&quot;highlighter-rouge&quot;&gt;todos/index&lt;/code&gt; handler:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;import { expect } from 'chai';
+
+import todosIndex from '../../../../handlers/api/v1/todos';
+
+describe('Fetching list of todos', () =&amp;gt; {
+  it('returns a valid response', (done) =&amp;gt; {
+    const event = 'event';
+    const context = 'context';
+    const callback = (error, response) =&amp;gt; {
+      expect(response.statusCode).to.equal(200);
+      expect(typeof response.body).to.equal('string');
+      expect(response.body).to.contain('Hello from todos/index');
+      done();
+    };
+
+    todosIndex(event, context, callback);
+  });
+});
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then we can run it by first adding this script to our &lt;code class=&quot;highlighter-rouge&quot;&gt;package.json&lt;/code&gt; file:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;  &quot;scripts&quot;: {
+  	&quot;start&quot;: &quot;serverless offline start&quot;,
+    &quot;lint&quot;: &quot;node_modules/.bin/eslint .&quot;,
+    &quot;test&quot;: &quot;NODE_ENV=test node_modules/.bin/mocha --recursive --require babel-core/register&quot;
+  },
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We have to add the &lt;code class=&quot;highlighter-rouge&quot;&gt;--recursive&lt;/code&gt; tag so it will find the tests in our subfolders, and the &lt;code class=&quot;highlighter-rouge&quot;&gt;--require babel-core/register&lt;/code&gt; tag to make ES7 work with our tests.&lt;/p&gt;
+
+&lt;p&gt;Then we can run our tests with the command:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;yarn test
+# or
+npm test
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now we also need a different &lt;code class=&quot;highlighter-rouge&quot;&gt;.eslintrc.json&lt;/code&gt; file for our testing so if we put a new one in our test tile the tests will play by different eslint rules.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;touch test/.eslintrc.json
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;With these contents so it will ignore mocha keywords:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;extends&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;airbnb/base&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;plugin:promise/recommended&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;plugins&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;promise&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;mocha&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;env&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;mocha&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&quot;rules&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;wrap-it-up&quot;&gt;Wrap it up&lt;/h3&gt;
+
+&lt;p&gt;Now we can start our offline server:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;serverless offline start
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We can test our code:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;yarn test
+# or
+npm test
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;…and we can lint our code:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;yarn lint
+# or
+npm run lint
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And we have some good folder structure to start building our API.&lt;/p&gt;
+
+&lt;p&gt;Thanks for reading, I hope this can be of help to someone.&lt;/p&gt;
+
+&lt;p&gt;As always if you notice anything I did that could be improved, please reach out. I’m always looking to improve.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 25 Aug 2018 00:00:00 +0000</pubDate>
+        <link>/posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment</link>
+        <guid isPermaLink="true">/posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment</guid>
+        
+        <category>serverless</category>
+        
+        <category>eslint</category>
+        
+        <category>javascript</category>
+        
+        <category>es6</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Access Token Handling (Automatic Refresh) with React + Redux</title>
+        <description>&lt;p&gt;The industry trend of decoupling backends and frontends has lots of advantages. You could argue that its just good software design. Plus it makes it much easier to have multiple front-end clients using the same backend. And since mobile apps dont use cookies, then it makes sense to convert the entire authentication system to some kind of token based solution.&lt;/p&gt;
+
+&lt;p&gt;But the next questions is how can you safely and convienently store and manage these tokens in your React+Redux app.&lt;/p&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;Here is the approach I’ve used recently and it seems to work out pretty well. Its very similar to the approach I found &lt;a href=&quot;https://michaelwashburnjr.com/best-way-to-store-tokens-redux/&quot; title=&quot;https://michaelwashburnjr.com/best-way-to-store-tokens-redux/&quot;&gt;here&lt;/a&gt;. In this example I’m dealing with accessToken + refreshToken, but this could easily be adapted to different kinds of tokens (a JWT auth for example).&lt;/p&gt;
+
+&lt;h3 id=&quot;break-it-down&quot;&gt;Break it down&lt;/h3&gt;
+
+&lt;p&gt;First we’ll make sure that redux has gets the token. In my case this means passing it from the server after the authentication callback.&lt;/p&gt;
+
+&lt;p&gt;Then we will use a simple redux subscriber to store our auth tokens in the browser localStorage. Using a subscriber will keep it synced so that anytime the auth token in the redux state changes it updates it in the localStorage.&lt;/p&gt;
+
+&lt;p&gt;Then we’ll make sure that anytime we refresh the page, we load in the auth tokens from localStorage when creating the store.&lt;/p&gt;
+
+&lt;p&gt;Then we’ll add some middleware that happens before each outgoing HTTP request that will refresh the token if needed, and update the redux state with the new tokens, and our subscriber will automatically update the token in localStorage.&lt;/p&gt;
+
+&lt;h3 id=&quot;get-the-token-from-the-server-to-redux&quot;&gt;Get the Token from the Server to Redux&lt;/h3&gt;
+
+&lt;p&gt;You can probably skip this part if you are already getting your auth tokens to redux some other way.&lt;/p&gt;
+
+&lt;p&gt;In my case, I’m authenticating with Microsofts Oauth2 service. and the tokens are being sent to the server via a RedirectURI callback, that means I need to pass the tokens from the server to the client. I don’t store it in the session or database, Instead I pass it back to the client using the &lt;code class=&quot;highlighter-rouge&quot;&gt;window.__PRELOADED_STATE__&lt;/code&gt; demonstrated in the &lt;a href=&quot;https://redux.js.org/recipes/serverrendering&quot;&gt;Redux server rendering documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I’ve decided to store my auth tokens in redux under &lt;code class=&quot;highlighter-rouge&quot;&gt;state.auth.tokens&lt;/code&gt;, so my preloadedState object will look like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const preloadedState = {
+  auth: {
+    tokens: { /* Auth token data goes here */ }
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then we set that as the value of the &lt;code class=&quot;highlighter-rouge&quot;&gt;window.__PRELOADED_STATE__&lt;/code&gt;, in the server rendered html like this (Making sure to include these lines BEFORE loading in the client js bundle):&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&amp;lt;script&amp;gt;
+  window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/&amp;lt;/g, '\\u003c')}
+  
+  /* The string replace is to prevent injections into our preloaded state. Check the redux server rendering docs for more info */
+&amp;lt;/script&amp;gt;
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then when loading the store, load in the &lt;code class=&quot;highlighter-rouge&quot;&gt;window.__PRELOADED_STATE__&lt;/code&gt; as the initial state when creating the redux store:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const store = createStore(reducer, window.__PRELOADED_STATE__)
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;sync-auth-state-to-localstorage&quot;&gt;Sync Auth State to localStorage&lt;/h3&gt;
+
+&lt;p&gt;Thanks again to &lt;a href=&quot;https://michaelwashburnjr.com/best-way-to-store-tokens-redux/&quot;&gt;this post&lt;/a&gt; for the idea of using a simple redux store subscriber to keep localStorage synced with out auth section of the redux store.&lt;/p&gt;
+
+&lt;p&gt;I made a function that will serialize and set the localStorage variables, and then call that function from &lt;code class=&quot;highlighter-rouge&quot;&gt;store.subscribe&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;function setAuthState(state) {
+  try {
+    localStorage.setItem('state.auth.tokens', JSON.stringify((state.auth || {}).tokens));
+  } catch (err) { return undefined; }
+}
+
+store.subscribe(() =&amp;gt; {
+  setAuthState(store.getState())
+});
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Be sure to checkout the &lt;a href=&quot;https://redux.js.org/api/store#subscribe&quot;&gt;documentation for store.subscribe&lt;/a&gt;. You can also checkout &lt;a href=&quot;https://egghead.io/lessons/javascript-redux-persisting-the-state-to-the-local-storage&quot;&gt;this video&lt;/a&gt; by Dan Abramov on how to use subscribe to store the state into localStorage.&lt;/p&gt;
+
+&lt;p&gt;Some other libraries for watching the state for mutations are &lt;a href=&quot;https://github.com/jprichardson/redux-watch&quot;&gt;redux-watch&lt;/a&gt; and &lt;a href=&quot;https://github.com/ashaffer/redux-subscribe&quot;&gt;redux-subscribe&lt;/a&gt;. They may be a better option later, but for now I’m going with this simple subscribe approach.&lt;/p&gt;
+
+&lt;h3 id=&quot;load-auth-from-localstorage-on-refresh&quot;&gt;Load Auth From localStorage on Refresh&lt;/h3&gt;
+
+&lt;p&gt;Then I made a function to get and deserialize the state from localStorage:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;function getAuthState() {
+  try {
+    const tokens = JSON.parse(localStorage.getItem('state.auth.tokens')) || undefined;
+    const user = JSON.parse(localStorage.getItem('state.auth.user')) || undefined;
+
+    return { auth: { tokens, user } }
+  } catch (err) { return undefined; }
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Then change our create store to something like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;const store = createStore(
+  reducer,
+  { ...getAuthState(), ...window.__PRELOADED_STATE__ }
+ )
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And I was able to refresh the page and the auth tokens persist. So it works!&lt;/p&gt;
+
+&lt;h3 id=&quot;automatic-token-refreshing&quot;&gt;Automatic Token Refreshing&lt;/h3&gt;
+
+&lt;p&gt;I debated whether or not to include this part, because there’s so many different ways to implement it, but the ways I think are truly nice and elegant can be a bit complex for a blog post. But I’ll try anyway. Hopefully people can get a few good ideas from this.&lt;/p&gt;
+
+&lt;p&gt;Now this step is going to vary a lot depending on your implementation. I was greatly inspired by &lt;a href=&quot;https://github.com/erikras/react-redux-universal-hot-example&quot;&gt;this library (erikras/react-redux-universal-hot-example)&lt;/a&gt; which has a really nice middleware setup for making API requests by dispatching redux actions.&lt;/p&gt;
+
+&lt;p&gt;Although my final implementation looks much more like that the middleware found in the &lt;a href=&quot;https://github.com/erikras/react-redux-universal-hot-example&quot;&gt;erikras/react-redux-universal-hot-example&lt;/a&gt; mentioned above, here is an exmample of how you might do a simplified version of some API request middleware with the refresh token.&lt;/p&gt;
+
+&lt;p&gt;I’m assuming you are using a function dispatcher middleware like &lt;a href=&quot;https://github.com/reduxjs/redux-thunk&quot;&gt;redux-thunk&lt;/a&gt; and &lt;a href=&quot;https://github.com/visionmedia/superagent&quot;&gt;superagent&lt;/a&gt; as the request library.&lt;/p&gt;
+
+&lt;p&gt;You’ll also notice that I loaded my tokens with an &lt;code class=&quot;highlighter-rouge&quot;&gt;expires_at&lt;/code&gt; attribute to help calculate when a refresh is needed.&lt;/p&gt;
+
+&lt;p&gt;The middleware is in a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;requestMiddleware.js&lt;/code&gt; and looks something like this like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;export default function requestMiddleware() {
+  return ({ dispatch, getState }) =&amp;gt; next =&amp;gt; (action) =&amp;gt; {
+    const {
+      request,
+    } = action;
+
+    if (!request) {
+      return next(action);
+    }
+
+    const { tokens } = getState().auth;
+
+    // 5 minutes from now
+    const refreshThreshold = (new Date.getTime() + 300000);
+
+    if (tokens.refresh_token &amp;amp;&amp;amp; refreshThreshold &amp;gt; tokens.expires_at) {
+      return superagent.post('/path/to/renew')
+        .send({ refresh_token: tokens.refresh_token })
+        .end((err, { body } = {}) =&amp;gt; {
+          dispatch({ type: 'SET_TOKENS', payload: body });
+          request(body);
+        });
+    }
+    return request(tokens);
+  };
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Dont forget to apply the middleware:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;import { createStore, applyMiddleware } from 'redux';
+import requestMiddleware from './middleware/requestMiddleware';
+import rootReducer from './reducers/index';
+
+const store = createStore(
+  rootReducer,
+  applyMiddleware(requestMiddleware())
+);
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Add a reducer to capture the &lt;code class=&quot;highlighter-rouge&quot;&gt;SET_TOKEN&lt;/code&gt; action:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;export default function reducer(state = initialState, action = {}) {
+  switch (action.type) {
+    case SET_TOKENS:
+      return {
+        ...state,
+        auth: { tokens: action.payload },
+      };
+    default:
+      return state;
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And now we can dispatch actions like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;export default function sendAnyRequest() {
+  return (dispatch) =&amp;gt; {
+    return {
+      request: (tokens) =&amp;gt; superagent.post('/some/random/request')
+        .send({ foo: 'bar' })
+        .end((err, { body } = {}) =&amp;gt; {
+          dispatch({ type: 'SOME_EVENT', payload: body });
+        });
+    }
+  }
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;wrap-it-up&quot;&gt;Wrap it up&lt;/h3&gt;
+
+&lt;p&gt;And before making any request it will first check the validity of the refresh token and refresh it if needed. And if a refresh does occur it will set the new token in the redux store, which will be automatically written to the localStorage by the subscriber.&lt;/p&gt;
+
+&lt;p&gt;Noice!&lt;/p&gt;
+
+&lt;p&gt;I highly recommend you read through the code of this project &lt;a href=&quot;https://github.com/erikras/react-redux-universal-hot-example&quot;&gt;erikras/react-redux-universal-hot-example&lt;/a&gt;, specifically the &lt;code class=&quot;highlighter-rouge&quot;&gt;ApiClient.js&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;clientMiddleware.js&lt;/code&gt;, and see how the request actions are dispatched.&lt;/p&gt;
+
+&lt;p&gt;As I said, I used that example heavily when setting up my redux store. Here is what my middleware file looks like:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;import { SIGN_OUT, SET_TOKENS } from '../modules/auth';
+
+export default function clientMiddleware(client) {
+  return ({ dispatch, getState }) =&amp;gt; next =&amp;gt; (action) =&amp;gt; {
+    if (typeof action === 'function') {
+      return action(dispatch, getState);
+    }
+
+    const {
+      promise, types, ...rest
+    } = action;
+    if (!promise) {
+      return next(action);
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    client.token = (getState().auth.tokens || {}).access_token;
+
+    const [REQUEST, SUCCESS, FAILURE] = types;
+    next({ ...rest, type: REQUEST });
+
+    let actionPromise = Promise.resolve();
+    const { tokens } = getState().auth;
+
+    const refreshThreshold = (new Date().getTime() + 300000); // 5 minutes from now
+
+    if (tokens.refresh_token &amp;amp;&amp;amp; refreshThreshold &amp;gt; tokens.expires_at) {
+      actionPromise = client.post('/my-server/renew', { data: { refresh_token: tokens.refresh_token } })
+        .then(
+          (result) =&amp;gt; {
+            client.token = result.access_token;
+            return next({
+              ...rest, result, type: SET_TOKENS,
+            });
+          },
+          errors =&amp;gt; next({
+            ...rest, errors, type: SIGN_OUT,
+          }),
+        )
+        .then(() =&amp;gt; promise(client));
+    } else {
+      actionPromise = promise(client);
+    }
+
+    actionPromise.then(
+      result =&amp;gt; next({ ...rest, result, type: SUCCESS }),
+      errors =&amp;gt; next({ ...rest, errors, type: FAILURE }),
+    ).catch((error) =&amp;gt; {
+      console.error('MIDDLEWARE ERROR:', error);
+      next({ ...rest, error, type: FAILURE });
+    });
+
+    return actionPromise;
+  };
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And I can dispatch really clean actions that look like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2
+3
+4
+5
+6&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;export function loadOne(_id) {
+  return {
+    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+    promise: client =&amp;gt; client.get('/items/'),
+  };
+}
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And the tokens are automatically refreshed and persisted.&lt;/p&gt;
+
+&lt;p&gt;I still have some cleaning up to do with my setup. I’d like to modularize that refresh token bit. I first tried to put it into its own middleware, but the existing client middleware dispatches an initial action (LOAD in the example above) that triggers the loading state and adds spinners. Having the refresh token part in its own middleware delayed the loading state until after the refresh so it made for a bad user experience.&lt;/p&gt;
+
+&lt;p&gt;It seems to be pretty functional and reliable so far. I’ll be sure to update this article if I discover any problems or brittleness with this implementation.&lt;/p&gt;
+
+&lt;p&gt;If you notice any mistakes in here, or if you have any ideas on how to improve this setup, please let me know in the comments. I’m always looking for better patterns to follow.&lt;/p&gt;
+</description>
+        <pubDate>Thu, 23 Aug 2018 00:00:00 +0000</pubDate>
+        <link>/posts/access-and-refresh-token-handling-with-redux</link>
+        <guid isPermaLink="true">/posts/access-and-refresh-token-handling-with-redux</guid>
+        
+        <category>react</category>
+        
+        <category>redux</category>
+        
+        <category>authentication</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Node Env Variables - dotenv Workaround</title>
+        <description>&lt;p&gt;The library that everyone uses to manage environmental variables in node is &lt;a href=&quot;https://www.npmjs.com/package/dotenv&quot; title=&quot;https://www.npmjs.com/package/dotenv&quot;&gt;dotenv&lt;/a&gt;. I don’t think I’ve ever had so much trouble with such a popular module.&lt;/p&gt;
+
+&lt;p&gt;What I want is to have my development environment run with the one set of environment variables and my tests run with a different set of environment variables.&lt;/p&gt;
+
+&lt;p class=&quot;lead&quot;&gt;&amp;lt;!–-break-–&amp;gt;&lt;/p&gt;
+
+&lt;p&gt;The instructions say to put this line in your code as early as possible.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;require('dotenv').config()
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;But that didnt work for me.&lt;/p&gt;
+
+&lt;p&gt;I think it might be a problem related to webpack. I could never get &lt;code class=&quot;highlighter-rouge&quot;&gt;dotenv&lt;/code&gt; to work reliably, any env variables I referenced would be &lt;code class=&quot;highlighter-rouge&quot;&gt;undefined&lt;/code&gt;, but then I finally found the solution in &lt;a href=&quot;https://github.com/motdotla/dotenv/issues/133#issuecomment-255298822&quot; title=&quot;https://github.com/motdotla/dotenv/issues/133#issuecomment-255298822&quot;&gt;this github issue&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;What you have to do is create a file called &lt;code class=&quot;highlighter-rouge&quot;&gt;.env.js&lt;/code&gt; that looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;import dotenv from 'dotenv';
+dotenv.config({ silent: true });
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And import it into your program as early as possible, like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;import {} from './env';
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;For some reason that makes it work.&lt;/p&gt;
+
+&lt;h1 id=&quot;testing&quot;&gt;Testing&lt;/h1&gt;
+
+&lt;p&gt;I also had trouble using env variables in my testing environment. What I found was that the &lt;code class=&quot;highlighter-rouge&quot;&gt;test_helper.js&lt;/code&gt; file actually loads after some of my tests so I couldn’t use the trick above.&lt;/p&gt;
+
+&lt;p&gt;What I did was create a new &lt;code class=&quot;highlighter-rouge&quot;&gt;env.js&lt;/code&gt; file that looks like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1
+2&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;import dotenv from 'dotenv';
+dotenv.config({ path: '.env.test' });
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;…and load it as a setup script in the mocha command like this:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;table style=&quot;border-spacing: 0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td class=&quot;gutter gl&quot; style=&quot;text-align: right&quot;&gt;&lt;pre class=&quot;lineno&quot;&gt;1&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt; NODE_ENV=test node_modules/.bin/mocha --recursive --require babel-core/register --require ./test/env.js --exit
+&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And thats the only way I have been able to get dotenv to work predictably. I hope this helps someone.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 22 Aug 2018 00:00:00 +0000</pubDate>
+        <link>/posts/node-env-variables-solving-the-nightmare</link>
+        <guid isPermaLink="true">/posts/node-env-variables-solving-the-nightmare</guid>
+        
+        <category>node</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Adding ESLint to Your Project with a Git Hook &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="Linters can be annoying at first, but I feel like they really help me write better code. Plus they are great for working in teams to make sure everyone is following the same conventions. We’re going to walk through how to setup ESLint and add it to our project using...">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="javascript, git">
+<link rel="canonical" href="/posts/adding-eslint-to-your-project">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Adding ESLint to Your Project with a Git Hook" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Adding ESLint to Your Project with a Git Hook">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/adding-eslint-to-your-project">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          Adding ESLint to Your Project with a Git Hook
+     </h1>
+      <span class="published-at">Published Jul 17, 2018</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/javascript">#javascript</a>
+            <a href="/tag/git">#git</a>
+      </span>
+          <a href="/posts/adding-eslint-to-your-project" title="Adding ESLint to Your Project with a Git Hook"><img class="hero-image" src="/uploads/2018/07/17/Beautiful Code!.png" /></a>
+   </div>
+ </div>
+   <p>Linters can be annoying at first, but I feel like they really help me write better code. Plus they are great for working in teams to make sure everyone is following the same conventions.
+<p>We’re going to walk through how to setup ESLint and add it to our project using a git pre-commit hook.
+<p class="lead">
+<h2 id="installation">Installation</h2>
+<p>First install the package eslint:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>yarn add eslint --only=dev
+</pre></table>
+</div>
+</div>
+<p>Then initialize init and it will walk you through a typical setup:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>yarn eslint --init
+</pre></table>
+</div>
+</div>
+<p>These are the options I selected. I like to start with the AirBnB template:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre><td class="code"><pre>? How would you like to configure ESLint? Use a popular style guide
+? Which style guide do you want to follow? Airbnb
+? Do you use React? Yes
+? What format do you want your config file to be in? JSON
+</pre></table>
+</div>
+</div>
+<p>The airbnb template is already set up to use react and it will install all sorts of nice dependencies for you.
+<p>And thats basically it!
+<h2 id="configuration">Configuration</h2>
+<p>It creates a file called <code class="highlighter-rouge">eslintrc.json</code> (the file will be different depending on which format you chose). And in this file will be your configuration.
+<p>If you open that file it will look like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nt">"extends"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airbnb"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table>
+</div>
+</div>
+<p>So it is basically just copying all of airbnb’s rules. So if we want to now change the rules we are using we need to manually add them. We can turn off or change any rule and any rule we specify in our file will override the airbnb rule.
+<p>Here is an example of how to disable a rule called <code class="highlighter-rouge">no-underscore-dangle</code> and change the rule called <code class="highlighter-rouge">react/jsx-filename-extension</code> which requires all javascript files what use jsx to have the extension <code class="highlighter-rouge">.jsx</code>. This rule change also allows you to have <code class="highlighter-rouge">.js</code> extension.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7</pre><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nt">"extends"</span><span class="p">:</span><span class="w"> </span><span class="s2">"airbnb"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"react/jsx-filename-extension"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">"extensions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">".js"</span><span class="p">,</span><span class="w"> </span><span class="s2">".jsx"</span><span class="p">]</span><span class="w"> </span><span class="p">}],</span><span class="w">
+    </span><span class="nt">"no-underscore-dangle"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table>
+</div>
+</div>
+<p>To disable eslint totally on a specific line, you can add this at the end of the line:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>var foo = "bar" // eslint-disable-line
+</pre></table>
+</div>
+</div>
+<p>And to disable 1 rule on that line you can add the rule like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>var foo = "bar" // eslint-disable-line no-alert
+</pre></table>
+</div>
+</div>
+<p>You can also do it this way:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre><td class="code"><pre>// eslint-disable-next-line
+var foo = "bar"
+
+// eslint-disable-next-line no-alert
+var foo = "bar"
+</pre></table>
+</div>
+</div>
+<p>You can lint any file by running <code class="highlighter-rouge">yarn eslint path/to/file.js</code>.
+<p>You can also configure your editor to display any lint issues inline for you.
+<p>You can also set up a git pre-commit script to run before each commit which will enforce the lint rules in a very strong way.
+<h2 id="setting-up-a-eslint-pre-commit-git-hook">Setting up a ESLint pre-commit git hook</h2>
+<p>I’m assuming you already have a git repo setup.
+<p>Create a new file:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>touch .git/hooks/pre-commit
+</pre></table>
+</div>
+</div>
+<p>Make the file executable:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>chmod +x .git/hooks/pre-commit
+</pre></table>
+</div>
+</div>
+<p>Then paste in this code here into that file:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41</pre><td class="code"><pre><span class="c">#!/bin/sh</span>
+
+<span class="nv">STAGED_FILES</span><span class="o">=</span><span class="k">$(</span>git diff --cached --name-only --diff-filter<span class="o">=</span>ACM | grep <span class="s2">".jsx</span><span class="se">\{</span><span class="s2">0,1</span><span class="se">\}</span><span class="s2">$"</span><span class="k">)</span>
+<span class="nv">ESLINT</span><span class="o">=</span><span class="s2">"</span><span class="k">$(</span>git rev-parse --show-toplevel<span class="k">)</span><span class="s2">/node_modules/.bin/eslint"</span>
+
+<span class="k">if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$STAGED_FILES</span><span class="s2">"</span> <span class="o">=</span> <span class="s2">""</span> <span class="o">]]</span>; <span class="k">then
+  </span><span class="nb">exit </span>0
+<span class="k">fi
+
+</span><span class="nv">PASS</span><span class="o">=</span><span class="nb">true
+
+printf</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">Validating Javascript:</span><span class="se">\n</span><span class="s2">"</span>
+
+<span class="c"># Check for eslint</span>
+<span class="k">if</span> <span class="o">[[</span> ! -x <span class="s2">"</span><span class="nv">$ESLINT</span><span class="s2">"</span> <span class="o">]]</span>; <span class="k">then
+  </span><span class="nb">printf</span> <span class="s2">"</span><span class="se">\t\0</span><span class="s2">33[41mPlease install ESlint</span><span class="se">\0</span><span class="s2">33[0m (npm i --save-dev eslint)"</span>
+  <span class="nb">exit </span>1
+<span class="k">fi
+
+for </span>FILE <span class="k">in</span> <span class="nv">$STAGED_FILES</span>
+<span class="k">do</span>
+  <span class="s2">"</span><span class="nv">$ESLINT</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$FILE</span><span class="s2">"</span>
+
+  <span class="k">if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$?</span><span class="s2">"</span> <span class="o">==</span> 0 <span class="o">]]</span>; <span class="k">then
+    </span><span class="nb">printf</span> <span class="s2">"</span><span class="se">\t\0</span><span class="s2">33[32mESLint Passed: </span><span class="nv">$FILE</span><span class="se">\0</span><span class="s2">33[0m"</span>
+  <span class="k">else
+    </span><span class="nb">printf</span> <span class="s2">"</span><span class="se">\t\0</span><span class="s2">33[41mESLint Failed: </span><span class="nv">$FILE</span><span class="se">\0</span><span class="s2">33[0m"</span>
+    <span class="nv">PASS</span><span class="o">=</span><span class="nb">false
+  </span><span class="k">fi
+done
+
+</span><span class="nb">printf</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">Javascript validation completed!</span><span class="se">\n</span><span class="s2">"</span>
+
+<span class="k">if</span> ! <span class="nv">$PASS</span>; <span class="k">then
+  </span><span class="nb">printf</span> <span class="s2">"</span><span class="se">\0</span><span class="s2">33[41mCOMMIT FAILED:</span><span class="se">\0</span><span class="s2">33[0m Your commit contains files that should pass ESLint but do not. Please fix the ESLint errors and try again.</span><span class="se">\n</span><span class="s2">"</span>
+  <span class="nb">exit </span>1
+<span class="k">else
+  </span><span class="nb">printf</span> <span class="s2">"</span><span class="se">\0</span><span class="s2">33[42mCOMMIT SUCCEEDED</span><span class="se">\0</span><span class="s2">33[0m</span><span class="se">\n</span><span class="s2">"</span>
+<span class="k">fi
+
+</span><span class="nb">exit</span> <span class="nv">$?</span>
+</pre></table>
+</div>
+</div>
+<p>This code is from [this article](<a href="https://medium.com/@shettyrahul8june/how-to-run-eslint-using-pre-commit-hook-25984fbce17e" title="https://medium.com/@shettyrahul8june/how-to-run-eslint-using-pre-commit-hook-25984fbce17e">https://medium.com/@shettyrahul8june/how-to-run-eslint-using-pre-commit-hook-25984fbce17e</a>) which references [this gist](<a href="https://gist.github.com/rashtay/328da46a99a9d7c746636df1cf769675" title="https://gist.github.com/rashtay/328da46a99a9d7c746636df1cf769675">https://gist.github.com/rashtay/328da46a99a9d7c746636df1cf769675</a>).
+<p>Now anytime someone commits, any javascript files included in the commit will have to pass the lint test!
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

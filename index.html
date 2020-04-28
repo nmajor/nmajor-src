@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>NMajor Blog </title>
+<!---->
+<meta name="description" content="A blog filled with adventures in tech">
+<link rel="canonical" href="/">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Blog" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blog">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/jwt-json-web-token-and-my-approach" title="JWT - What You Should Know">JWT - What You Should Know</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Oct 29, 2019</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/javascript">#javascript</a>
+        <a href="/tag/authentication">#authentication</a>
+        <a href="/tag/jwt">#jwt</a>
+  </span>
+      <a href="/posts/jwt-json-web-token-and-my-approach" title="JWT - What You Should Know"><img class="hero-image" src="/uploads/2019/10/29/You are Sunshine.png" /></a>
+     <p>This is not an introduction to JSON Web Tokens. There are plenty of those on the internet already. I’m trying to outline and compile my thoughts and research about when to implement JWT and how to do it safely.
+<p>TLDR: It’s easy to shoot yourself in the foot with JWT, but it’s very widely used and has some clear benefits. Be sure to research before trying and use a solid library.
+       <div class="readmore">
+          <a href="/posts/jwt-json-web-token-and-my-approach" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/create-a-new-linux-user-with-ssh-access" title="Create a New Linux User With SSH Access">Create a New Linux User With SSH Access</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Oct 11, 2019</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/linux">#linux</a>
+        <a href="/tag/ssh">#ssh</a>
+  </span>
+      <a href="/posts/create-a-new-linux-user-with-ssh-access" title="Create a New Linux User With SSH Access"><img class="hero-image" src="" /></a>
+     <p>This is just a personal reference.
+<p>Generate the key for the user. This should be done on the local machine:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>ssh-keygen -t rsa -b 4096 -o -a 100
+</pre></table>
+</div>
+</div>
+<p>Create a new user on the remote machine. The <code class="highlighter-rouge">-m</code> adds a deuser fault user home directory.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>useradd -m new-user
+</pre></table>
+</div>
+</div>
+       <div class="readmore">
+          <a href="/posts/create-a-new-linux-user-with-ssh-access" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/quick-docker-server-setup-with-api-on-ubuntu" title="Quick Docker Server Setup with API on Ubuntu">Quick Docker Server Setup with API on Ubuntu</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Oct 5, 2019</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/docker">#docker</a>
+  </span>
+      <a href="/posts/quick-docker-server-setup-with-api-on-ubuntu" title="Quick Docker Server Setup with API on Ubuntu"><img class="hero-image" src="/uploads/2019/10/07/Docker on Ubuntu.png" /></a>
+     <p>This is mostly just a quick reference for me to use when I need to whip up a docker server. This is on Ubuntu 16.04.
+       <div class="readmore">
+          <a href="/posts/quick-docker-server-setup-with-api-on-ubuntu" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/simple-object-storage-in-redis-and-node" title="Simple Object Storage in Redis (Node.js)">Simple Object Storage in Redis (Node.js)</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Oct 5, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/node">#node</a>
+        <a href="/tag/redis">#redis</a>
+        <a href="/tag/javascript">#javascript</a>
+  </span>
+      <a href="/posts/simple-object-storage-in-redis-and-node" title="Simple Object Storage in Redis (Node.js)"><img class="hero-image" src="/uploads/2018/10/06/object Storage.png" /></a>
+     <p><a href="https://redis.io/" title="https://redis.io/">Redis</a> is a simple key value store and is highly optimized for fast reads and writes. I found myself in a situation where I wanted to offload some app task logging from our document store (mongoDB) to redis.
+<p>There are a few important things to consider when making this kind of change.
+       <div class="readmore">
+          <a href="/posts/simple-object-storage-in-redis-and-node" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/multi-tenancy-with-expressmongoose" title="Multi Tenancy with Express/Mongoose">Multi Tenancy with Express/Mongoose</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Oct 3, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/mongoose">#mongoose</a>
+        <a href="/tag/express">#express</a>
+        <a href="/tag/node">#node</a>
+        <a href="/tag/javascript">#javascript</a>
+  </span>
+      <a href="/posts/multi-tenancy-with-expressmongoose" title="Multi Tenancy with Express/Mongoose"><img class="hero-image" src="/uploads/2018/10/06/Multi-tenant.png" /></a>
+     <p>Multi tenant apps are apps where multiple users share the same database but their data is isolated from one another. This can basically describe almost any app with multiple users. For example users can often only see and change their own data.
+<p>However, personally, I define multi tenant apps as having a layer of data isolation above the level of the user. For example you could have a data model called an <code class="highlighter-rouge">organization</code> and the the user can only see and interact with the data related to that organization.
+       <div class="readmore">
+          <a href="/posts/multi-tenancy-with-expressmongoose" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/serverless-framework-s3-file-uploads" title="Serverless Framework S3 Permissions (Serverless IAM Permissions)">Serverless Framework S3 Permissions (Serverless IAM Permissions)</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Sep 13, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/serverless">#serverless</a>
+        <a href="/tag/javascript">#javascript</a>
+        <a href="/tag/aws">#aws</a>
+  </span>
+      <a href="/posts/serverless-framework-s3-file-uploads" title="Serverless Framework S3 Permissions (Serverless IAM Permissions)"><img class="hero-image" src="" /></a>
+     <p>This really isn’t a complicated problem, but I want to document this for later.
+<p>Its hard to find a good title for this. Usually you will never us a lambda function to upload to S3. For user submitted files, the right way to upload to S3 is generate a temporary signed upload URL and the user will submit directly to S3 without sending the file to the serverless function.
+       <div class="readmore">
+          <a href="/posts/serverless-framework-s3-file-uploads" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/serverless-framework-executable-binaries-aws-lambda" title="Executable Binary Files with Serverless Framework and Webpack - AWS Lambda">Executable Binary Files with Serverless Framework and Webpack - AWS Lambda</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Sep 1, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/serverless">#serverless</a>
+        <a href="/tag/javascript">#javascript</a>
+        <a href="/tag/aws">#aws</a>
+        <a href="/tag/webpack">#webpack</a>
+  </span>
+      <a href="/posts/serverless-framework-executable-binaries-aws-lambda" title="Executable Binary Files with Serverless Framework and Webpack - AWS Lambda"><img class="hero-image" src="/uploads/2018/09/02/Serverless Framework with Webpack-Executables.png" /></a>
+     <p>Many web apps rely on executable binaries to function. For example if you want to do any kind of image processing, usually, in addition to the actual libraries you are using usually you need an program like `imagemagick ` to make it actually work.
+<p>So, if you ever want to build a sophisticated web app with the serverless framework, you need to be able to upload and use executable binaries. And its best if you can upload them in such a way that the library knows how to find them without any extra configuration.
+       <div class="readmore">
+          <a href="/posts/serverless-framework-executable-binaries-aws-lambda" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment" title="Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha + Chai), and ESLint">Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha + Chai), and ESLint</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Aug 25, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/serverless">#serverless</a>
+        <a href="/tag/eslint">#eslint</a>
+        <a href="/tag/javascript">#javascript</a>
+        <a href="/tag/es6">#es6</a>
+  </span>
+      <a href="/posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment" title="Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha + Chai), and ESLint"><img class="hero-image" src="/uploads/2018/08/25/robust.png" /></a>
+     <p>As a Rails developer turned Javascript Zealot, I sometimes miss the structure and opinions of the Ruby on Rails world. Its amazing how bare bones many javascript libraries are. They are so modular and self contained (good things) that, unless you take the time to add some structure and organization to your code, its easy for your project to feel chaotic an unorganized. So I’m always looking for and trying to find good patterns and structure to follow with my javascript projects.
+<p>The serverless framework is a good example of this. Its so minimal in its setup that it may be difficult to know where to start to give it some structure. So here I’ll share with you one possible way to structure a serverless API project.
+       <div class="readmore">
+          <a href="/posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/access-and-refresh-token-handling-with-redux" title="Access Token Handling (Automatic Refresh) with React + Redux">Access Token Handling (Automatic Refresh) with React + Redux</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Aug 23, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/react">#react</a>
+        <a href="/tag/redux">#redux</a>
+        <a href="/tag/authentication">#authentication</a>
+  </span>
+      <a href="/posts/access-and-refresh-token-handling-with-redux" title="Access Token Handling (Automatic Refresh) with React + Redux"><img class="hero-image" src="/uploads/2018/08/23/GET DISCOUNTS.png" /></a>
+     <p>The industry trend of decoupling backends and frontends has lots of advantages. You could argue that its just good software design. Plus it makes it much easier to have multiple front-end clients using the same backend. And since mobile apps dont use cookies, then it makes sense to convert the entire authentication system to some kind of token based solution.
+<p>But the next questions is how can you safely and convienently store and manage these tokens in your React+Redux app.
+       <div class="readmore">
+          <a href="/posts/access-and-refresh-token-handling-with-redux" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/node-env-variables-solving-the-nightmare" title="Node Env Variables - dotenv Workaround">Node Env Variables - dotenv Workaround</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Aug 22, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/node">#node</a>
+  </span>
+      <a href="/posts/node-env-variables-solving-the-nightmare" title="Node Env Variables - dotenv Workaround"><img class="hero-image" src="" /></a>
+     <p>The library that everyone uses to manage environmental variables in node is <a href="https://www.npmjs.com/package/dotenv" title="https://www.npmjs.com/package/dotenv">dotenv</a>. I don’t think I’ve ever had so much trouble with such a popular module.
+<p>What I want is to have my development environment run with the one set of environment variables and my tests run with a different set of environment variables.
+       <div class="readmore">
+          <a href="/posts/node-env-variables-solving-the-nightmare" role="button">Read more</a>
+       <div>
+</article>
+<nav class="pagination" role="navigation">
+<hr/>
+ <ul>
+   <li class="pagination-item-prev" >
+      <span>&laquo; Previous</span>
+   <li class="pagination-item-next" >
+      <a rel="next" href="/page-2/">Next &raquo;</a>
+ </ul>
+<hr/>
+</nav>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

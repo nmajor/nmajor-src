@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha + Chai), and ESLint &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="As a Rails developer turned Javascript Zealot, I sometimes miss the structure and opinions of the Ruby on Rails world. Its amazing how bare bones many javascript libraries are. They are so modular and self contained (good things) that, unless you take the time to add some structure and organization...">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="serverless, eslint, javascript, es6">
+<link rel="canonical" href="/posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha + Chai), and ESLint" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha + Chai), and ESLint">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha + Chai), and ESLint
+     </h1>
+      <span class="published-at">Published Aug 25, 2018</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/serverless">#serverless</a>
+            <a href="/tag/eslint">#eslint</a>
+            <a href="/tag/javascript">#javascript</a>
+            <a href="/tag/es6">#es6</a>
+      </span>
+          <a href="/posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment" title="Robust Serverless API Boilerplate with ES6, Folder Structure, Testing (Mocha + Chai), and ESLint"><img class="hero-image" src="/uploads/2018/08/25/robust.png" /></a>
+   </div>
+ </div>
+   <p>As a Rails developer turned Javascript Zealot, I sometimes miss the structure and opinions of the Ruby on Rails world. Its amazing how bare bones many javascript libraries are. They are so modular and self contained (good things) that, unless you take the time to add some structure and organization to your code, its easy for your project to feel chaotic an unorganized. So I’m always looking for and trying to find good patterns and structure to follow with my javascript projects.
+<p>The serverless framework is a good example of this. Its so minimal in its setup that it may be difficult to know where to start to give it some structure. So here I’ll share with you one possible way to structure a serverless API project.
+<p class="lead">
+<p>Basically before I start any serious project I like to have a few things setup:
+<ul>
+ <li>ES6/ES7 Webpack and Babel (From Starter)
+ <li>A good offline dev workflow (From Starter)
+ <li>ESLint
+ <li>Folder structure
+ <li>Testing
+</ul>
+<p>I hope this isnt too obscure of a topic, but I’m not actually going to cover how to build a CRUD API, this is just an example starting boilerplate before you begin coding your project.
+<p>I’m assuming you’ve at least tried using the serverless framework before. If you are new to serverless, I have an article that breaks it down from the beginning here:
+<p><a href="/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture" title="/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture">Serverless Back-End for React - Your Introduction to Serverless Architecture</a>
+<h3 id="the-starter">The Starter</h3>
+<p>Lets start with the great <a href="https://serverless-stack.com/chapters/serverless-nodejs-starter.html" title="https://serverless-stack.com/chapters/serverless-nodejs-starter.html">Serverless Node.js Starter</a> (<a href="https://github.com/AnomalyInnovations/serverless-nodejs-starter" title="https://github.com/AnomalyInnovations/serverless-nodejs-starter">github</a>) from the awesome <a href="https://serverless-stack.com/" title="https://serverless-stack.com/">Serverless Stack</a> project. If you’re not familiar with that project be sure to check it out.
+<p>The starter basically includes all this stuff (From the the <a href="https://serverless-stack.com/chapters/serverless-nodejs-starter.html" title="https://serverless-stack.com/chapters/serverless-nodejs-starter.html">starter description page</a>):
+<ul>
+ <li><strong>Use ES7 syntax in your handler functions</strong>
+ <li><strong>Package your functions using Webpack</strong>
+ <li><strong>Run API Gateway locally</strong>
+   <ul>
+     <li>Use <code class="highlighter-rouge">serverless offline start</code>
+   </ul>
+ <li><strong>Support for unit tests</strong>
+   <ul>
+     <li>Run <code class="highlighter-rouge">npm test</code> to run your tests
+   </ul>
+ <li><strong>Sourcemaps for proper error messages</strong>
+   <ul>
+     <li>Error message show the correct line numbers
+     <li>Works in production with CloudWatch
+   </ul>
+ <li><strong>Automatic support for multiple handler files</strong>
+   <ul>
+     <li>No need to add a new entry to your <code class="highlighter-rouge">webpack.config.js</code>
+   </ul>
+ <li><strong>Add environment variables for your stages</strong>
+</ul>
+<p>If you dont use this starter, you have to add a lot of this stuff one by one by including and configuring the right packages and plugins. So this gives us a great place to start.
+<h3 id="create-a-new-project">Create a New Project</h3>
+<p>First make sure you have the <code class="highlighter-rouge">serverless</code> module installed globally
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>yarn global add serverless
+# or
+npm install serverless -g
+</pre></table>
+</div>
+</div>
+<p>And then run this command to create a new serverless project using the starter:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>$ serverless install --url https://github.com/AnomalyInnovations/serverless-nodejs-starter --name my-project
+</pre></table>
+</div>
+</div>
+<p>It gives us a <code class="highlighter-rouge">serverless.yml</code> file that looks like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre><td class="code"><pre>service: my-project
+
+plugins:
+  - serverless-webpack
+  - serverless-offline
+
+custom:
+  webpack:
+    webpackConfig: ./webpack.config.js
+    includeModules: true
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  region: us-east-1
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: hello
+          method: get
+</pre></table>
+</div>
+</div>
+<p>And a handler.js file that looks like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16</pre><td class="code"><pre>export const hello = async (event, context, callback) =&gt; {
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: `Go Serverless v1.0! ${(await message({ time: 1, copy: 'Your function executed successfully!'}))}`,
+    }),
+  };
+
+  callback(null, response);
+};
+
+const message = ({ time, ...rest }) =&gt; new Promise((resolve, reject) =&gt; 
+  setTimeout(() =&gt; {
+    resolve(`${rest.copy} (with a delay)`);
+  }, time * 1000)
+);
+</pre></table>
+</div>
+</div>
+<p>It also gives us a test folder with an example test.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre><td class="code"><pre># tests/handler.test.js
+
+import * as handler from '../handler';
+
+test('hello', async () =&gt; {
+  const event = 'event';
+  const context = 'context';
+  const callback = (error, response) =&gt; {
+    expect(response.statusCode).toEqual(200);
+    expect(typeof response.body).toBe("string");
+  };
+
+  await handler.hello(event, context, callback);
+});
+</pre></table>
+</div>
+</div>
+<p>We can run this command to start the offline server for a good development workflow:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>serverless offline start
+</pre></table>
+</div>
+</div>
+<p>This will start an offline server that you can use to make API requests and test all the endpoints.
+<p>I also like to add a script in the <code class="highlighter-rouge">package.json</code> file to make this easy to launch:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre><td class="code"><pre>  "scripts": {
+  	"start": "serverless offline start",
+    "lint": "node_modules/.bin/eslint .",
+    "test": "NODE_ENV=test node_modules/.bin/mocha --recursive --require babel-core/register"
+  },
+</pre></table>
+</div>
+</div>
+<h3 id="add-eslint">Add ESLint</h3>
+<p>I always work with a linter these days, there’s no better way to keep clean code and enforce best practices with a language like javascript where its so easy to write messy and ugly code.
+<p>Lets add <code class="highlighter-rouge">eslint</code> and some plugins:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>, yarn add --dev eslint eslint-config-airbnb eslint-plugin-import eslint-plugin-mocha eslint-plugin-promise
+</pre></table>
+</div>
+</div>
+<p>And then make a new <code class="highlighter-rouge">.eslintrc.json</code> file in the root of our project.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>touch .eslintrc.json
+</pre></table>
+</div>
+</div>
+<p>And add this to the new file:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nt">"extends"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"airbnb/base"</span><span class="p">,</span><span class="w"> </span><span class="s2">"plugin:promise/recommended"</span><span class="p">],</span><span class="w">
+  </span><span class="nt">"plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"promise"</span><span class="p">],</span><span class="w">
+  </span><span class="nt">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table>
+</div>
+</div>
+<p>Add a <code class="highlighter-rouge">.eslintignore</code> file:.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>touch .eslintignore
+</pre></table>
+</div>
+</div>
+<p>And ignore the webpack config:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre># .eslintignore
+
+webpack.config.js
+</pre></table>
+</div>
+</div>
+<p>And then add a <code class="highlighter-rouge">lint</code> script to our <code class="highlighter-rouge">package.json</code>:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre><td class="code"><pre>  "scripts": {
+  	"start": "serverless offline start",
+    "lint": "node_modules/.bin/eslint .",
+  },
+</pre></table>
+</div>
+</div>
+<p>Then you can run the linter with this command:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>yarn lint
+# or 
+npm run lint
+</pre></table>
+</div>
+</div>
+<h3 id="api-folder-structure">API Folder Structure</h3>
+<p>When I’m building a serverless api I like to give my functions, paths, and folder a api-like structure. So I’ll create some directories to organize my handlers. This may be a bit overkill for small projects, but I dont think there are any downsides of having this kind of extra organization right off the bat.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>mkdir -p handlers/api/v1/todos
+</pre></table>
+</div>
+</div>
+<p>I think you can think of these handlers as controllers, and so if you’re building CRUD endpoints for a model, you can add a different file for each of the 5 main API actions:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre><td class="code"><pre>touch handlers/api/v1/todos/index.js
+touch handlers/api/v1/todos/show.js
+touch handlers/api/v1/todos/create.js
+touch handlers/api/v1/todos/update.js
+touch handlers/api/v1/todos/delete.js
+</pre></table>
+</div>
+</div>
+<p>Then the functions part of your <code class="highlighter-rouge">serverless.yml</code> file would look something like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31</pre><td class="code"><pre>functions:
+  api/v1/todos/index:
+    handler: handlers/api/v1/todos/index.default
+    events:
+      - http:
+          path: api/v1/todos
+          method: get
+  api/v1/todos/show:
+    handler: handlers/api/v1/todos/show.default
+    events:
+      - http:
+          path: api/v1/todos/{id}
+          method: get
+  api/v1/todos/create:
+    handler: handlers/api/v1/todos/create.default
+    events:
+      - http:
+          path: api/v1/todos
+          method: post
+  api/v1/todos/update:
+    handler: handlers/api/v1/todos/update.default
+    events:
+      - http:
+          path: api/v1/todos/{id}
+          method: put
+  api/v1/todos/delete:
+    handler: handlers/api/v1/todos/delete.default
+    events:
+      - http:
+          path: api/v1/todos/{id}
+          method: delete
+</pre></table>
+</div>
+</div>
+<p>As you can see this is a pretty typical REST setup.
+<p>We can now remove our original handler.js file since we dont need it anymore:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>rm handler.js
+</pre></table>
+</div>
+</div>
+<p>We wont be using this today, but lets also create a <code class="highlighter-rouge">models</code> folder where I can put our models:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre><td class="code"><pre>mkdir models
+touch models/todo.js
+</pre></table>
+</div>
+</div>
+<p>Then the individual handlers will include the models to handle the crud operations.
+<p>Now I’m going to add a basic handler for <code class="highlighter-rouge">todos/index.js</code> so we have something to test:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12</pre><td class="code"><pre># handlers/api/v1/index.js
+
+export default (event, context, callback) =&gt; {
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify({
+      message: 'Hello from todos/index',
+    }),
+  };
+
+  callback(null, response);
+};
+</pre></table>
+</div>
+</div>
+<p>And if you are following along, you’ll have to add an export to all the handler files in order to run the offline server.
+<h3 id="setup-testing">Setup Testing</h3>
+<p>By default the starter comes with <code class="highlighter-rouge">jest</code> but I prefer <code class="highlighter-rouge">mocha</code> so lets swap <code class="highlighter-rouge">jest</code> for <code class="highlighter-rouge">mocha</code> and add a bit of <code class="highlighter-rouge">chai</code> for the assertions.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre><td class="code"><pre>mv tests test
+rm test/handler.test.js
+yarn remove --dev jest
+yarn add --dev mocha chai
+touch test/test_helper.js
+</pre></table>
+</div>
+</div>
+<p>Now lets add some test files for our endpoints:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre><td class="code"><pre>mkdir -p test/api/v1/todos/
+touch test/api/v1/todos/index.test.js
+touch test/api/v1/todos/show.test.js
+touch test/api/v1/todos/create.test.js
+touch test/api/v1/todos/update.test.js
+touch test/api/v1/todos/delete.test.js
+</pre></table>
+</div>
+</div>
+<p>And we’ll only add 1 test for now for our <code class="highlighter-rouge">todos/index</code> handler:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18</pre><td class="code"><pre>import { expect } from 'chai';
+
+import todosIndex from '../../../../handlers/api/v1/todos';
+
+describe('Fetching list of todos', () =&gt; {
+  it('returns a valid response', (done) =&gt; {
+    const event = 'event';
+    const context = 'context';
+    const callback = (error, response) =&gt; {
+      expect(response.statusCode).to.equal(200);
+      expect(typeof response.body).to.equal('string');
+      expect(response.body).to.contain('Hello from todos/index');
+      done();
+    };
+
+    todosIndex(event, context, callback);
+  });
+});
+</pre></table>
+</div>
+</div>
+<p>Then we can run it by first adding this script to our <code class="highlighter-rouge">package.json</code> file:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre><td class="code"><pre>  "scripts": {
+  	"start": "serverless offline start",
+    "lint": "node_modules/.bin/eslint .",
+    "test": "NODE_ENV=test node_modules/.bin/mocha --recursive --require babel-core/register"
+  },
+</pre></table>
+</div>
+</div>
+<p>We have to add the <code class="highlighter-rouge">--recursive</code> tag so it will find the tests in our subfolders, and the <code class="highlighter-rouge">--require babel-core/register</code> tag to make ES7 work with our tests.
+<p>Then we can run our tests with the command:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>yarn test
+# or
+npm test
+</pre></table>
+</div>
+</div>
+<p>Now we also need a different <code class="highlighter-rouge">.eslintrc.json</code> file for our testing so if we put a new one in our test tile the tests will play by different eslint rules.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>touch test/.eslintrc.json
+</pre></table>
+</div>
+</div>
+<p>With these contents so it will ignore mocha keywords:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8</pre><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nt">"extends"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"airbnb/base"</span><span class="p">,</span><span class="w"> </span><span class="s2">"plugin:promise/recommended"</span><span class="p">],</span><span class="w">
+  </span><span class="nt">"plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"promise"</span><span class="p">,</span><span class="w"> </span><span class="s2">"mocha"</span><span class="p">],</span><span class="w">
+  </span><span class="nt">"env"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"mocha"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="nt">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table>
+</div>
+</div>
+<h3 id="wrap-it-up">Wrap it up</h3>
+<p>Now we can start our offline server:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>serverless offline start
+</pre></table>
+</div>
+</div>
+<p>We can test our code:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>yarn test
+# or
+npm test
+</pre></table>
+</div>
+</div>
+<p>…and we can lint our code:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>yarn lint
+# or
+npm run lint
+</pre></table>
+</div>
+</div>
+<p>And we have some good folder structure to start building our API.
+<p>Thanks for reading, I hope this can be of help to someone.
+<p>As always if you notice anything I did that could be improved, please reach out. I’m always looking to improve.
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

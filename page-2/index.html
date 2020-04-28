@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>NMajor Blog </title>
+<!---->
+<meta name="description" content="A blog filled with adventures in tech">
+<link rel="canonical" href="/page-2/">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Blog" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Blog">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/page-2/">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/using-socket-io-with-redux-websocket-redux-middleware" title="Using Socket.io with Redux - Websocket Redux Middleware">Using Socket.io with Redux - Websocket Redux Middleware</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Aug 21, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/javascript">#javascript</a>
+        <a href="/tag/react">#react</a>
+        <a href="/tag/redux">#redux</a>
+        <a href="/tag/websockets">#websockets</a>
+        <a href="/tag/socket.io">#socket.io</a>
+  </span>
+      <a href="/posts/using-socket-io-with-redux-websocket-redux-middleware" title="Using Socket.io with Redux - Websocket Redux Middleware"><img class="hero-image" src="/uploads/2018/07/25/Action Cable (1).png" /></a>
+     <p>This article uses socket.io as the websocket library. If you want to see a version of this article using Rails’ ActionCable library, <a href="/posts/making-redux-middleware-for-websockets" title="/posts/making-redux-middleware-for-websockets">click here</a>
+<hr />
+<p>Middleware is one of the most powerful and useful features of redux. If you’re unfamiliar with redux middleware, it is a way to insert extra behavior into dispatched redux actions.
+<p>Today we’re going to use it to make a clean and powerful way to manage our socket.io events. Basically we want to subscribe to specific events and then dispatch specific redux actions anytime those events are broadcast to us from the socket.io server.
+       <div class="readmore">
+          <a href="/posts/using-socket-io-with-redux-websocket-redux-middleware" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/making-redux-middleware-for-websockets" title="Using Action Cable with Redux - Websocket Redux Middleware">Using Action Cable with Redux - Websocket Redux Middleware</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Jul 25, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/redux">#redux</a>
+        <a href="/tag/javascript">#javascript</a>
+        <a href="/tag/websockets">#websockets</a>
+        <a href="/tag/react">#react</a>
+        <a href="/tag/rails">#rails</a>
+        <a href="/tag/actioncable">#actioncable</a>
+  </span>
+      <a href="/posts/making-redux-middleware-for-websockets" title="Using Action Cable with Redux - Websocket Redux Middleware"><img class="hero-image" src="/uploads/2018/07/25/Action Cable.png" /></a>
+     <p>This article uses ActionCable as the websocket library. If you want to see a version of this article using socket.io, <a href="/posts/using-socket-io-with-redux-websocket-redux-middleware" title="/posts/using-socket-io-with-redux-websocket-redux-middleware">click here.</a>
+<hr />
+<p>Middleware is one of the most powerful and useful features of redux. If you’re unfamiliar with redux middleware, it is a way to insert extra behavior into dispatched redux actions.
+<p>Today we’re going to use it to make a clean and powerful way to manage our subscriptions to different Action Cable channels+rooms. This also means taking the data sent to use through action cable and dispatching the appropriate redux actions to mutate the state.
+       <div class="readmore">
+          <a href="/posts/making-redux-middleware-for-websockets" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/adding-eslint-to-your-project" title="Adding ESLint to Your Project with a Git Hook">Adding ESLint to Your Project with a Git Hook</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Jul 17, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/javascript">#javascript</a>
+        <a href="/tag/git">#git</a>
+  </span>
+      <a href="/posts/adding-eslint-to-your-project" title="Adding ESLint to Your Project with a Git Hook"><img class="hero-image" src="/uploads/2018/07/17/Beautiful Code!.png" /></a>
+     <p>Linters can be annoying at first, but I feel like they really help me write better code. Plus they are great for working in teams to make sure everyone is following the same conventions.
+<p>We’re going to walk through how to setup ESLint and add it to our project using a git pre-commit hook.
+       <div class="readmore">
+          <a href="/posts/adding-eslint-to-your-project" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/react-css-styled-components" title="React CSS - Styled Components">React CSS - Styled Components</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Jul 16, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/react">#react</a>
+        <a href="/tag/css">#css</a>
+  </span>
+      <a href="/posts/react-css-styled-components" title="React CSS - Styled Components"><img class="hero-image" src="/uploads/2018/07/16/jungle & river trails.png" /></a>
+     <h2 id="why-i-prefer-styled-components">Why I prefer Styled Components</h2>
+<p>I prefer Styled Components because I feel like it is more inline with the core component philosophy of react. React is all about creating reusable components, and really pushed the idea of bundling the templating (HTML) and behavior (JS) together into components. So it always felt a bit wonky to me to still put my CSS in a separate file and connect my styling using regular CSS <code class="highlighter-rouge">class</code> and <code class="highlighter-rouge">id</code> targeting.
+       <div class="readmore">
+          <a href="/posts/react-css-styled-components" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/get-a-facebook-page-access-token-that-never-expires" title="Get a Facebook Page Access Token That Never Expires">Get a Facebook Page Access Token That Never Expires</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Mar 21, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/facebook">#facebook</a>
+  </span>
+      <a href="/posts/get-a-facebook-page-access-token-that-never-expires" title="Get a Facebook Page Access Token That Never Expires"><img class="hero-image" src="/uploads/2018/03/21/So, let's take it to the streets and celebrate our freedom!.png" /></a>
+     <p>With the facebook API, page tokens can often be used in place of user tokens. This is very useful because if you are doing something with a business, its not ideal to have to use your own user token for everything. However, if you don’t want to have to recreate a new token all the time, you have to go through the process of getting a long-lived page access token.
+       <div class="readmore">
+          <a href="/posts/get-a-facebook-page-access-token-that-never-expires" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/express-js-with-es6-and-babel" title="Express.js With ES6 and Babel">Express.js With ES6 and Babel</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Feb 16, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/express">#express</a>
+        <a href="/tag/node">#node</a>
+        <a href="/tag/babel">#babel</a>
+        <a href="/tag/es6">#es6</a>
+  </span>
+      <a href="/posts/express-js-with-es6-and-babel" title="Express.js With ES6 and Babel"><img class="hero-image" src="/uploads/2018/02/16/Express.js - ES6 - Babel.png" /></a>
+     <p>Express.js doesn’t come with es6 out of the box. But its actually not that hard to add.
+<p>I’m going to go over how to easily add ES6 support to your project using the <a href="https://www.npmjs.com/package/babel-cli" title="babel-cli">babel-cli</a>, as well as show you some of the things you need to do so your app will be ready for production later.
+       <div class="readmore">
+          <a href="/posts/express-js-with-es6-and-babel" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/deploying-a-node-js-app-on-azure-app-services" title="Deploying Node.js on Azure App Services">Deploying Node.js on Azure App Services</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Feb 14, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/node">#node</a>
+        <a href="/tag/azure">#azure</a>
+        <a href="/tag/production">#production</a>
+  </span>
+      <a href="/posts/deploying-a-node-js-app-on-azure-app-services" title="Deploying Node.js on Azure App Services"><img class="hero-image" src="/uploads/2018/07/16/Deploying.png" /></a>
+     <p>I know, I know, I know, Microsoft is not the company you think of when its time to figure out where to host your Node.js app, but Azure has a surprisingly robust suite of services now. And deploying to <a href="https://azure.microsoft.com/en-us/services/app-service/" title="Azure App Service">Azure App Services</a> was easier than I expected.
+       <div class="readmore">
+          <a href="/posts/deploying-a-node-js-app-on-azure-app-services" role="button">Read more</a>
+       <div>
+</article>
+ <hr>
+<article class="blog">
+ <div class="
+    post-title-container-nohero
+  ">
+     <h1>
+          <a href="/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture" title="Serverless Back-End for React - Your Introduction to Serverless Architecture">Serverless Back-End for React - Your Introduction to Serverless Architecture</a>
+     </h1>
+     <div class="
+        post-meta-nohero
+      ">
+     </div>
+ </div>
+  <span class="published-at">Published Jan 29, 2018</span>
+  &#9642;
+  <span class="post-tags">
+        <a href="/tag/serverless">#serverless</a>
+        <a href="/tag/react">#react</a>
+        <a href="/tag/aws">#aws</a>
+  </span>
+      <a href="/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture" title="Serverless Back-End for React - Your Introduction to Serverless Architecture"><img class="hero-image" src="/uploads/2018/02/16/call it a plan (1).png" /></a>
+     <p>I believe Serverless is the next big thing in web development. I discuss the what, why, and how of Serverless. Then I show you how to build a simple backend for a react app. You’ll be surprised how easy it is.
+       <div class="readmore">
+          <a href="/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture" role="button">Read more</a>
+       <div>
+</article>
+<nav class="pagination" role="navigation">
+<hr/>
+ <ul>
+   <li class="pagination-item-prev" >
+            <a rel="prev" href="/">&laquo; Previous</a>
+   <li class="pagination-item-next" >
+      <span>Next &raquo;</span>
+ </ul>
+<hr/>
+</nav>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

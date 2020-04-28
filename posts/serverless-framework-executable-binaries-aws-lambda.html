@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Executable Binary Files with Serverless Framework and Webpack - AWS Lambda &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="Many web apps rely on executable binaries to function. For example if you want to do any kind of image processing, usually, in addition to the actual libraries you are using usually you need an program like `imagemagick ` to make it actually work. So, if you ever want to...">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="serverless, javascript, aws, webpack">
+<link rel="canonical" href="/posts/serverless-framework-executable-binaries-aws-lambda">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Executable Binary Files with Serverless Framework and Webpack - AWS Lambda" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Executable Binary Files with Serverless Framework and Webpack - AWS Lambda">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/serverless-framework-executable-binaries-aws-lambda">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          Executable Binary Files with Serverless Framework and Webpack - AWS Lambda
+     </h1>
+      <span class="published-at">Published Sep 1, 2018</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/serverless">#serverless</a>
+            <a href="/tag/javascript">#javascript</a>
+            <a href="/tag/aws">#aws</a>
+            <a href="/tag/webpack">#webpack</a>
+      </span>
+          <a href="/posts/serverless-framework-executable-binaries-aws-lambda" title="Executable Binary Files with Serverless Framework and Webpack - AWS Lambda"><img class="hero-image" src="/uploads/2018/09/02/Serverless Framework with Webpack-Executables.png" /></a>
+   </div>
+ </div>
+   <p>Many web apps rely on executable binaries to function. For example if you want to do any kind of image processing, usually, in addition to the actual libraries you are using usually you need an program like `imagemagick ` to make it actually work.
+<p>So, if you ever want to build a sophisticated web app with the serverless framework, you need to be able to upload and use executable binaries. And its best if you can upload them in such a way that the library knows how to find them without any extra configuration.
+<p class="lead">
+<h3 id="the-approach">The Approach</h3>
+<p>Basically we need to:
+<ul>
+ <li>Upload the executable binaries with the aws lambda deployment package.
+ <li>Make sure our executable binaries maintain the correct executable permissions.
+ <li>Change the <code class="highlighter-rouge">$PATH</code> env variable to include the location of our executables.
+</ul>
+<p>And then we should be good to go.
+<h3 id="upload">Upload</h3>
+<h5 id="without-webpack">Without Webpack</h5>
+<p>If you’re not using the <code class="highlighter-rouge">serverless-webpack</code> plugin, then this is actually pretty easy.
+<p>I like to just create a folder in my project called <code class="highlighter-rouge">bin</code> and put them all in there. I did this in my <a href="http://nmajor.com/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture" title="http://nmajor.com/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture">Serverless Backend for React</a> post.
+<p>After you put the executables in the <code class="highlighter-rouge">bin</code> folder, put this in your <code class="highlighter-rouge">serverless.yml</code> file:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>package:
+  include:
+    - bin/*
+</pre></table>
+</div>
+</div>
+<p>Your files should maintain their permissions.
+<h5 id="with-webpack">With Webpack:</h5>
+<p>Here is where it gets tricky. The package includes are not honored by the <code class="highlighter-rouge">serverless-webpack</code> plugin, so we have have webpack include the files in our bundle. We’re going to use the official <a href="https://webpack.js.org/plugins/copy-webpack-plugin/" title="https://webpack.js.org/plugins/copy-webpack-plugin/">copy-webpack-plugin</a> to do this, but here’s the kicker. The <a href="https://webpack.js.org/plugins/copy-webpack-plugin/" title="https://webpack.js.org/plugins/copy-webpack-plugin/">copy-webpack-plugin</a> does NOT preserve file permission, so we then have to write a custom plugin to set the file permissions of all the files in our <code class="highlighter-rouge">bin</code> folder to <code class="highlighter-rouge">755</code> so they can be executed by lambda.
+<p>But first lets copy our files with <a href="https://webpack.js.org/plugins/copy-webpack-plugin/" title="https://webpack.js.org/plugins/copy-webpack-plugin/">copy-webpack-plugin</a>. Do do this you can checkout the <a href="">documentation here</a>, or you can add this to your webpack config:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre><td class="code"><pre>  plugins: [
+    new CopyWebpackPlugin([{
+      from: 'bin/',
+      to: 'bin/'
+    }]),
+  ]
+</pre></table>
+</div>
+</div>
+<p>Pretty easy.
+<h3 id="permissions">Permissions</h3>
+<p>I did find a plugin called <a href="https://www.npmjs.com/package/webpack-permissions-plugin" title="https://www.npmjs.com/package/webpack-permissions-plugin">webpack-permissions-plugin </a> that helped me solve the issue with the permissions, but I couldn’t get the feature to change all the permissions in the directory to work. So I decided to make my own simplified version of that plugin to simply handle changing the permissions of the files in the bin folder.
+<p>So here’s the simple plugin I whipped up:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21</pre><td class="code"><pre>const fs = require('fs');
+
+function WebpackBinPermission(options) {
+  this.options = options || {};
+}
+
+WebpackBinPermission.prototype.apply = function (compiler) {
+  compiler.plugin('done', () =&gt; {
+    const permissions = this.options.permissions || '755';
+    const binPath = `${compiler.outputPath}/bin`;
+    fs.readdir(binPath, (err, items) =&gt; {
+      if (items &amp;&amp; items.length &gt; 0) {
+        for (let i = 0; i &lt; items.length; i += 1) {
+          fs.chmodSync(`${binPath}/${items[i]}`, permissions);
+        }
+      }
+    });
+  });
+};
+
+module.exports = WebpackBinPermission;
+</pre></table>
+</div>
+</div>
+<p>As you can see, its pretty simple and all it does it changes the permissions of everything in the <code class="highlighter-rouge">/bin</code> folder to <code class="highlighter-rouge">755</code>. And for me it works like a charm.
+<p>Put that plugin code in a new file called <code class="highlighter-rouge">webpack-bin-permissions.js</code>.Then at the top of your webpack config file, import it like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>const WebpackBinPermission = require('webpack-bin-permissions')
+</pre></table>
+</div>
+</div>
+<p>To then to use it, you just have to pair it with the <a href="https://webpack.js.org/plugins/copy-webpack-plugin/" title="https://webpack.js.org/plugins/copy-webpack-plugin/">copy-webpack-plugin</a> in your webpack config like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7</pre><td class="code"><pre>  plugins: [
+    new CopyWebpackPlugin([{
+      from: 'bin/',
+      to: 'bin/'
+    }]),
+    new WebpackBinPermission(),
+  ]
+</pre></table>
+</div>
+</div>
+<p>And then when <a href="">serverless-webpack</a> builds it will automatically copy everything in the bin folder and set the executable permissions correctly.
+<h3 id="executable-path">Executable Path</h3>
+<p>According to the <a href="https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html" title="https://docs.aws.amazon.com/lambda/latest/dg/current-supported-versions.html">aws lambda documentation</a>, lambda functions run in a linux environment. And libraries are used to having access to ready to run executables. That means that in a terminal you can just type in the name of the program without referencing the whole path. If you’re not familiar with how this works take a look at <a href="http://www.linfo.org/path_env_var.html" title="http://www.linfo.org/path_env_var.html">this page by linfo.org</a>.
+<p>To make an executable ready-to-run without referencing its path, we have to set the <code class="highlighter-rouge">$PATH</code> environmental variable and tell linux to look inside our own <code class="highlighter-rouge">bin</code> folder when searching for valid ready-to-run executables.
+<p>Thats actually really easy. According to <a href="">this official aws post</a> we can do it by just putting this line at the top of our handler code:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>process.env.PATH = `${process.env.PATH}:${process.env.LAMBDA_TASK_ROOT}/bin`;
+</pre></table>
+</div>
+</div>
+<p>But I like to also wrap it around some logic so it doesnt interfere with testing:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>if (process.env.LAMBDA_TASK_ROOT) {
+  process.env.PATH = `${process.env.PATH}:${process.env.LAMBDA_TASK_ROOT}/bin`;
+}
+</pre></table>
+</div>
+</div>
+<h3 id="wrap-it-up">Wrap it up</h3>
+<p>That is the approach that worked for me. I’m currently doing a lot of stuff with executables, and so I needed a solution that allowed me to possibly put many many files in the bin folder that reference each other, and this approach seems to work well.
+<p>As always, please comment below if you see any room for improvement in my code, approach, or writing.
+<p>Thanks for reading!
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

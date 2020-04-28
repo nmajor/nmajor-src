@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+    
+    <url>
+      <loc>/posts/jwt-json-web-token-and-my-approach/</loc>
+      
+        <lastmod>2019-10-29T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/create-a-new-linux-user-with-ssh-access/</loc>
+      
+        <lastmod>2019-10-11T23:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/quick-docker-server-setup-with-api-on-ubuntu/</loc>
+      
+        <lastmod>2019-10-05T23:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/simple-object-storage-in-redis-and-node/</loc>
+      
+        <lastmod>2018-10-05T17:27:12+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/multi-tenancy-with-expressmongoose/</loc>
+      
+        <lastmod>2018-10-03T12:12:59+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/serverless-framework-s3-file-uploads/</loc>
+      
+        <lastmod>2018-09-13T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/serverless-framework-executable-binaries-aws-lambda/</loc>
+      
+        <lastmod>2018-09-01T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/serverless-my-initial-setup-with-es6-testing-and-ci-deployment/</loc>
+      
+        <lastmod>2018-08-25T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/access-and-refresh-token-handling-with-redux/</loc>
+      
+        <lastmod>2018-08-23T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/node-env-variables-solving-the-nightmare/</loc>
+      
+        <lastmod>2018-08-22T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/using-socket-io-with-redux-websocket-redux-middleware/</loc>
+      
+        <lastmod>2018-08-21T12:59:28+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/making-redux-middleware-for-websockets/</loc>
+      
+        <lastmod>2018-07-25T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/adding-eslint-to-your-project/</loc>
+      
+        <lastmod>2018-07-17T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/react-css-styled-components/</loc>
+      
+        <lastmod>2018-07-16T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/get-a-facebook-page-access-token-that-never-expires/</loc>
+      
+        <lastmod>2018-03-21T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/express-js-with-es6-and-babel/</loc>
+      
+        <lastmod>2018-02-16T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/deploying-a-node-js-app-on-azure-app-services/</loc>
+      
+        <lastmod>2018-02-14T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/posts/serverless-back-end-for-react-your-introduction-to-serverless-architecture/</loc>
+      
+        <lastmod>2018-01-29T00:00:00+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.7</priority>
+      
+    </url>
+    
+  
+  
+    
+  
+    
+    <url>
+      <loc>/about/</loc>
+      
+        <lastmod>2020-04-28T22:09:03+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+    <url>
+      <loc>/archive/</loc>
+      
+        <lastmod>2020-04-28T22:09:03+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.9</priority>
+      
+    </url>
+    
+  
+    
+  
+    
+  
+    
+    <url>
+      <loc>/</loc>
+      
+        <lastmod>2020-04-28T22:09:03+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+  
+    
+    <url>
+      <loc>/projects/</loc>
+      
+        <lastmod>2018-01-30T00:55:26+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+    
+  
+    
+  
+    
+    <url>
+      <loc>/page-2/</loc>
+      
+        <lastmod>2020-04-28T22:09:03+00:00</lastmod>
+      
+      
+        <changefreq>monthly</changefreq>
+      
+      
+        <priority>0.5</priority>
+      
+    </url>
+    
+  
+</urlset>

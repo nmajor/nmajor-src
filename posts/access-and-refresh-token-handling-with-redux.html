@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Access Token Handling (Automatic Refresh) with React + Redux &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="The industry trend of decoupling backends and frontends has lots of advantages. You could argue that its just good software design. Plus it makes it much easier to have multiple front-end clients using the same backend. And since mobile apps dont use cookies, then it makes sense to convert the...">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="react, redux, authentication">
+<link rel="canonical" href="/posts/access-and-refresh-token-handling-with-redux">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Access Token Handling (Automatic Refresh) with React + Redux" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Access Token Handling (Automatic Refresh) with React + Redux">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/access-and-refresh-token-handling-with-redux">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          Access Token Handling (Automatic Refresh) with React + Redux
+     </h1>
+      <span class="published-at">Published Aug 23, 2018</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/react">#react</a>
+            <a href="/tag/redux">#redux</a>
+            <a href="/tag/authentication">#authentication</a>
+      </span>
+          <a href="/posts/access-and-refresh-token-handling-with-redux" title="Access Token Handling (Automatic Refresh) with React + Redux"><img class="hero-image" src="/uploads/2018/08/23/GET DISCOUNTS.png" /></a>
+   </div>
+ </div>
+   <p>The industry trend of decoupling backends and frontends has lots of advantages. You could argue that its just good software design. Plus it makes it much easier to have multiple front-end clients using the same backend. And since mobile apps dont use cookies, then it makes sense to convert the entire authentication system to some kind of token based solution.
+<p>But the next questions is how can you safely and convienently store and manage these tokens in your React+Redux app.
+<p class="lead">
+<p>Here is the approach I’ve used recently and it seems to work out pretty well. Its very similar to the approach I found <a href="https://michaelwashburnjr.com/best-way-to-store-tokens-redux/" title="https://michaelwashburnjr.com/best-way-to-store-tokens-redux/">here</a>. In this example I’m dealing with accessToken + refreshToken, but this could easily be adapted to different kinds of tokens (a JWT auth for example).
+<h3 id="break-it-down">Break it down</h3>
+<p>First we’ll make sure that redux has gets the token. In my case this means passing it from the server after the authentication callback.
+<p>Then we will use a simple redux subscriber to store our auth tokens in the browser localStorage. Using a subscriber will keep it synced so that anytime the auth token in the redux state changes it updates it in the localStorage.
+<p>Then we’ll make sure that anytime we refresh the page, we load in the auth tokens from localStorage when creating the store.
+<p>Then we’ll add some middleware that happens before each outgoing HTTP request that will refresh the token if needed, and update the redux state with the new tokens, and our subscriber will automatically update the token in localStorage.
+<h3 id="get-the-token-from-the-server-to-redux">Get the Token from the Server to Redux</h3>
+<p>You can probably skip this part if you are already getting your auth tokens to redux some other way.
+<p>In my case, I’m authenticating with Microsofts Oauth2 service. and the tokens are being sent to the server via a RedirectURI callback, that means I need to pass the tokens from the server to the client. I don’t store it in the session or database, Instead I pass it back to the client using the <code class="highlighter-rouge">window.__PRELOADED_STATE__</code> demonstrated in the <a href="https://redux.js.org/recipes/serverrendering">Redux server rendering documentation</a>.
+<p>I’ve decided to store my auth tokens in redux under <code class="highlighter-rouge">state.auth.tokens</code>, so my preloadedState object will look like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre><td class="code"><pre>const preloadedState = {
+  auth: {
+    tokens: { /* Auth token data goes here */ }
+  }
+}
+</pre></table>
+</div>
+</div>
+<p>Then we set that as the value of the <code class="highlighter-rouge">window.__PRELOADED_STATE__</code>, in the server rendered html like this (Making sure to include these lines BEFORE loading in the client js bundle):
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5</pre><td class="code"><pre>&lt;script&gt;
+  window.__PRELOADED_STATE__ = ${JSON.stringify(preloadedState).replace(/&lt;/g, '\\u003c')}
+  
+  /* The string replace is to prevent injections into our preloaded state. Check the redux server rendering docs for more info */
+&lt;/script&gt;
+</pre></table>
+</div>
+</div>
+<p>Then when loading the store, load in the <code class="highlighter-rouge">window.__PRELOADED_STATE__</code> as the initial state when creating the redux store:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>const store = createStore(reducer, window.__PRELOADED_STATE__)
+</pre></table>
+</div>
+</div>
+<h3 id="sync-auth-state-to-localstorage">Sync Auth State to localStorage</h3>
+<p>Thanks again to <a href="https://michaelwashburnjr.com/best-way-to-store-tokens-redux/">this post</a> for the idea of using a simple redux store subscriber to keep localStorage synced with out auth section of the redux store.
+<p>I made a function that will serialize and set the localStorage variables, and then call that function from <code class="highlighter-rouge">store.subscribe</code>
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9</pre><td class="code"><pre>function setAuthState(state) {
+  try {
+    localStorage.setItem('state.auth.tokens', JSON.stringify((state.auth || {}).tokens));
+  } catch (err) { return undefined; }
+}
+
+store.subscribe(() =&gt; {
+  setAuthState(store.getState())
+});
+</pre></table>
+</div>
+</div>
+<p>Be sure to checkout the <a href="https://redux.js.org/api/store#subscribe">documentation for store.subscribe</a>. You can also checkout <a href="https://egghead.io/lessons/javascript-redux-persisting-the-state-to-the-local-storage">this video</a> by Dan Abramov on how to use subscribe to store the state into localStorage.
+<p>Some other libraries for watching the state for mutations are <a href="https://github.com/jprichardson/redux-watch">redux-watch</a> and <a href="https://github.com/ashaffer/redux-subscribe">redux-subscribe</a>. They may be a better option later, but for now I’m going with this simple subscribe approach.
+<h3 id="load-auth-from-localstorage-on-refresh">Load Auth From localStorage on Refresh</h3>
+<p>Then I made a function to get and deserialize the state from localStorage:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8</pre><td class="code"><pre>function getAuthState() {
+  try {
+    const tokens = JSON.parse(localStorage.getItem('state.auth.tokens')) || undefined;
+    const user = JSON.parse(localStorage.getItem('state.auth.user')) || undefined;
+
+    return { auth: { tokens, user } }
+  } catch (err) { return undefined; }
+}
+</pre></table>
+</div>
+</div>
+<p>Then change our create store to something like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre><td class="code"><pre>const store = createStore(
+  reducer,
+  { ...getAuthState(), ...window.__PRELOADED_STATE__ }
+ )
+</pre></table>
+</div>
+</div>
+<p>And I was able to refresh the page and the auth tokens persist. So it works!
+<h3 id="automatic-token-refreshing">Automatic Token Refreshing</h3>
+<p>I debated whether or not to include this part, because there’s so many different ways to implement it, but the ways I think are truly nice and elegant can be a bit complex for a blog post. But I’ll try anyway. Hopefully people can get a few good ideas from this.
+<p>Now this step is going to vary a lot depending on your implementation. I was greatly inspired by <a href="https://github.com/erikras/react-redux-universal-hot-example">this library (erikras/react-redux-universal-hot-example)</a> which has a really nice middleware setup for making API requests by dispatching redux actions.
+<p>Although my final implementation looks much more like that the middleware found in the <a href="https://github.com/erikras/react-redux-universal-hot-example">erikras/react-redux-universal-hot-example</a> mentioned above, here is an exmample of how you might do a simplified version of some API request middleware with the refresh token.
+<p>I’m assuming you are using a function dispatcher middleware like <a href="https://github.com/reduxjs/redux-thunk">redux-thunk</a> and <a href="https://github.com/visionmedia/superagent">superagent</a> as the request library.
+<p>You’ll also notice that I loaded my tokens with an <code class="highlighter-rouge">expires_at</code> attribute to help calculate when a refresh is needed.
+<p>The middleware is in a file called <code class="highlighter-rouge">requestMiddleware.js</code> and looks something like this like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre><td class="code"><pre>export default function requestMiddleware() {
+  return ({ dispatch, getState }) =&gt; next =&gt; (action) =&gt; {
+    const {
+      request,
+    } = action;
+
+    if (!request) {
+      return next(action);
+    }
+
+    const { tokens } = getState().auth;
+
+    // 5 minutes from now
+    const refreshThreshold = (new Date.getTime() + 300000);
+
+    if (tokens.refresh_token &amp;&amp; refreshThreshold &gt; tokens.expires_at) {
+      return superagent.post('/path/to/renew')
+        .send({ refresh_token: tokens.refresh_token })
+        .end((err, { body } = {}) =&gt; {
+          dispatch({ type: 'SET_TOKENS', payload: body });
+          request(body);
+        });
+    }
+    return request(tokens);
+  };
+}
+</pre></table>
+</div>
+</div>
+<p>Dont forget to apply the middleware:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8</pre><td class="code"><pre>import { createStore, applyMiddleware } from 'redux';
+import requestMiddleware from './middleware/requestMiddleware';
+import rootReducer from './reducers/index';
+
+const store = createStore(
+  rootReducer,
+  applyMiddleware(requestMiddleware())
+);
+</pre></table>
+</div>
+</div>
+<p>Add a reducer to capture the <code class="highlighter-rouge">SET_TOKEN</code> action:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre><td class="code"><pre>export default function reducer(state = initialState, action = {}) {
+  switch (action.type) {
+    case SET_TOKENS:
+      return {
+        ...state,
+        auth: { tokens: action.payload },
+      };
+    default:
+      return state;
+  }
+}
+</pre></table>
+</div>
+</div>
+<p>And now we can dispatch actions like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11</pre><td class="code"><pre>export default function sendAnyRequest() {
+  return (dispatch) =&gt; {
+    return {
+      request: (tokens) =&gt; superagent.post('/some/random/request')
+        .send({ foo: 'bar' })
+        .end((err, { body } = {}) =&gt; {
+          dispatch({ type: 'SOME_EVENT', payload: body });
+        });
+    }
+  }
+}
+</pre></table>
+</div>
+</div>
+<h3 id="wrap-it-up">Wrap it up</h3>
+<p>And before making any request it will first check the validity of the refresh token and refresh it if needed. And if a refresh does occur it will set the new token in the redux store, which will be automatically written to the localStorage by the subscriber.
+<p>Noice!
+<p>I highly recommend you read through the code of this project <a href="https://github.com/erikras/react-redux-universal-hot-example">erikras/react-redux-universal-hot-example</a>, specifically the <code class="highlighter-rouge">ApiClient.js</code>, <code class="highlighter-rouge">clientMiddleware.js</code>, and see how the request actions are dispatched.
+<p>As I said, I used that example heavily when setting up my redux store. Here is what my middleware file looks like:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55</pre><td class="code"><pre>import { SIGN_OUT, SET_TOKENS } from '../modules/auth';
+
+export default function clientMiddleware(client) {
+  return ({ dispatch, getState }) =&gt; next =&gt; (action) =&gt; {
+    if (typeof action === 'function') {
+      return action(dispatch, getState);
+    }
+
+    const {
+      promise, types, ...rest
+    } = action;
+    if (!promise) {
+      return next(action);
+    }
+
+    // eslint-disable-next-line no-param-reassign
+    client.token = (getState().auth.tokens || {}).access_token;
+
+    const [REQUEST, SUCCESS, FAILURE] = types;
+    next({ ...rest, type: REQUEST });
+
+    let actionPromise = Promise.resolve();
+    const { tokens } = getState().auth;
+
+    const refreshThreshold = (new Date().getTime() + 300000); // 5 minutes from now
+
+    if (tokens.refresh_token &amp;&amp; refreshThreshold &gt; tokens.expires_at) {
+      actionPromise = client.post('/my-server/renew', { data: { refresh_token: tokens.refresh_token } })
+        .then(
+          (result) =&gt; {
+            client.token = result.access_token;
+            return next({
+              ...rest, result, type: SET_TOKENS,
+            });
+          },
+          errors =&gt; next({
+            ...rest, errors, type: SIGN_OUT,
+          }),
+        )
+        .then(() =&gt; promise(client));
+    } else {
+      actionPromise = promise(client);
+    }
+
+    actionPromise.then(
+      result =&gt; next({ ...rest, result, type: SUCCESS }),
+      errors =&gt; next({ ...rest, errors, type: FAILURE }),
+    ).catch((error) =&gt; {
+      console.error('MIDDLEWARE ERROR:', error);
+      next({ ...rest, error, type: FAILURE });
+    });
+
+    return actionPromise;
+  };
+}
+</pre></table>
+</div>
+</div>
+<p>And I can dispatch really clean actions that look like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre><td class="code"><pre>export function loadOne(_id) {
+  return {
+    types: [LOAD, LOAD_SUCCESS, LOAD_FAIL],
+    promise: client =&gt; client.get('/items/'),
+  };
+}
+</pre></table>
+</div>
+</div>
+<p>And the tokens are automatically refreshed and persisted.
+<p>I still have some cleaning up to do with my setup. I’d like to modularize that refresh token bit. I first tried to put it into its own middleware, but the existing client middleware dispatches an initial action (LOAD in the example above) that triggers the loading state and adds spinners. Having the refresh token part in its own middleware delayed the loading state until after the refresh so it made for a bad user experience.
+<p>It seems to be pretty functional and reliable so far. I’ll be sure to update this article if I discover any problems or brittleness with this implementation.
+<p>If you notice any mistakes in here, or if you have any ideas on how to improve this setup, please let me know in the comments. I’m always looking for better patterns to follow.
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

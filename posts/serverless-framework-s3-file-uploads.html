@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Serverless Framework S3 Permissions (Serverless IAM Permissions) &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="This really isn’t a complicated problem, but I want to document this for later. Its hard to find a good title for this. Usually you will never us a lambda function to upload to S3. For user submitted files, the right way to upload to S3 is generate a temporary...">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="serverless, javascript, aws">
+<link rel="canonical" href="/posts/serverless-framework-s3-file-uploads">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Serverless Framework S3 Permissions (Serverless IAM Permissions)" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Serverless Framework S3 Permissions (Serverless IAM Permissions)">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/serverless-framework-s3-file-uploads">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          Serverless Framework S3 Permissions (Serverless IAM Permissions)
+     </h1>
+      <span class="published-at">Published Sep 13, 2018</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/serverless">#serverless</a>
+            <a href="/tag/javascript">#javascript</a>
+            <a href="/tag/aws">#aws</a>
+      </span>
+          <a href="/posts/serverless-framework-s3-file-uploads" title="Serverless Framework S3 Permissions (Serverless IAM Permissions)"><img class="hero-image" src="" /></a>
+   </div>
+ </div>
+   <p>This really isn’t a complicated problem, but I want to document this for later.
+<p>Its hard to find a good title for this. Usually you will never us a lambda function to upload to S3. For user submitted files, the right way to upload to S3 is generate a temporary signed upload URL and the user will submit directly to S3 without sending the file to the serverless function.
+<p class="lead">
+<p>But I do a lot of PDF generation with one of my projects so I need to be able to put S3 objects from the serverless function, so I need a bit of setup to do that.
+<p>I created a new bucket in S3.
+<p>Then the main thing is find the simplest way to grant the serverless project access to the S3 bucket.
+<p>In the past I’ve spent time creating new users and roles and connecting to aws services using the using the secret keys of the user. But one of the main benefits of serverless is the easy integration of other aws services.
+<p>According to <a href="https://serverless.com/framework/docs/providers/aws/guide/iam/" title="https://serverless.com/framework/docs/providers/aws/guide/iam/">this post</a> the serverless framework automatically creates a IAM user for the serverless project. Of course there are ways to customize this access, but for my purposes its really easy to use the default user and role.
+<p>Then you can give the default user/role access to a service like S3 by simply adding this to the <code class="highlighter-rouge">serverless.yml</code> file:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7</pre><td class="code"><pre>provider:
+  ...
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+       - "s3:*"
+      Resource: { "Fn::Join": ["", ["arn:aws:s3:::BUCKET_NAME", "/*" ] ] }
+</pre></table>
+</div>
+</div>
+<p>Just be sure to replace <code class="highlighter-rouge">BUCKET_NAME</code> with the name of your bucket. This gives the lambda function full access to this bucket.
+<p><a href="https://stackoverflow.com/questions/46098173/how-to-add-iamrolestatements-to-s3-trigger-bucket-in-serverless-framework" title="https://stackoverflow.com/questions/46098173/how-to-add-iamrolestatements-to-s3-trigger-bucket-in-serverless-framework">This stackoverflow question</a> was helpful in figuring this out. Also it probably would help if I understood cloudformation and aws IAM users more.
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

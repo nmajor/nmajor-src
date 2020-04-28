@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Create a New Linux User With SSH Access &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="This is just a personal reference.
+Generate the key for the user. This should be done on the local machine:
+1ssh-keygen -t rsa -b 4096 -o -a 100
+Create a new user on the remote machine. The -m adds a deuser fault user home directory.
+1useradd -m new-user
+">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="linux, ssh">
+<link rel="canonical" href="/posts/create-a-new-linux-user-with-ssh-access">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Create a New Linux User With SSH Access" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Create a New Linux User With SSH Access">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/create-a-new-linux-user-with-ssh-access">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          Create a New Linux User With SSH Access
+     </h1>
+      <span class="published-at">Published Oct 11, 2019</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/linux">#linux</a>
+            <a href="/tag/ssh">#ssh</a>
+      </span>
+          <a href="/posts/create-a-new-linux-user-with-ssh-access" title="Create a New Linux User With SSH Access"><img class="hero-image" src="" /></a>
+   </div>
+ </div>
+   <p>This is just a personal reference.
+<p>Generate the key for the user. This should be done on the local machine:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>ssh-keygen -t rsa -b 4096 -o -a 100
+</pre></table>
+</div>
+</div>
+<p>Create a new user on the remote machine. The <code class="highlighter-rouge">-m</code> adds a deuser fault user home directory.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>useradd -m new-user
+</pre></table>
+</div>
+</div>
+<p class="lead">
+<p>Switch to the new user:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>sudo su new-user
+</pre></table>
+</div>
+</div>
+<p>Make a <code class="highlighter-rouge">.ssh</code> directory for the user:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>mkdir ~/.ssh
+</pre></table>
+</div>
+</div>
+<p>Make an <code class="highlighter-rouge">authorized_keys</code> file.:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>touch ~/.ssh/authorized_keys
+</pre></table>
+</div>
+</div>
+<p>Set the right permissions:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre><td class="code"><pre>chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+</pre></table>
+</div>
+</div>
+<p>Add the public key you created to the <code class="highlighter-rouge">authorized_keys</code> file.
+<h3 id="resources">Resources:</h3>
+<ul>
+ <li><a href="https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices" title="https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices">https://security.stackexchange.com/questions/143442/what-are-ssh-keygen-best-practices</a>
+ <li><a href="https://help.ubuntu.com/community/SSH/OpenSSH/Keys" title="https://help.ubuntu.com/community/SSH/OpenSSH/Keys">https://help.ubuntu.com/community/SSH/OpenSSH/Keys</a>
+</ul>
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

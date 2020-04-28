@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>React CSS - Styled Components &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="Why I prefer Styled Components I prefer Styled Components because I feel like it is more inline with the core component philosophy of react. React is all about creating reusable components, and really pushed the idea of bundling the templating (HTML) and behavior (JS) together into components. So it always...">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="react, css">
+<link rel="canonical" href="/posts/react-css-styled-components">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="React CSS - Styled Components" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React CSS - Styled Components">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/react-css-styled-components">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          React CSS - Styled Components
+     </h1>
+      <span class="published-at">Published Jul 16, 2018</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/react">#react</a>
+            <a href="/tag/css">#css</a>
+      </span>
+          <a href="/posts/react-css-styled-components" title="React CSS - Styled Components"><img class="hero-image" src="/uploads/2018/07/16/jungle & river trails.png" /></a>
+   </div>
+ </div>
+   <h2 id="why-i-prefer-styled-components">Why I prefer Styled Components</h2>
+<p>I prefer Styled Components because I feel like it is more inline with the core component philosophy of react. React is all about creating reusable components, and really pushed the idea of bundling the templating (HTML) and behavior (JS) together into components. So it always felt a bit wonky to me to still put my CSS in a separate file and connect my styling using regular CSS <code class="highlighter-rouge">class</code> and <code class="highlighter-rouge">id</code> targeting.
+<p class="lead">
+<p>Styled Components allow us to bundle the templating (HTML), behavior (JS), and styling (CSS) all together. And similar to how JSX lets us write HTML in with our Javascript, Styled Components let us write classic CSS, but it has many classic JS ways for us to manage our styling logic.
+<p>From the [documentation](<a href="https://www.styled-components.com/" title="https://www.styled-components.com/">https://www.styled-components.com/</a>): Styled components combine the html element and the rules that style it.
+<h2 id="installation-and-basic-use-of-styled-components">Installation and basic use of Styled Components</h2>
+<p>Styled Component are quite easy to use. First install the module:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>yarn add styled-components
+</pre></table>
+</div>
+</div>
+<p>And here is a basic example of how to use it:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30</pre><td class="code"><pre>import styled from 'styled-components';
+
+const Wrapper = styled.div`
+  height: 100%;
+  width: 100%;
+`;
+
+const Header = styled.header`
+  width: 100%;
+  height: 70px;
+  background-color: #333;
+  border-bottom: 1px solid #333;
+  display: flex;
+`;
+
+const Body = styled.div`
+  background-color: #fff;
+  color: #333;
+`;
+
+export default function App(props) {
+  return (
+    &lt;Wrapper&gt;
+      &lt;Header/&gt;
+      &lt;Body&gt;
+        &lt;p&gt;Hello Styled Components&lt;/p&gt;
+      &lt;/Body&gt;
+    &lt;/Wrapper&gt;
+  );
+}
+</pre></table>
+</div>
+</div>
+<p>As you can see, you just create a new <code class="highlighter-rouge">const</code> using the <code class="highlighter-rouge">styled</code> object we imported. That new <code class="highlighter-rouge">const</code> is now a component we can use when we render. So no more dealing with classNames, the connection from the component to its styling is made directly.
+<p>Because its CSS we can use all the classic CSS features like media queries, nesting, and psudo-selectors.
+<p>We can also simple interpolate, like this example from [the documentation](<a href="https://www.styled-components.com/" title="https://www.styled-components.com/">https://www.styled-components.com/</a>).
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13</pre><td class="code"><pre>const Button = styled.button`
+  border-radius: 3px;
+  padding: 0.25em 1em;
+  margin: 0 1em;
+  background: transparent;
+  color: palevioletred;
+  border: 2px solid palevioletred;
+
+  ${props =&gt; props.primary &amp;&amp; css`
+    background: palevioletred;
+    color: white;
+  `}
+`;
+</pre></table>
+</div>
+</div>
+<p>When you interpolate a function in the CSS string definition like this, that function automatically has access to the props from the component it is being used in. Thats pretty neat.
+<p>You can also attach props to the Styled Component and then add interpolated logic based on those props. For example:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7</pre><td class="code"><pre>// In the render:
+&lt;Header size="3em"&gt;&lt;/Header&gt;
+
+// In the Styled Component definition
+const Header = styled.div`
+  size: ${props =&gt; props.size || '1em'}
+`
+</pre></table>
+</div>
+</div>
+<p>Or if we are trying to just extend an existing styled component without any logic we can do this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14</pre><td class="code"><pre>const Button = styled.button`
+  color: palevioletred;
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid palevioletred;
+  border-radius: 3px;
+`;
+
+// We're extending Button with some extra styles
+const TomatoButton = Button.extend`
+  color: tomato;
+  border-color: tomato;
+`;
+</pre></table>
+</div>
+</div>
+<p>You can also wrap any existing component.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4</pre><td class="code"><pre>const HelloComponent = props =&gt; &lt;div&gt;Hello Styled Components!&lt;/div&gt;
+const StyledComponent = styled(HelloComponent)`
+  color: blue;
+`
+</pre></table>
+</div>
+</div>
+<p>This is particularly useful when working with libraries like <code class="highlighter-rouge">react-router</code> because they give you components like <code class="highlighter-rouge">Link</code> to use.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8</pre><td class="code"><pre>// Link component from react-router
+const StyledLink = styled(Link)`
+  color: pink;
+
+  &amp;:hover {
+    text-decoration: none;
+  }
+`;
+</pre></table>
+</div>
+</div>
+<p>There are a few more tricks available. Checkout the [full documentation](<a href="https://www.styled-components.com/docs" title="https://www.styled-components.com/docs">https://www.styled-components.com/docs</a>) for more.
+<p>Styled Components, allow us to really simplify our display logic while still being able to customize our styling in complex ways. Oh yeah, it also works with React Native.
+<p>So give Styled Components a try!
+<p>I don’t really go into some of the other options for CSS with React, so for a nice outline of some of the other approaches check [this article](<a href="https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945" title="https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945">https://blog.logrocket.com/the-best-styling-in-react-tutorial-youve-ever-seen-676f1284b945</a>) out.
+<p>You can also see the Official Documentation for Styled Components [here](<a href="https://www.styled-components.com/" title="https://www.styled-components.com/">https://www.styled-components.com/</a>).
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    

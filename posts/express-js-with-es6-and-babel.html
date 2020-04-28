@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+       <meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+<title>Express.js With ES6 and Babel &#9642; NMajor Blog</title>
+<!--
+<meta name="description" content="Express.js doesn’t come with es6 out of the box. But its actually not that hard to add. I’m going to go over how to easily add ES6 support to your project using the babel-cli, as well as show you some of the things you need to do so your app...">
+-->
+<meta name="description" content="A blog filled with adventures in tech">
+<meta name="keywords" content="express, node, babel, es6">
+<link rel="canonical" href="/posts/express-js-with-es6-and-babel">
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Express.js With ES6 and Babel" />
+<meta name="twitter:description" content="A blog filled with adventures in tech" />
+<meta name="twitter:image" content="" />
+<meta name="author" content="">
+<link rel="author" href="">
+<meta property="og:locale" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Express.js With ES6 and Babel">
+<meta property="og:description" content="A blog filled with adventures in tech">
+<meta property="og:url" content="/posts/express-js-with-es6-and-babel">
+<meta property="og:site_name" content="NMajor Blog">
+<link rel="stylesheet" href="/assets/vendor/normalize-css/normalize.css">
+<link rel="stylesheet" href="/assets/css/main.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i">
+<style>
+    html {
+      font-family: "Open Sans", "Helvetica Neue", sans-serif;
+    }
+</style>
+<link rel="stylesheet" href="/assets/css/bf.css">
+   <body>
+       <div class="wrapper" id="blep">
+          <header>
+   <div class="menu">
+     <div class="logo">
+        <img src="/uploads/me4.jpg" />
+        <a href="/">NMajor Blog</a>
+     </div>
+       <ul>
+           <li><a href="/about">About</a>
+           <li><a href="/projects">Projects</a>
+           <li><a href="/archive">Archive</a>
+       </ul>
+   </div>
+   <div class="social">
+     <ul>
+       <li>
+            <a href="https://github.com/nmajor" target="_blank" class="smaller">
+              <span class="icon-github"></span>
+            </a>
+       <li>
+            <a href="https://twitter.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon-twitter"></span>
+            </a>
+       <li>
+            <a href="https://linkedin.com/in/nmajor" target="_blank" class="smaller">
+              <span class="icon2-linkedin"></span>
+            </a>
+       <li>
+            <a href="http://blog.nmajor.com" target="_blank" class="smaller">
+              <span class="icon2-globe"></span>
+            </a>
+       <li>
+            <a href="https://instagram.com/_nmajor" target="_blank" class="smaller">
+              <span class="icon2-instagram"></span>
+            </a>
+       <li>
+            <a href="/feed.xml" target="_blank">
+                <span class="icon-rss_feed"></span>
+            </a>
+     </ul>
+   </div>
+</header>
+<article class="post">
+ <div class="post-title-container
+  no-hero-margin
+  ">
+    <!--Post hero image source-->
+   <div class="heading-container ">
+     <h1>
+          Express.js With ES6 and Babel
+     </h1>
+      <span class="published-at">Published Feb 16, 2018</span>
+      &#9642;
+      <span class="post-tags">
+            <a href="/tag/express">#express</a>
+            <a href="/tag/node">#node</a>
+            <a href="/tag/babel">#babel</a>
+            <a href="/tag/es6">#es6</a>
+      </span>
+          <a href="/posts/express-js-with-es6-and-babel" title="Express.js With ES6 and Babel"><img class="hero-image" src="/uploads/2018/02/16/Express.js - ES6 - Babel.png" /></a>
+   </div>
+ </div>
+   <p>Express.js doesn’t come with es6 out of the box. But its actually not that hard to add.
+<p>I’m going to go over how to easily add ES6 support to your project using the <a href="https://www.npmjs.com/package/babel-cli" title="babel-cli">babel-cli</a>, as well as show you some of the things you need to do so your app will be ready for production later.
+<p class="lead">
+<p>The <code class="highlighter-rouge">babel-cli</code> gives us a command line tool called <code class="highlighter-rouge">babel-node</code> that wraps around node and converts our ES6 code to basic javascript that node can read.
+<p><strong>However it is not recommended to use babel-node in production</strong>
+<h3 id="new-express-app">New Express App</h3>
+<p>First lets use the <a href="http://expressjs.com/en/starter/generator.html">express-generator</a> to make a new Express.js app.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre>$ express --view pug --css sass new-app
+$ cd new-app
+$ npm install
+</pre></table>
+</div>
+</div>
+<p>This generates a new express app in a new folder called new-app. And as you can see, I’ve told express to use sass for css and pug for the html templating.
+<h3 id="rearrange-files">Rearrange Files</h3>
+<p>We are going to need to rearrange things a bit. This is because of the production build. We want all the javascript files isolated in a subfolder of our app because later we are going to tell babel to compile all the files and things get really messy if all our code is in at the same level as our dot files, node_modules folder, etc…
+<p>So lets make a new folder called <code class="highlighter-rouge">app</code> and move all our express stuff into it.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre><td class="code"><pre>$ mkdir app
+$ mv bin public routes views app.js app/
+</pre></table>
+</div>
+</div>
+<h3 id="install-babel">Install Babel</h3>
+<p>First we need to add 2 babel packages to our apps dev-dependencies.
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2</pre><td class="code"><pre>$ npm install babel-cli --save-dev
+$ npm install babel-preset-env --save-dev
+</pre></table>
+</div>
+</div>
+<p><a href="">babel-preset-env</a> by default behaves like <a href="">babel-preset-latest</a>. Basically it includes all the new features of ECMAScript that are standardized each year. But it also allows you to specify specific environments to build for such as specific browsers you want to support.
+<p>Next we need to add the babel configuration file <code class="highlighter-rouge">.babelrc</code> to our app folder. Make it look like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3</pre><td class="code"><pre><span class="p">{</span><span class="w">
+  </span><span class="nt">"presets"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"env"</span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></pre></table>
+</div>
+</div>
+<p>This just tells babel to use <a href="">babel-preset-env</a> that we just installed but take a look as some of the other configuration settings you can specify <a href="https://babeljs.io/docs/usage/babelrc/">here</a>.
+<h3 id="try-it-out">Try it Out</h3>
+<p>To try it out lets open our <code class="highlighter-rouge">app.js</code> file and replace this line
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>var express = require('express');
+</pre></table>
+</div>
+</div>
+<p>with this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>import express from 'express';
+</pre></table>
+</div>
+</div>
+<p>And then we run express with babel with this command:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>$ babel-node app/bin/www
+</pre></table>
+</div>
+</div>
+<p>It works!
+<p>And you will notice that if you just run <code class="highlighter-rouge">node app/bin/www</code> you get an error which is expected.
+<p>Now lets add a npm script to make running this easier. Open up your <code class="highlighter-rouge">package.json</code> file and lets add a new line in the scripts section so it looks like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6</pre><td class="code"><pre>...
+  "scripts": {
+    "start": "node ./bin/www",
+    "start:dev": "babel-node ./app/bin/www"
+  }
+...
+</pre></table>
+</div>
+</div>
+<p>Now we can run our babelized app with the command:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>npm run start:dev
+</pre></table>
+</div>
+</div>
+<p>You might be asking, “Why don’t we just use the existing start script”. We need to save that for production because many production environments use the start script to run the app, but obviously we need to change it since we know <code class="highlighter-rouge">node ./bin/www</code> doesn’t work.
+<h3 id="preparing-for-production">Preparing for Production</h3>
+<p>So to prepare our app for production we need a build step that will take our ES6 code and generate node-friendly ES5 code in a file somewhere that node can run.
+<p>To do this I like to another npm script:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1
+2
+3
+4
+5
+6
+7</pre><td class="code"><pre>...
+  "scripts": {
+    "start": "node ./bin/www",
+    "start:dev": "babel-node ./app/bin/www",
+    "build": "rm -rf ./build &amp;&amp; mkdir build &amp;&amp; babel --out-dir ./build --source-maps --copy-files ./app"
+  }
+...
+</pre></table>
+</div>
+</div>
+<p>As you can see this build script removes and recreates any existing <code class="highlighter-rouge">build</code> folder, and then runs the command <code class="highlighter-rouge">babel --out-dir ./build --source-maps --copy-files ./app</code> which compiles all the javascript files and copies any other files  into the <code class="highlighter-rouge">build</code> folder. Checkout <a href="https://babeljs.io/docs/usage/cli/">this page</a> for more info on how the babel command works.
+<p>You may want to add the <code class="highlighter-rouge">build</code> folder to your <code class="highlighter-rouge">.gitignore</code>.
+<p>Then the last thing to do is to change the start script to look like this:
+<div class="highlighter-rouge"><div class="highlight"><table style="border-spacing: 0"><tbody><tr><td class="gutter gl" style="text-align: right"><pre class="lineno">1</pre><td class="code"><pre>"start": "node ./app/bin/www"
+</pre></table>
+</div>
+</div>
+<p>And we are good to go.
+<p>Just make sure you run <code class="highlighter-rouge">npm run build</code> as part of any deployment into production.
+</article>
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'nmajor';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+           <footer>
+    <span>A blog filled with adventures in tech</span>
+    <span>written by Nicholas Major</span>
+</footer>
+       </div>
+<script type="text/javascript" src="/assets/js/theme.js"></script>
+<script type="text/javascript" src="/assets/js/barefoot.js"></script>
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-48130330-1', 'auto');
+      ga('send', 'pageview');
+    </script>
+    
